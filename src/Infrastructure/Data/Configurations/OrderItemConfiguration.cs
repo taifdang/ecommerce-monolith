@@ -1,5 +1,4 @@
-﻿
-using Infrastructure.Enitites;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,20 +10,33 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
     {
         builder.ToTable(nameof(OrderItem));
 
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).ValueGeneratedOnAdd();
+        // Composite primary key (OrderId + ProductVariantId)
+        builder.HasKey(oi => new { oi.OrderId, oi.ProductVariantId });
 
-        builder.Property(p => p.Price)
-               .HasPrecision(18, 2);
+        builder.Property(oi => oi.OrderId)
+            .IsRequired();
 
-        builder.HasOne(od => od.Orders)
-               .WithMany(o => o.OrderItems)
-               .HasForeignKey(od => od.OrderId)
-               .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(oi => oi.ProductVariantId)
+            .IsRequired();
 
-        builder.HasOne(od => od.ProductVariants)
-               .WithMany(pv => pv.OrderDetails)
-               .HasForeignKey(od => od.ProductVariantId)
-               .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(oi => oi.ProductName)
+            .IsRequired()
+            .HasMaxLength(255);
+
+        builder.Property(oi => oi.UnitPrice)
+          .IsRequired()
+          .HasColumnType("decimal(18,2)");
+
+        builder.Property(oi => oi.Quantity)
+            .IsRequired();
+
+        builder.HasIndex(oi => oi.ProductVariantId);
+        builder.HasIndex(oi => oi.OrderId);
+
+        // Configure relationship with Order (optional, but explicit)
+        builder.HasOne<Order>()
+            .WithMany(o => o.Items)
+            .HasForeignKey(oi => oi.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

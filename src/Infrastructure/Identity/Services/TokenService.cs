@@ -1,0 +1,129 @@
+﻿using Application.Common.Exceptions;
+using Application.Common.Interfaces;
+using Infrastructure.Identity.Data;
+using Infrastructure.Identity.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Shared.Constants;
+using Shared.Models.Auth;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
+namespace Infrastructure.Identity.Services;
+
+public class TokenService(
+    AppSettings appSettings, 
+    UserManager<ApplicationUser> userManager,
+    AppIdentityDbContext appIdentityDbContext,
+    IUnitOfWork unitOfWork) : ITokenService
+{
+    private readonly AppSettings _appSettings = appSettings;
+    private readonly Shared.Constants.Identity _jwt = appSettings.Identity;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly AppIdentityDbContext _appIdentityDbContext = appIdentityDbContext;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+
+    public async Task<TokenResult> GenerateToken(string username, string[] scopes, CancellationToken cancellationToken)
+    {
+        var result = new TokenResult();
+
+        //token
+        var user = await _userManager.FindByNameAsync(username);
+        if (user == null) throw new EntityNotFoundException(username);
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Name, user.UserName),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Uri, user?.AvatarUrl ?? "default.png"),
+            new Claim(ClaimTypes.Role, roles == null ? IdentityConstant.Role.User.ToString() : string.Join(";", roles)),
+            new Claim("scope", string.Join(" ", scopes)) // Adding scope claim
+        };
+
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Identity.Key));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        var expires = DateTime.UtcNow.AddDays(_jwt.ExpiredTime);
+
+        var token = new JwtSecurityToken(
+            issuer: _jwt.Issuer,
+            audience: _jwt.Audience,
+            claims: claims,
+            expires: expires,
+            signingCredentials: credentials);
+
+        var tokenResult = new JwtSecurityTokenHandler().WriteToken(token);
+
+        //set result
+        result.Token = tokenResult;
+        result.UserId = user.Id;
+        result.Expire = expires;
+
+        //refresh token  
+        var refreshToken = new RefreshToken
+        {
+            Token = tokenResult,
+            UserId = user.Id,
+            Expires = expires,
+            Created = DateTime.UtcNow
+        };
+
+        //var existToken = await _unitOfWork.RefreshTokenRepository.FirstOrDefault(x => x.UserId == user.Id);
+        var existToken = await _appIdentityDbContext.RefreshTokens.FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+        if (existToken == null)
+        {
+            //await _unitOfWork.ExecuteTransactionAsync(async () => await _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken), cancellationToken);
+            await _appIdentityDbContext.RefreshTokens.AddAsync(refreshToken, cancellationToken);
+        }
+
+        else if (existToken.Expires > DateTime.UtcNow)
+        {
+            existToken.Token = tokenResult;
+            existToken.Expires = expires;
+            existToken.Created = DateTime.UtcNow;
+
+            //_appIdentityDbContext.RefreshTokens.Update(refreshToken);
+            await _appIdentityDbContext.SaveChangesAsync(cancellationToken);
+        }
+        else
+        {
+            //await _unitOfWork.ExecuteTransactionAsync(
+            //   async () =>
+            //   {
+            //       _unitOfWork.RefreshTokenRepository.Delete(refreshToken);
+            //       await _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
+            //   }, cancellationToken);
+            await _unitOfWork.ExecuteTransactionAsync(
+               async () =>
+               {
+                   _appIdentityDbContext.RefreshTokens.Remove(existToken);
+                   await _appIdentityDbContext.RefreshTokens.AddAsync(refreshToken);
+               }, cancellationToken);
+        }
+        return result;
+    }
+
+    public ClaimsPrincipal ValidateToken(string token)
+    {
+        TokenValidationParameters validationParameters = new()
+        {
+            ValidIssuer = _appSettings.Identity.Issuer,
+            ValidAudience = _appSettings.Identity.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Identity.Key)),
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = false,
+            ValidateIssuerSigningKey = true
+        };
+
+        var principal = new JwtSecurityTokenHandler().ValidateToken(token, validationParameters, out _);
+
+        return principal;
+    }
+}

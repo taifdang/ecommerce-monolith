@@ -8,7 +8,7 @@ public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<Applicatio
     public ApplicationDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-        optionsBuilder.UseSqlServer("Server=LAPTOP-J20BGGNG\\SQLEXPRESS;Database=clothify_db;Trusted_Connection=true; MultipleActiveResultSets=true; TrustServerCertificate=True");
+        optionsBuilder.UseSqlServer("Server=LAPTOP-J20BGGNG\\SQLEXPRESS;Database=ecommerce_db;Trusted_Connection=true; MultipleActiveResultSets=true; TrustServerCertificate=True");
 
         return new ApplicationDbContext(optionsBuilder.Options);
     }

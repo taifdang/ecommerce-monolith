@@ -1,4 +1,4 @@
-﻿using Infrastructure.Enitites;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,23 +11,29 @@ public class ProductOptionConfiguration : IEntityTypeConfiguration<ProductOption
         builder.ToTable(nameof(ProductOption));
 
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Property(x => x.Id)
+            .ValueGeneratedOnAdd();
 
-        builder.HasIndex(po => new { po.ProductId, po.OptionId }).IsUnique();
+        builder.Property(x => x.ProductId)
+            .IsRequired();
 
-        builder.HasOne(po => po.Products)
-               .WithMany(p => p.ProductOptions)
-               .HasForeignKey(po => po.ProductId)
-               .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne(po => po.Options)
-               .WithMany(o => o.ProductOptions)
-               .HasForeignKey(po => po.OptionId)
-               .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(x => x.OptionName)
+            .IsRequired()
+            .HasMaxLength(100);
 
         builder.HasIndex(x => x.ProductId)
-            .HasFilter("[AllowImages] = 1")
-            .IsUnique();
+          .IsUnique()
+          .HasFilter("[AllowImage] = 1");
 
+        // Relationships
+        builder.HasOne(x => x.Product)
+            .WithMany(p => p.ProductOptions)
+            .HasForeignKey(x => x.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.OptionValues)
+            .WithOne(y => y.ProductOption)
+            .HasForeignKey(ov => ov.ProductOptionId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

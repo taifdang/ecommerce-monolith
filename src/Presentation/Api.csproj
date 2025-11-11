@@ -18,11 +18,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Shared\Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Service\" />
-    <Folder Include="Validations\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,54 @@
+﻿
+using Application.Catalog.Products.Dtos;
+using Ardalis.Specification;
+using Domain.Entities;
+
+namespace Application.Common.Specifications;
+
+public class ProductWithOptionSpec : Specification<Product, ProductItemDto>
+{
+    public ProductWithOptionSpec(int productId)
+    {
+        Query
+            .Where(x => x.Id == productId)
+            .Include(x => x.ProductOptions)
+                .ThenInclude(x => x.OptionValues);
+
+        Query
+            .Select(x => new ProductItemDto
+            {
+                Id = x.Id,
+                Title = x.Title,
+                MinPrice = x.ProductVariants.Min(x => x.RegularPrice),
+                MaxPrice = x.ProductVariants.Max(x => x.RegularPrice),
+                Description = x.Description ?? string.Empty,
+                Category = x.Category.Title,
+                ProductType = x.Category.ProductType.Title,
+                Images = x.ProductImages.Select(img => new ProductImageDto
+                {
+                    Id = img.Id,
+                    Url = img.ImageUrl,
+                }).ToList(),
+                Options = x.ProductOptions.Select(po => new ProductOptionDto
+                {
+                    Title = po.OptionName,
+                    Values = po.OptionValues.Select(v => v.Value).ToList()
+                }).ToList(),
+                OptionValues = x.ProductOptions.Select(po => new ProductOptionValueDto
+                {
+                    Title = po.OptionName,
+                    Values = po.OptionValues.Select(v => v.Value).ToList(),
+                    Variants = po.OptionValues.Select(ov => new ProductOptionVariantDto
+                    {
+                        Title = ov.Value,
+                        Label = ov.Label,
+                        Images = ov.ProductImages!.Select(pi => new ProductImageDto
+                        {
+                            Id = pi.Id,
+                            Url = pi.ImageUrl
+                        }).ToList()
+                    }).ToList()
+                }).ToList(),
+            });
+    }
+}

@@ -1,6 +1,6 @@
-﻿using Api.Extensions;
-using Application.Common.Interface;
+﻿using Application;
 using Shared.Constants;
+using Shared.Web;
 using System.Text.Json.Serialization;
 
 namespace Api;
@@ -14,7 +14,9 @@ public static class ConfigureService
 
         services.AddHttpContextAccessor();
 
-        services.AddTransient<ICurrentUserProvider, CurrentUserProvider>();
+        services.AddTransient<ICurrentUserProdvider, CurrentUserProvider>();
+
+        services.AddAutoMapper(typeof(Program).Assembly);
 
         services.AddControllers()
             .AddJsonOptions(opt =>

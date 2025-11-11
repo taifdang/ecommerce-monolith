@@ -2,10 +2,13 @@
 
 namespace Shared.Extensions;
 
+//ref: https://coding.abel.nu/2013/01/merging-expression-trees-to-reuse-in-linq-queries/
+//ref: https://www.codeproject.com/articles/Combining-expressions-to-dynamically-append-criter#comments-section
+//ref: https://blog.elmah.io/expression-trees-in-c-building-dynamic-linq-queries-at-runtime/
 public static class ExpresstionExtensions
 {
-    public static Expression<Func<T, bool>> AndAlso<T>(
-       this Expression<Func<T, bool>> left,
+    public static Expression<Func<T, bool>> And<T>(
+       Expression<Func<T, bool>> left,
        Expression<Func<T, bool>> right)
     {
         var param = Expression.Parameter(typeof(T),"x");

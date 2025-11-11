@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
-using Infrastructure.Enitites;
-using Shared.Models.ProductImage;
+using Domain.Entities;
 
 namespace Application.Common.Mapping;
 
@@ -8,6 +7,6 @@ public class ProductImageProfile : Profile
 {
     public ProductImageProfile()
     {
-        CreateMap<ProductImage, ProductImageDTO>().ReverseMap();
+        //CreateMap<ProductImage, ProductImageDTO>().ReverseMap();
     }
 }

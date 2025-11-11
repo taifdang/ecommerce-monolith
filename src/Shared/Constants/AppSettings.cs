@@ -34,5 +34,5 @@ public class Identity
     public string ScopeBaseDomain { get; set; }
     [Required]
     public bool ValidateHttps { get; set; }
-    public int ExpiredTime { get; set; } = 10;
+    public int ExpiredTime { get; set; } = 30;
 }

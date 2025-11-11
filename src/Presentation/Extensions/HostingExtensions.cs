@@ -1,5 +1,4 @@
-﻿using Application;
-using Infrastructure;
+﻿using Infrastructure;
 using Shared.Constants;
 
 namespace Api.Extensions;
@@ -9,7 +8,7 @@ public static class HostingExtensions
     public static WebApplicationBuilder ConfigureServices(this WebApplicationBuilder builder, AppSettings appsettings)
     {
         builder.Services.AddInfrastructureService(appsettings);
-        builder.Services.AddApplicationService(appsettings);
+        //builder.Services.AddApplicationService(appsettings);
         builder.Services.AddWebAPIService(appsettings);
 
         return builder;

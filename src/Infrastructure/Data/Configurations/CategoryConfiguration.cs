@@ -1,4 +1,4 @@
-﻿using Infrastructure.Enitites;
+﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,11 +11,29 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.ToTable(nameof(Category));
 
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).ValueGeneratedOnAdd();
+        builder.Property(x => x.Id)
+            .ValueGeneratedOnAdd();
 
-        builder.HasMany(c => c.Products)
-               .WithOne(p => p.Categories)
-               .HasForeignKey(p => p.CategoryId)
-               .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(x => x.ProductTypeId)
+            .IsRequired();
+
+        builder.Property(x => x.Title)
+            .IsRequired()
+            .HasMaxLength(255);
+
+        builder.Property(x => x.Label)
+            .HasMaxLength(100);
+
+        // Relationships
+        builder.HasOne(x => x.ProductType)
+            .WithMany(y => y.Categories)
+            .HasForeignKey(x => x.ProductTypeId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasMany(x => x.Products)
+            .WithOne(y => y.Category)
+            .HasForeignKey(p => p.CategoryId)
+            .OnDelete(DeleteBehavior.NoAction);
+
     }
 }

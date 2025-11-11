@@ -7,8 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Exceptions\" />
-    <Folder Include="Models\Order\" />
+    <Folder Include="EFCore\" />
+    <Folder Include="Contracts\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
 
   <ItemGroup>
