@@ -12,7 +12,7 @@ public record UpdateVariantCommand : IRequest<Unit>
     public decimal RegularPrice { get; init; }
     public int Quantity { get; init; }
     public decimal? Percent { get; init; }
-    public string? Sku { get; init; }
+    //public string? Sku { get; init; }
 }
 
 public class UpdateVariantCommandHandler : IRequestHandler<UpdateVariantCommand, Unit>
@@ -26,11 +26,10 @@ public class UpdateVariantCommandHandler : IRequestHandler<UpdateVariantCommand,
 
     public async Task<Unit> Handle(UpdateVariantCommand request, CancellationToken cancellationToken)
     {
-        var specification = new VariantFilterSpec(null, request.Id);
-        var variant = await _productVariantRepository.FirstOrDefaultAsync(specification)
+        var variant = await _productVariantRepository.FirstOrDefaultAsync(new VariantFilterSpec(null, request.Id))
             ?? throw new EntityNotFoundException(nameof(ProductVariant), request.Id);
 
-        variant.Sku = variant.Sku;
+        //variant.Sku = variant.Sku;
         variant.RegularPrice = request.RegularPrice;
         variant.Quantity = request.Quantity;
         //no update variant option value, percent

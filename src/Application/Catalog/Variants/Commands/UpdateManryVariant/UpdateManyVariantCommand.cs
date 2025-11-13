@@ -1,0 +1,53 @@
+﻿using Application.Common;
+using Application.Common.Exceptions;
+using Application.Common.Interfaces;
+using Domain.Entities;
+using MediatR;
+
+namespace Application.Catalog.Variants.Commands.UpdateManyVariant;
+
+public record UpdateManyVariantCommand : IRequest<int>
+{
+    public int ProductId { get; set; }
+    public decimal? Price { get; set; }
+    public int? Quantity { get; set; }
+    public string? Sku { get; set; }
+}
+
+public class UpdateManyVariantCommandHandler : IRequestHandler<UpdateManyVariantCommand, int>
+{
+    private readonly IRepository<ProductVariant> _productVariantRepository;
+
+    public UpdateManyVariantCommandHandler(IRepository<ProductVariant> productVariantRepository)
+    {
+        _productVariantRepository = productVariantRepository;
+    }
+
+    public async Task<int> Handle(UpdateManyVariantCommand request, CancellationToken cancellationToken)
+    {
+        var variants = await _productVariantRepository.ListAsync(new VariantByProductIdSpec(request.ProductId))
+            ?? throw new EntityNotFoundException(nameof(Product),"null");
+
+        foreach (var v in variants)
+        {
+            if (request.Price.HasValue)
+            {
+                v.RegularPrice = request.Price.Value;
+            }
+            if (request.Quantity.HasValue)
+            {
+                v.Quantity = request.Quantity.Value;
+            }
+            if(!string.IsNullOrWhiteSpace(request.Sku)) 
+            { 
+                v.Sku = request.Sku;
+            }       
+        }
+
+        await _productVariantRepository.UpdateRangeAsync(variants, cancellationToken);
+
+        return request.ProductId;
+    }
+}
+
+

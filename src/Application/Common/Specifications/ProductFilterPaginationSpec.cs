@@ -13,6 +13,7 @@ public class ProductFilterPaginationSpec : Specification<Product, ProductListDto
         {
             take = int.MaxValue;
         }
+        Query.Where(x => x.IsPublished);
 
         Query.Select(x => new ProductListDto
         {

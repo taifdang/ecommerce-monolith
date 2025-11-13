@@ -6,26 +6,42 @@ namespace Application.Common.Specifications;
 
 public class VariantOptionFilterSpec : Specification<ProductVariant, VariantDto>
 {
-    public VariantOptionFilterSpec(int productId, Dictionary<int, int>? options, bool exact)
+    public VariantOptionFilterSpec(
+        int productId, 
+        //Dictionary<int, int>? options,
+        List<int> optionValues, 
+        bool exact)
     {
         Query
             .Where(c => c.ProductId == productId);
 
-        if (options != null && options.Count > 0)
+        if (optionValues != null && optionValues.Count > 0)
         {
             // Not enough to option values, need to match all provided options
-            Query.Where(x =>
-                options.All(opt =>
-                    x.VariantOptionValues.Any(v =>
-                        v.OptionValue.ProductOptionId == opt.Key &&
-                        v.OptionValue.Id == opt.Value)));
+            //Query.Where(x =>
+                //options.All(opt =>
+                //    x.VariantOptionValues.Any(v =>
+                //        v.OptionValue.ProductOptionId == opt.Key &&
+                //        v.OptionValue.Id == opt.Value))
+                //);
+                Query
+                    .Where(x =>
+                        optionValues.All(opt =>
+                            x.VariantOptionValues.Any(v =>
+                                v.OptionValue.Id == opt))
+                        );
+
             if (exact)
             {
                 // Corrected to ensure exact match of option values
                 // Ex: Color : Red, Size: M  should not match Color: Red, Size: M, Material: Cotton
+                //Query
+                //.Where(x => x.VariantOptionValues.Count == options.Count);
+
                 Query
-                    .Where(x => x.VariantOptionValues.Count == options.Count);
-            }         
+                  .Where(x => x.VariantOptionValues.Count == optionValues.Count);
+
+            }
         }
 
         Query

@@ -22,19 +22,14 @@ public static class CombinationHelper
         //foreach (var combination in result)
         //    yield return combination;
         #endregion
-        #region C2
-        return sequences.Aggregate(
-        new[] { Enumerable.Empty<T>() },
-        (acc, seq) => (IEnumerable<T>[])acc.SelectMany(prefix => seq, (prefix, item) => prefix.Append(item)));
-        #endregion
         #region C3
-        //IEnumerable<IEnumerable<T>> emptyProduct = new[] { Enumerable.Empty<T>() };
-        //return sequences.Aggregate(
-        //  emptyProduct,
-        //  (accumulator, sequence) =>
-        //    from accseq in accumulator
-        //    from item in sequence
-        //    select accseq.Concat(new[] { item }));
+        IEnumerable<IEnumerable<T>> emptyProduct = new[] { Enumerable.Empty<T>() };
+        return sequences.Aggregate(
+          emptyProduct,
+          (accumulator, sequence) =>
+            from accseq in accumulator
+            from item in sequence
+            select accseq.Concat(new[] { item }));
         #endregion
     }
 }

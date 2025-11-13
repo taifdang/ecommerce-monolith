@@ -1,5 +1,6 @@
 ﻿using Application.Catalog.Variants.Commands.DeleteVariant;
 using Application.Catalog.Variants.Commands.GenerateVariant;
+using Application.Catalog.Variants.Commands.UpdateManyVariant;
 using Application.Catalog.Variants.Commands.UpdateVariant;
 using Application.Catalog.Variants.Queries.GetVariantById;
 using Application.Catalog.Variants.Queries.GetVariantByOption;
@@ -18,10 +19,10 @@ public class ProductVariantsController : BaseController
         return Ok(await Mediator.Send(query));
     }
 
-    [HttpGet]
+    [HttpGet("by-option-values")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetByOption(GetVariantByOptionQuery query)
+    public async Task<IActionResult> GetByOption([FromQuery] GetVariantByOptionQuery query)
     {
         return Ok(await Mediator.Send(query));
     }
@@ -38,6 +39,13 @@ public class ProductVariantsController : BaseController
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UpdateVariant(UpdateVariantCommand command)
+    {
+        return Ok(await Mediator.Send(command));
+    }
+    [HttpPut("update-many")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UpdateManyVariant(UpdateManyVariantCommand command)
     {
         return Ok(await Mediator.Send(command));
     }

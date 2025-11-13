@@ -12,7 +12,6 @@ public class UpdateVariantCommandValidator : AbstractValidator<UpdateVariantComm
             .GreaterThanOrEqualTo(0).WithMessage("Quantity must be greater than or equal to 0.");
         RuleFor(x => x.Percent)
            .GreaterThanOrEqualTo(0).WithMessage("Percent must be greater than or equal to 0.");
-        RuleFor(x => x.Sku)
-       .MaximumLength(200).WithMessage("Title must not exceed 200 characters.");
+        //RuleFor(x => x.Sku).MaximumLength(200).WithMessage("Title must not exceed 200 characters.");
     }
 }

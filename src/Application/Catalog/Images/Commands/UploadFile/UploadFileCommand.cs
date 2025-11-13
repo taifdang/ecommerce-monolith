@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 //ref: https://code-maze.com/cqrs-mediatr-fluentvalidation
 namespace Application.Catalog.Images.Commands.UploadFile;
 
-public record UploadFileCommand : IRequest<Unit>
+public record UploadFileCommand  : IRequest<Unit>
 {
     public int ProductId { get; init; }
     public int? OptionValueId { get; init; }
@@ -37,7 +37,7 @@ public class CreateImageCommandHandler : IRequestHandler<UploadFileCommand, Unit
         //if (request.MediaFile is null)
         //    throw new ArgumentException("Media file cannot be null.", nameof(request.MediaFile));
 
-        if (request.OptionValueId.HasValue)
+        if (request.OptionValueId.HasValue || request.OptionValueId != 0)
         {       
             if(!await _optionValueRepository.AnyAsync(new OptionValueWithImageSpec(request.OptionValueId.Value, request.ProductId)))
             {

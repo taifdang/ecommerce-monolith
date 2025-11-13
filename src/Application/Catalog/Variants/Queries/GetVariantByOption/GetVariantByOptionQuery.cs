@@ -10,7 +10,8 @@ namespace Application.Catalog.Variants.Queries.GetVariantByOption;
 public record GetVariantByOptionQuery : IRequest<VariantListDto>
 {
     public int ProductId { get; init; }
-    public Dictionary<int, int> OptionFilter { get; init; }
+    //public Dictionary<int, int> OptionFilter { get; set; }
+    public List<int> OptionValueMap { get; init; }
 }
 
 public class GetVariantByOptionQueryHandler : IRequestHandler<GetVariantByOptionQuery, VariantListDto>
@@ -18,9 +19,10 @@ public class GetVariantByOptionQueryHandler : IRequestHandler<GetVariantByOption
     private readonly IRepository<ProductVariant> _productVariantRepository;
     private readonly IRepository<ProductOption> _productOptionRepository;
 
-    public GetVariantByOptionQueryHandler(IRepository<ProductVariant> productVariantRepository)
+    public GetVariantByOptionQueryHandler(IRepository<ProductVariant> productVariantRepository, IRepository<ProductOption> productOptionRepository)
     {
         _productVariantRepository = productVariantRepository;
+        _productOptionRepository = productOptionRepository;
     }
     public async Task<VariantListDto> Handle(GetVariantByOptionQuery request, CancellationToken cancellationToken)
     {
@@ -29,10 +31,10 @@ public class GetVariantByOptionQueryHandler : IRequestHandler<GetVariantByOption
             new OptionProductFilterSpec(request.ProductId, null),
             cancellationToken);
 
-        var isExactMatch = request.OptionFilter.Count == totalOptions;
+        var isExactMatch = request.OptionValueMap.Count == totalOptions;
 
         var variants = await _productVariantRepository.ListAsync(
-            new VariantOptionFilterSpec(request.ProductId, request.OptionFilter, isExactMatch), 
+            new VariantOptionFilterSpec(request.ProductId, request.OptionValueMap, isExactMatch), 
             cancellationToken);
 
         if (!variants.Any())
