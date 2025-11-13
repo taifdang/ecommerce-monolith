@@ -31,7 +31,13 @@ public class CreateOptionCommandHandler : IRequestHandler<CreateOptionCommand, U
             throw new Exception("Only one product option can allow images per product.");
         }
 
-        var productOption = _mapper.Map<ProductOption>(request);
+        //var productOption = _mapper.Map<ProductOption>(request);
+        var productOption = new ProductOption
+        {
+            ProductId = request.ProductId,
+            OptionName = request.OptionName,
+            AllowImage = request.AllowImage,
+        };
 
         await _productOptionRepository.AddAsync(productOption, cancellationToken);
         return Unit.Value;

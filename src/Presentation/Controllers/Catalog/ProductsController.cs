@@ -21,7 +21,7 @@ public class ProductsController : BaseController
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetById([FromRoute] GetProductByIdQuery query)
+    public async Task<IActionResult> GetById([FromQuery] GetProductByIdQuery query)
     {
         return Ok(await Mediator.Send(query));
     }

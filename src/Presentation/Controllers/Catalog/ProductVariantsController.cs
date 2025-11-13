@@ -13,7 +13,7 @@ public class ProductVariantsController : BaseController
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetById(GetVariantByIdQuery query)
+    public async Task<IActionResult> GetById([FromQuery]GetVariantByIdQuery query)
     {
         return Ok(await Mediator.Send(query));
     }
@@ -26,10 +26,10 @@ public class ProductVariantsController : BaseController
         return Ok(await Mediator.Send(query));
     }
 
-    [HttpPost]
+    [HttpPost("generate")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GenerateVariants(GenerateVariantCommand command)
+    public async Task<IActionResult> GenerateVariants([FromBody] GenerateVariantCommand command)
     {
         return Ok(await Mediator.Send(command));
     }

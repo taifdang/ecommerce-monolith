@@ -20,8 +20,12 @@ public class GetVariantByIdQueryHandler : IRequestHandler<GetVariantByIdQuery, V
     }
     public async Task<VariantDto> Handle(GetVariantByIdQuery request, CancellationToken cancellationToken)
     {
-        var specification = new VariantWithOptionSpec(request.Id);
-        var variantVm = await _productVariantRepository.FirstOrDefaultAsync(specification, cancellationToken);
-        return variantVm;
+        var variant = await _productVariantRepository.FirstOrDefaultAsync(new VariantWithOptionSpec(request.Id), cancellationToken);
+        if(variant!.Image!.Url == null)
+        {
+            var mainImage = await _productVariantRepository.FirstOrDefaultAsync(new VariantWithFallbackImageSpec(variant.ProductId), cancellationToken);
+            variant.Image = mainImage?.Image;
+        }
+        return variant;
     }
 }

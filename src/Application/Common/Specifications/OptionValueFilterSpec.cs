@@ -10,6 +10,6 @@ public class OptionValueFilterSpec : Specification<OptionValue>
         Query
             .Where(x => 
             (!optionValueId.HasValue || x.Id == optionValueId) && 
-            x.ProductOptionId == productOptionId);
+            x.ProductOption.Id == productOptionId);
     }
 }

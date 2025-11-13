@@ -16,6 +16,7 @@ public class VariantWithOptionSpec : Specification<ProductVariant, VariantDto>
             {
                 Id = x.Id,
                 Title = x.Title ?? string.Empty,
+                ProductId = x.ProductId,
                 ProductName = x.Product.Title,
                 RegularPrice = x.RegularPrice,
                 Percent = x.Percent,
@@ -38,5 +39,28 @@ public class VariantWithOptionSpec : Specification<ProductVariant, VariantDto>
                 }).ToList()
             });
 
+        /// All in
+        //Image = (
+        //    from img in x.Product.ProductImages
+        //    where img.OptionValueId != null &&
+        //          x.VariantOptionValues
+        //           .Select(vov => vov.OptionValueId)
+        //           .Contains(img.OptionValueId.Value)
+        //    orderby img.Id
+        //    select new VariantImageDto
+        //    {
+        //        Id = img.Id,
+        //        Url = img.ImageUrl!
+        //    }
+        //).FirstOrDefault() ??
+        //(
+        //    from img in x.Product.ProductImages
+        //    where img.IsMain && img.OptionValueId == null
+        //    select new VariantImageDto
+        //    {
+        //        Id = img.Id,
+        //        Url = img.ImageUrl!
+        //    }
+        //).FirstOrDefault() ?? new VariantImageDto(),
     }
 }

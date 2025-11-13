@@ -58,7 +58,7 @@ public class GetBasketQueryHandler : IRequestHandler<GetBasketQuery, BasketDto>
                 ProductVariantId = cartItem.ProductVariantId,
                 ProductName = productVariant.Title,
                 RegularPrice = productVariant.RegularPrice,
-                ImageUrl = productVariant.Image.Url ?? "",
+                ImageUrl = productVariant.Image.Url ?? "", // if product variant not image , use default image of product
                 Quantity = cartItem.Quantity,
             });
         }
