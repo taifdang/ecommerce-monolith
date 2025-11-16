@@ -20,10 +20,10 @@ public class GetVariantByIdQueryHandler : IRequestHandler<GetVariantByIdQuery, V
     }
     public async Task<VariantDto> Handle(GetVariantByIdQuery request, CancellationToken cancellationToken)
     {
-        var variant = await _productVariantRepository.FirstOrDefaultAsync(new VariantWithOptionSpec(request.Id), cancellationToken);
+        var variant = await _productVariantRepository.FirstOrDefaultAsync(new ProductVariantByIdSpec(request.Id), cancellationToken);
         if(variant!.Image!.Url == null)
         {
-            var mainImage = await _productVariantRepository.FirstOrDefaultAsync(new VariantWithFallbackImageSpec(variant.ProductId), cancellationToken);
+            var mainImage = await _productVariantRepository.FirstOrDefaultAsync(new ProductVariantWithImageByProductIdSpec(variant.ProductId), cancellationToken);
             variant.Image = mainImage?.Image;
         }
         return variant;

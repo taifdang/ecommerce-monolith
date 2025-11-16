@@ -26,7 +26,7 @@ public class UpdateVariantCommandHandler : IRequestHandler<UpdateVariantCommand,
 
     public async Task<Unit> Handle(UpdateVariantCommand request, CancellationToken cancellationToken)
     {
-        var variant = await _productVariantRepository.FirstOrDefaultAsync(new VariantFilterSpec(null, request.Id))
+        var variant = await _productVariantRepository.FirstOrDefaultAsync(new ProductVariantFilterSpec(null, request.Id))
             ?? throw new EntityNotFoundException(nameof(ProductVariant), request.Id);
 
         //variant.Sku = variant.Sku;

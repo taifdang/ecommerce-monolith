@@ -4,9 +4,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class VariantWithOptionSpec : Specification<ProductVariant, VariantDto>
+public class ProductVariantByIdSpec : Specification<ProductVariant, VariantDto>
 {
-    public VariantWithOptionSpec(int productVariantId)
+    public ProductVariantByIdSpec(int productVariantId)
     {
         Query
             .Where(x => x.Id == productVariantId);

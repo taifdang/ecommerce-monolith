@@ -3,9 +3,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class OptionValueWithImageSpec : Specification<OptionValue>
+public class OptionValueAllowImageSpec : Specification<OptionValue>
 {
-    public OptionValueWithImageSpec(int optionValueId, int productId)
+    public OptionValueAllowImageSpec(int optionValueId, int productId)
     {
         Query
             .Include(x => x.ProductOption)

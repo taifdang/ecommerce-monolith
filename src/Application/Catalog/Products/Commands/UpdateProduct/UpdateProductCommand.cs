@@ -27,7 +27,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 
     public async Task<Unit> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.FirstOrDefaultAsync(new ProductFilterSpec(request.Id))
+        var product = await _productRepository.FirstOrDefaultAsync(new ProductByIdSpec(request.Id))
             ?? throw new EntityNotFoundException(nameof(Products), request.Id);
 
         product.CategoryId = request.CategoryId;

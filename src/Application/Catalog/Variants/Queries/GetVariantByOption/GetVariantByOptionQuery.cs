@@ -28,13 +28,13 @@ public class GetVariantByOptionQueryHandler : IRequestHandler<GetVariantByOption
     {
        
         var totalOptions = await _productOptionRepository.CountAsync(
-            new OptionProductFilterSpec(request.ProductId, null),
+            new ProductOptionFilterSpec(request.ProductId, null),
             cancellationToken);
 
         var isExactMatch = request.OptionValueMap.Count == totalOptions;
 
         var variants = await _productVariantRepository.ListAsync(
-            new VariantOptionFilterSpec(request.ProductId, request.OptionValueMap, isExactMatch), 
+            new ProductVariantOptionFilterSpec(request.ProductId, request.OptionValueMap, isExactMatch), 
             cancellationToken);
 
         if (!variants.Any())

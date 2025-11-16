@@ -5,9 +5,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class ProductWithOptionSpec : Specification<Product, ProductItemDto>
+public class ProductDetailSpec : Specification<Product, ProductItemDto>
 {
-    public ProductWithOptionSpec(int productId)
+    public ProductDetailSpec(int productId)
     {
         Query
             .Where(x => x.Id == productId)

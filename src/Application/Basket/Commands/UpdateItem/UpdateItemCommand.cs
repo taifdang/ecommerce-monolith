@@ -48,7 +48,7 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, int>
                 ?? throw new EntityNotFoundException("Product variant not found");
 
         // Get or create basket
-        var basket = await _basketRepository.FirstOrDefaultAsync(new BasketCustomerWithItemSpec(customer.Id));
+        var basket = await _basketRepository.FirstOrDefaultAsync(new BasketWithItemsByCustomerIdSpec(customer.Id));
         if (basket == null)
         {
             basket = new Domain.Entities.Basket()

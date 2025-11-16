@@ -26,7 +26,7 @@ public class DeleteFileCommandHandler : IRequestHandler<DeleteFileCommand, Unit>
 
     public async Task<Unit> Handle(DeleteFileCommand request, CancellationToken cancellationToken)
     {
-        var productImage = await _productImageRepository.FirstOrDefaultAsync(new ImageProductFilterSpec(request.ProductId, request.Id))
+        var productImage = await _productImageRepository.FirstOrDefaultAsync(new ProductImageByIdSpec(request.ProductId, request.Id))
                 ?? throw new EntityNotFoundException(nameof(ProductImage), request.Id);
 
         // Remove file

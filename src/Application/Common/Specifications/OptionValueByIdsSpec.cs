@@ -1,13 +1,12 @@
-﻿
-using Application.Catalog.Options.Dtos;
+﻿using Application.Catalog.Options.Dtos;
 using Ardalis.Specification;
 using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class OptionValueExistSpec : Specification<OptionValue, OptionValueDto>
+public class OptionValueByIdsSpec : Specification<OptionValue, OptionValueDto>
 {
-    public OptionValueExistSpec(List<int> optionValues)
+    public OptionValueByIdsSpec(List<int> optionValues)
     {
         Query
             .Where(x => optionValues.Contains(x.Id));

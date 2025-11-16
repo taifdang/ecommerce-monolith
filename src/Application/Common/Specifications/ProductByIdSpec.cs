@@ -3,9 +3,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class ProductFilterSpec : Specification<Product>
+public class ProductByIdSpec : Specification<Product>
 {
-    public ProductFilterSpec(int productId)
+    public ProductByIdSpec(int productId)
     {
         Query
             .Where(x => x.Id == productId);

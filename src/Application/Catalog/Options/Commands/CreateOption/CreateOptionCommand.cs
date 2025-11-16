@@ -24,7 +24,7 @@ public class CreateOptionCommandHandler : IRequestHandler<CreateOptionCommand, U
     }
     public async Task<Unit> Handle(CreateOptionCommand request, CancellationToken cancellationToken)
     {
-        var existing = await _productOptionRepository.AnyAsync(new OptionImageFilterSpec(request.ProductId));
+        var existing = await _productOptionRepository.AnyAsync(new ProductOptionAllowImage(request.ProductId));
 
         if (existing && request.AllowImage)
         {

@@ -22,7 +22,7 @@ public class DeleteVariantCommandHandler : IRequestHandler<DeleteVariantCommand,
 
     public async Task<Unit> Handle(DeleteVariantCommand request, CancellationToken cancellationToken)
     {
-        var variant = await _productVariantRepository.FirstOrDefaultAsync(new VariantFilterSpec(request.ProductId, request.Id))
+        var variant = await _productVariantRepository.FirstOrDefaultAsync(new ProductVariantFilterSpec(request.ProductId, request.Id))
             ?? throw new EntityNotFoundException(nameof(ProductVariant), request.Id);
 
         await _productVariantRepository.DeleteAsync(variant, cancellationToken);

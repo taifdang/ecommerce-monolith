@@ -4,9 +4,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class VariantWithFallbackImageSpec : Specification<ProductVariant, VariantWithImageDto>
+public class ProductVariantWithImageByProductIdSpec : Specification<ProductVariant, VariantWithImageDto>
 {
-    public VariantWithFallbackImageSpec(int productId)
+    public ProductVariantWithImageByProductIdSpec(int productId)
     {
         Query
             .Include(x => x.Product)

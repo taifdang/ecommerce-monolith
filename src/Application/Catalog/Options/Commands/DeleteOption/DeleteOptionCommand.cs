@@ -22,7 +22,7 @@ public class DeleteOptionCommandHandler : IRequestHandler<DeleteOptionCommand, U
 
     public async Task<Unit> Handle(DeleteOptionCommand request, CancellationToken cancellationToken)
     {
-        var productOption = await _productOptionRepository.FirstOrDefaultAsync(new OptionProductFilterSpec(request.ProductId, request.Id))
+        var productOption = await _productOptionRepository.FirstOrDefaultAsync(new ProductOptionFilterSpec(request.ProductId, request.Id))
             ?? throw new EntityNotFoundException(nameof(ProductOption), request.Id);
 
         await _productOptionRepository.DeleteAsync(productOption, cancellationToken);

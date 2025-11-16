@@ -34,13 +34,13 @@ public class GenerateVariantCommandHandler : IRequestHandler<GenerateVariantComm
         if (request.OptionValueFilter == null || request.OptionValueFilter.Count == 0)
             throw new ArgumentException("No option values provided.");
 
-        var product = await _productRepository.FirstOrDefaultAsync(new ProductFilterSpec(request.ProductId), cancellationToken)
+        var product = await _productRepository.FirstOrDefaultAsync(new ProductByIdSpec(request.ProductId), cancellationToken)
             ?? throw new EntityNotFoundException(nameof(Product), request.ProductId);
 
         // Implementation for generating variants would go here
         var optionValues = request.OptionValueFilter.SelectMany(x => x.Value).ToList();
 
-        var optionValueEntities = await _optionValueRepository.ListAsync(new OptionValueExistSpec(optionValues), cancellationToken);
+        var optionValueEntities = await _optionValueRepository.ListAsync(new OptionValueByIdsSpec(optionValues), cancellationToken);
 
         // Logic to create variants based on optionValueEntities would be implemented here
         var optionValueDict = optionValueEntities.ToDictionary(x => x.Id, x => x.Value ?? x.Label );

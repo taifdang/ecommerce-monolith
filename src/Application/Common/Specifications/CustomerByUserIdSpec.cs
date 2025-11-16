@@ -3,9 +3,9 @@ using Ardalis.Specification;
 
 namespace Application.Common.Specifications;
 
-public class CustomerUserSpec : Specification<Domain.Entities.Customer, CustomerDto>
+public class CustomerByUserIdSpec : Specification<Domain.Entities.Customer, CustomerDto>
 {  
-    public CustomerUserSpec(Guid UserId)
+    public CustomerByUserIdSpec(Guid UserId)
     {
         Query.Where(x => x.UserId == UserId);
 

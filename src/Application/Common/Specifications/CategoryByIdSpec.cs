@@ -3,9 +3,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class CategoryFilterSpec : Specification<Category>
+public class CategoryByIdSpec : Specification<Category>
 {
-    public CategoryFilterSpec(int CategoryId)
+    public CategoryByIdSpec(int CategoryId)
     {
         Query
             .Where(x => x.Id == CategoryId)

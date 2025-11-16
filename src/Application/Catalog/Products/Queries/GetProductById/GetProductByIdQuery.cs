@@ -24,7 +24,7 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
     {
         // *When user click product, we will load all options, option values, images for product to client side
         // *Then user select option values, we will generate variant on client side (based on option values selected) to show price, sku, quantity, image...
-        var productDetail = await _productRepository.FirstOrDefaultAsync(new ProductWithOptionSpec(request.Id));
+        var productDetail = await _productRepository.FirstOrDefaultAsync(new ProductDetailSpec(request.Id));
         return productDetail;
         #region
         //var productVm = await _unitOfWork.ProductRepository.GetByIdAsync(

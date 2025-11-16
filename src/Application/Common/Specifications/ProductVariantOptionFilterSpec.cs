@@ -4,9 +4,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class VariantOptionFilterSpec : Specification<ProductVariant, VariantDto>
+public class ProductVariantOptionFilterSpec : Specification<ProductVariant, VariantDto>
 {
-    public VariantOptionFilterSpec(
+    public ProductVariantOptionFilterSpec(
         int productId, 
         //Dictionary<int, int>? options,
         List<int> optionValues, 

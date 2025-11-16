@@ -2,13 +2,12 @@
 
 namespace Application.Common.Specifications;
 
-public class BasketCustomerWithItemSpec : Specification<Domain.Entities.Basket>
+public class BasketWithItemsByCustomerIdSpec : Specification<Domain.Entities.Basket>
 {
-    public BasketCustomerWithItemSpec(int customerId)
+    public BasketWithItemsByCustomerIdSpec(int customerId)
     {
         Query
             .Where(x => x.CustomerId == customerId)
             .Include(x => x.Items);
- 
     }
 }

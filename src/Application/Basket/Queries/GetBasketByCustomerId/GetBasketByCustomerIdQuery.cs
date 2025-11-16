@@ -20,7 +20,7 @@ public class GetBasketByCustomerIdQueryHandler : IRequestHandler<GetBasketByCust
     public async Task<BasketDto> Handle(GetBasketByCustomerIdQuery request, CancellationToken cancellationToken)
     {
         // Get basket
-        var specification = new BasketCustomerWithItemSpec(request.CustomerId);
+        var specification = new BasketWithItemsByCustomerIdSpec(request.CustomerId);
         var basket = await _basketRepository.FirstOrDefaultAsync(specification);
 
         // If basket doesn't exist, return an empty basket

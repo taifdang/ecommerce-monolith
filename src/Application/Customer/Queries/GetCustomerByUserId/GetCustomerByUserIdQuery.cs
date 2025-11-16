@@ -22,7 +22,7 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByUserIdQu
     }
     public async Task<CustomerDto> Handle(GetCustomerByUserIdQuery request, CancellationToken cancellationToken)
     {
-        var customer = await _customerRepository.FirstOrDefaultAsync(new CustomerUserSpec(request.UserId), cancellationToken);
+        var customer = await _customerRepository.FirstOrDefaultAsync(new CustomerByUserIdSpec(request.UserId), cancellationToken);
         return customer;
     }
 }

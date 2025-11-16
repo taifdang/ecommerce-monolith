@@ -22,7 +22,7 @@ public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand,
 
     public async Task<Unit> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.FirstOrDefaultAsync(new ProductFilterSpec(request.Id))
+        var product = await _productRepository.FirstOrDefaultAsync(new ProductByIdSpec(request.Id))
             ?? throw new EntityNotFoundException(nameof(Products), request.Id);
 
         await _productRepository.DeleteAsync(product, cancellationToken);

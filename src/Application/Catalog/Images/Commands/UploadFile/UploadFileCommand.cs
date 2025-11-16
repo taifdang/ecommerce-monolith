@@ -39,7 +39,7 @@ public class CreateImageCommandHandler : IRequestHandler<UploadFileCommand, Unit
 
         if (request.OptionValueId.HasValue || request.OptionValueId != 0)
         {       
-            if(!await _optionValueRepository.AnyAsync(new OptionValueWithImageSpec(request.OptionValueId.Value, request.ProductId)))
+            if(!await _optionValueRepository.AnyAsync(new OptionValueAllowImageSpec(request.OptionValueId.Value, request.ProductId)))
             {
                 throw new EntityNotFoundException(nameof(OptionValue), "This OptionValue not support add image");
             }

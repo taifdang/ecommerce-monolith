@@ -3,9 +3,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class ImageFilterSpec : Specification<ProductImage>
+public class ProductImageFilterSpec : Specification<ProductImage>
 {
-    public ImageFilterSpec(int productId, int? optionValueId)
+    public ProductImageFilterSpec(int productId, int? optionValueId)
     {
         Query
             .Where(x => 

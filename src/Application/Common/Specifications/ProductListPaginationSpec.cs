@@ -4,9 +4,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class ProductFilterPaginationSpec : Specification<Product, ProductListDto>
+public class ProductListPaginationSpec : Specification<Product, ProductListDto>
 {
-    public ProductFilterPaginationSpec(int skip, int take)
+    public ProductListPaginationSpec(int skip, int take)
         : base()
     {
         if(take == 0)

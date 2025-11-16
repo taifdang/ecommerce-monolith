@@ -27,7 +27,7 @@ public class UploadFileCommandValidator : AbstractValidator<UploadFileCommand>
 
     private async Task<bool> ProductExists(int Id, CancellationToken ct)
     {
-        var specification = new ProductFilterSpec(Id);
+        var specification = new ProductByIdSpec(Id);
         await _productImageRepository.AnyAsync();
         return false;
     }
@@ -35,7 +35,7 @@ public class UploadFileCommandValidator : AbstractValidator<UploadFileCommand>
 
     private async Task<bool> BeValidImageRules(UploadFileCommand cmd, CancellationToken ct)
     {
-        var specification = new ImageFilterSpec(cmd.ProductId, cmd.OptionValueId);
+        var specification = new ProductImageFilterSpec(cmd.ProductId, cmd.OptionValueId);
 
         if (cmd.OptionValueId is null)
         {  

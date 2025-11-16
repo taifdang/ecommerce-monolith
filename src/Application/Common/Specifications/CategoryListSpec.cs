@@ -4,9 +4,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class CategoryQuerySpec : Specification<Category, CategoryDto>
+public class CategoryListSpec : Specification<Category, CategoryDto>
 {
-    public CategoryQuerySpec()
+    public CategoryListSpec()
     {
         Query
             .Select(x => new CategoryDto

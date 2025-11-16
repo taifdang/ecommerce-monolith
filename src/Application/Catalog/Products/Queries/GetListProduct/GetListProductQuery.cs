@@ -25,7 +25,7 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
     {
         // implement filter ???
 
-        var specification = new ProductFilterPaginationSpec(request.pageIndex * request.pageSize, take: request.pageSize);
+        var specification = new ProductListPaginationSpec(request.pageIndex * request.pageSize, take: request.pageSize);
         var productList = await _productRepository.ListAsync(specification, cancellationToken);
         return new PageList<ProductListDto>(
            productList!,
