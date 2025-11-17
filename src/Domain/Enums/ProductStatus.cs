@@ -2,7 +2,7 @@
 
 public enum ProductStatus
 {
-    None,
-    InStock,
-    Sold,
+    Draft,
+    Published,
+    Unpublished
 }

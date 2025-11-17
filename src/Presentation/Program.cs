@@ -1,17 +1,16 @@
-using Api.Extensions;
-using Shared.Constants;
+using Api;
+using Application;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var configuration = builder.Configuration.Get<AppSettings>()
-    ?? throw new Exception("build fail");
-
-builder.Services.AddSingleton(configuration);
-builder.ConfigureServices(configuration);
+builder.AddApplication();
+builder.AddInfrastructure();
+builder.AddPresentation();
 
 var app = builder.Build();
 
-app.ConfigurePipelineAsync(configuration);
+app.UsePresentation();  
 
 app.Run();
 

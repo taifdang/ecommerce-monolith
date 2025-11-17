@@ -28,10 +28,10 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
         return productDetail;
         #region
         //var productVm = await _unitOfWork.ProductRepository.GetByIdAsync(
-        //    filter: x => x.Id == request.Id,
+        //    filter: x => x.ProductOptionId == request.ProductOptionId,
         //    selector: x => new ProductDetailVm
         //    {
-        //        Id = x.Id,
+        //        ProductOptionId = x.ProductOptionId,
         //        Title = x.Title,
         //        MinPrice = x.ProductVariants.Min(x => x.RegularPrice),
         //        MaxPrice = x.ProductVariants.Max(x => x.RegularPrice),
@@ -40,7 +40,7 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
         //        ProductType = x.Category.ProductType.Title,
         //        Images = x.ProductImages.Select(img => new ProductImageDto
         //        {
-        //            Id = img.Id,
+        //            ProductOptionId = img.ProductOptionId,
         //            Url = img.Image,
         //        }).ToList(),
         //        Options = x.ProductOptions.Select(po => new OptionDto 
@@ -58,7 +58,7 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
         //                Label = ov.Label,
         //                Image = ov.ProductImages!.Select(pi => new ProductImageDto
         //                {
-        //                    Id = pi.Id,
+        //                    ProductOptionId = pi.ProductOptionId,
         //                    Url = pi.Image
         //                }).ToList()
         //            }).ToList()

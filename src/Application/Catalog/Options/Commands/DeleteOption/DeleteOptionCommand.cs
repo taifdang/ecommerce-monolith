@@ -8,7 +8,7 @@ namespace Application.Catalog.Options.Commands.DeleteOption;
 
 public record DeleteOptionCommand : IRequest<Unit>
 {
-    public int Id { get; init; }// option id
+    public int ProductOptionId { get; init; }// option id
     public int ProductId { get; set; }
 }
 
@@ -22,8 +22,8 @@ public class DeleteOptionCommandHandler : IRequestHandler<DeleteOptionCommand, U
 
     public async Task<Unit> Handle(DeleteOptionCommand request, CancellationToken cancellationToken)
     {
-        var productOption = await _productOptionRepository.FirstOrDefaultAsync(new ProductOptionFilterSpec(request.ProductId, request.Id))
-            ?? throw new EntityNotFoundException(nameof(ProductOption), request.Id);
+        var productOption = await _productOptionRepository.FirstOrDefaultAsync(new ProductOptionFilterSpec(request.ProductId, request.ProductOptionId))
+            ?? throw new EntityNotFoundException(nameof(ProductOption), request.ProductOptionId);
 
         await _productOptionRepository.DeleteAsync(productOption, cancellationToken);
         return Unit.Value;

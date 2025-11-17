@@ -13,7 +13,7 @@ public class ProductVariantWithImageByProductIdSpec : Specification<ProductVaria
                 .ThenInclude(x => x.ProductImages)
             .Where(x => x.ProductId == productId);
 
-        //x.Product.ProductImages.Any(img => img.IsMain && img.OptionValueId == null));
+        //x.Product.ProductImages.Any(img => img.IsMain && img.ProductOptionId == null));
 
         Query.Select(x => new VariantWithImageDto
         {

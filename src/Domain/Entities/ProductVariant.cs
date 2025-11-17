@@ -12,7 +12,7 @@ public class ProductVariant
     public int Quantity { get; set; } // Inventory 
     public decimal Percent { get; set; } // Discount Percent
     public string? Sku { get; set; }
-    public ProductStatus Status { get; set; } // Inventory
+    public IntentoryStatus Status { get; set; } // Inventory
     public Product Product { get; set; }
     public ICollection<VariantOptionValue> VariantOptionValues { get; set; } = new List<VariantOptionValue>();
 }

@@ -24,7 +24,7 @@ public class VariantOptionValueConfiguration : IEntityTypeConfiguration<VariantO
         builder.HasOne(x => x.OptionValue)
             .WithMany(y => y.VariantOptionValues)
             .HasForeignKey(x => x.OptionValueId)
-            //.HasForeignKey(vov => vov.OptionValueId)
+            //.HasForeignKey(vov => vov.ProductOptionId)
             .OnDelete(DeleteBehavior.NoAction);
 
     }

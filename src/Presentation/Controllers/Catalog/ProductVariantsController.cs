@@ -1,10 +1,12 @@
-﻿using Application.Catalog.Variants.Commands.DeleteVariant;
+﻿using Application.Catalog.Variants.Commands.CreateVariant;
+using Application.Catalog.Variants.Commands.DeleteVariant;
 using Application.Catalog.Variants.Commands.GenerateVariant;
 using Application.Catalog.Variants.Commands.UpdateManyVariant;
 using Application.Catalog.Variants.Commands.UpdateVariant;
 using Application.Catalog.Variants.Queries.GetVariantById;
 using Application.Catalog.Variants.Queries.GetVariantByOption;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Web;
 
 namespace Api.Controllers.Catalog;
 
@@ -34,7 +36,13 @@ public class ProductVariantsController : BaseController
     {
         return Ok(await Mediator.Send(command));
     }
-
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CreateVariant(CreateVariantCommand command)
+    {
+        return Ok(await Mediator.Send(command));
+    }
     [HttpPut]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

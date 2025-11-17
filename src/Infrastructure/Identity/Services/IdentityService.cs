@@ -107,14 +107,14 @@ public class IdentityService(
 
         await _userManager.AddToRoleAsync(user, IdentityConstant.Role.User.ToString());
 
-        string readScope = _appSettings.Identity.ScopeBaseDomain + "/read";
-        string writeScope = _appSettings.Identity.ScopeBaseDomain + "/write";
+        //string readScope = _appSettings.Identity.ScopeBaseDomain + "/read";
+        //string writeScope = _appSettings.Identity.ScopeBaseDomain + "/write";
 
-        string[] scopes = [readScope, writeScope];
+        //string[] scopes = [readScope, writeScope];
 
-        var scopeClaim = new Claim("scope", string.Join(" ", scopes));
+        //var scopeClaim = new Claim("scope", string.Join(" ", scopes));
 
-        await _userManager.AddClaimAsync(user, scopeClaim);
+        //await _userManager.AddClaimAsync(user, scopeClaim);
     }
 
     public async Task<TokenResult> RefreshToken(string token, CancellationToken cancellationToken)

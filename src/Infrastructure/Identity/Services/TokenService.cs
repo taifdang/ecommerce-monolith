@@ -51,7 +51,7 @@ public class TokenService(
         var expires = DateTime.UtcNow.AddDays(_jwt.ExpiredTime);
 
         var token = new JwtSecurityToken(
-            issuer: _jwt.Issuer,
+            issuer: _jwt.Authority,
             audience: _jwt.Audience,
             claims: claims,
             expires: expires,
@@ -105,7 +105,7 @@ public class TokenService(
     {
         TokenValidationParameters validationParameters = new()
         {
-            ValidIssuer = _appSettings.Identity.Issuer,
+            ValidIssuer = _appSettings.Identity.Authority,
             ValidAudience = _appSettings.Identity.Audience,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Identity.Key)),
             ValidateIssuer = true,

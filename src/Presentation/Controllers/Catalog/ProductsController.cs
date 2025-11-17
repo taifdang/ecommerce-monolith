@@ -4,6 +4,7 @@ using Application.Catalog.Products.Commands.UpdateProduct;
 using Application.Catalog.Products.Queries.GetListProduct;
 using Application.Catalog.Products.Queries.GetProductById;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Web;
 
 namespace Api.Controllers.Catalog;
 

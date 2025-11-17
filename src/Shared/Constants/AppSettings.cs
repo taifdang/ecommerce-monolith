@@ -21,18 +21,12 @@ public class FileStorageSettings
     public string Path { get; set; } = "";
 }
 public class Identity
-{
-    [Required]
-    public bool IsLocal { get; set; } = false;
+{   
     [Required]
     public string Key { get; set; }
     [Required]
-    public string Issuer { get; set; }
+    public string Authority { get; set; }
     [Required]
     public string Audience { get; set; }
-    [Required]
-    public string ScopeBaseDomain { get; set; }
-    [Required]
-    public bool ValidateHttps { get; set; }
-    public int ExpiredTime { get; set; } = 30;
+    public int ExpiredTime { get; set; }
 }

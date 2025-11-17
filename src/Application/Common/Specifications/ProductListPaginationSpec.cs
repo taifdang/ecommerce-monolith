@@ -13,7 +13,7 @@ public class ProductListPaginationSpec : Specification<Product, ProductListDto>
         {
             take = int.MaxValue;
         }
-        Query.Where(x => x.IsPublished);
+        Query.Where(x => x.Status == Domain.Enums.ProductStatus.Published);
 
         Query.Select(x => new ProductListDto
         {

@@ -5,9 +5,9 @@ namespace Application.Common.Specifications;
 
 public class ProductOptionFilterSpec : Specification<ProductOption>
 {
-    public ProductOptionFilterSpec(int productId, int? Id)
+    public ProductOptionFilterSpec(int productId, int? productOptionId)
     {
         Query
-            .Where(x => x.ProductId == productId && (!Id.HasValue || x.Id == Id));
+            .Where(x => x.ProductId == productId && (!productOptionId.HasValue || x.Id == productOptionId));
     }
 }

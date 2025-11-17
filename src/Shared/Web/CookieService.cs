@@ -1,7 +1,13 @@
-﻿using Application.Common.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
-namespace Infrastructure.Services;
+namespace Shared.Web;
+
+public interface ICookieService
+{
+    public void Set(string token);
+    public string Get();
+    public void Delete();
+}
 
 public class CookieService(IHttpContextAccessor httpContextAccessor) : ICookieService
 {

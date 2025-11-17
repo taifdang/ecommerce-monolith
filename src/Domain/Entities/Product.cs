@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using Domain.Enums;
 
 namespace Domain.Entities;
 
@@ -10,7 +11,7 @@ public class Product : Entity<int>
     //public int Quantity { get; set; }
     public string Description { get; set; }
     //public ProductStatus Status { get; set; }
-    public bool IsPublished { get; set; }
+    public ProductStatus Status { get; set; }
     public int CategoryId { get; set; }
     public Category Category { get; set; }
     public ICollection<ProductOption> ProductOptions { get; set; } = new List<ProductOption>();

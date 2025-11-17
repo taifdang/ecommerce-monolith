@@ -22,7 +22,7 @@ public class ProductVariantOptionFilterSpec : Specification<ProductVariant, Vari
                 //options.All(opt =>
                 //    x.VariantOptionValues.Any(v =>
                 //        v.OptionValue.ProductOptionId == opt.Key &&
-                //        v.OptionValue.Id == opt.Value))
+                //        v.OptionValue.ProductOptionId == opt.Value))
                 //);
                 Query
                     .Where(x =>

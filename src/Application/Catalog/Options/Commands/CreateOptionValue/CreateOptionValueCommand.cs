@@ -27,15 +27,13 @@ public class CreateOptionValueCommandHandler : IRequestHandler<CreateOptionValue
     public async Task<Unit> Handle(CreateOptionValueCommand request, CancellationToken cancellationToken)
     {
         var option = await _optionValueRepository.FirstOrDefaultAsync(new OptionValueFilterSpec(null, request.ProductOptionId));
-               // ?? throw new EntityNotFoundException(nameof(ProductOption), request.ProductOptionId);
-               //??????
 
         //var optionValue = _mapper.Map<OptionValue>(request);
         var optionValue = new OptionValue
         {
             ProductOptionId = request.ProductOptionId,
-            Value = option.Value,
-            Label = option.Label,
+            Value = request.Value,
+            Label = request.Label,
             
         };
 

@@ -42,23 +42,23 @@ public class ProductVariantByIdSpec : Specification<ProductVariant, VariantDto>
         /// All in
         //Image = (
         //    from img in x.Product.ProductImages
-        //    where img.OptionValueId != null &&
+        //    where img.ProductOptionId != null &&
         //          x.VariantOptionValues
-        //           .Select(vov => vov.OptionValueId)
-        //           .Contains(img.OptionValueId.Value)
-        //    orderby img.Id
+        //           .Select(vov => vov.ProductOptionId)
+        //           .Contains(img.ProductOptionId.Value)
+        //    orderby img.ProductOptionId
         //    select new VariantImageDto
         //    {
-        //        Id = img.Id,
+        //        ProductOptionId = img.ProductOptionId,
         //        Url = img.ImageUrl!
         //    }
         //).FirstOrDefault() ??
         //(
         //    from img in x.Product.ProductImages
-        //    where img.IsMain && img.OptionValueId == null
+        //    where img.IsMain && img.ProductOptionId == null
         //    select new VariantImageDto
         //    {
-        //        Id = img.Id,
+        //        ProductOptionId = img.ProductOptionId,
         //        Url = img.ImageUrl!
         //    }
         //).FirstOrDefault() ?? new VariantImageDto(),

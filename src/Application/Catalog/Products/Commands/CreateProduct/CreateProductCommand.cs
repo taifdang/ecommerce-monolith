@@ -34,7 +34,7 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, int>
             CategoryId = request.CategoryId,
             Title = request.Title,
             Description = request.Description,
-            IsPublished = false
+            Status = Domain.Enums.ProductStatus.Draft
 
         };
         await _productRepository.AddAsync(product, cancellationToken);

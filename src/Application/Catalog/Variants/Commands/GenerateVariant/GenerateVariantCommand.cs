@@ -63,7 +63,7 @@ public class GenerateVariantCommandHandler : IRequestHandler<GenerateVariantComm
                 ProductId = product.Id,
                 Title = title,
                 Percent = 0,
-                Status = Domain.Enums.ProductStatus.InStock,
+                Status = Domain.Enums.IntentoryStatus.InStock,
                 VariantOptionValues = ids.Select(id => new VariantOptionValue { OptionValueId = id }).ToList()
             };
 

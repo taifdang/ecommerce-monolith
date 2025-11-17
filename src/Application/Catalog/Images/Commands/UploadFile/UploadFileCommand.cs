@@ -37,7 +37,7 @@ public class CreateImageCommandHandler : IRequestHandler<UploadFileCommand, Unit
         //if (request.MediaFile is null)
         //    throw new ArgumentException("Media file cannot be null.", nameof(request.MediaFile));
 
-        if (request.OptionValueId.HasValue || request.OptionValueId != 0)
+        if (request.OptionValueId.HasValue)
         {       
             if(!await _optionValueRepository.AnyAsync(new OptionValueAllowImageSpec(request.OptionValueId.Value, request.ProductId)))
             {

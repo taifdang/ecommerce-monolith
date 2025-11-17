@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models.User;
+using Shared.Web;
 
 namespace Api.Controllers.Identity;
 

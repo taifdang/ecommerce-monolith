@@ -36,11 +36,11 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
         //var listProductVm = await _unitOfWork.ProductRepository.ToPagination(
         //        pageIndex: request.pageIndex,
         //        pageSize: request.pageSize,
-        //        orderBy: x => x.Id,
+        //        orderBy: x => x.ProductOptionId,
         //        ascending: true,
         //        selector: x => new ProductListDto
         //        {
-        //            Id = x.Id,
+        //            ProductOptionId = x.ProductOptionId,
         //            Title = x.Title,
         //            //MinPrice = x.MinPrice,
         //            //MaxPrice = x.MaxPrice,
@@ -49,10 +49,10 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
         //            Category = x.Category.Title,
         //            ProductType = x.Category.ProductType.Title,
         //            Image = x.ProductImages
-        //            .Where(c => c.IsMain && c.OptionValueId == null) // Main image not linked to option value
+        //            .Where(c => c.IsMain && c.ProductOptionId == null) // Main image not linked to option value
         //            .Select(pi => new ProductImageDto
         //            {
-        //                Id = pi.Id,
+        //                ProductOptionId = pi.ProductOptionId,
         //                Url = pi.Image
         //            })
         //            .FirstOrDefault() ?? new(),
@@ -62,11 +62,11 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
         //var listProductVm = await _orderRepository.ProductRepository.ToPagination(
         //        pageIndex: request.pageIndex,
         //        pageSize: request.pageSize,
-        //        orderBy: x => x.Id,
+        //        orderBy: x => x.ProductOptionId,
         //        ascending: true,
         //        selector: x => new ProductVm
         //        {
-        //            Id = x.Id,
+        //            ProductOptionId = x.ProductOptionId,
         //            Title = x.Title,
         //            MinPrice = x.MinPrice,
         //            MaxPrice = x.MaxPrice,
@@ -75,7 +75,7 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
         //            ProductType = x.Category.ProductType.Title,
         //            Images = x.ProductImages.Select(img => new ProductImageDto
         //            {
-        //                Id = img.Id,
+        //                ProductOptionId = img.ProductOptionId,
         //                Image = img.Image
         //            }).ToList(),
         //            Options = x.ProductOptions.Select(po => new OptionDto
@@ -93,7 +93,7 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
         //                    Label = ov.Label,
         //                    Image = ov.ProductImages!.Select(pi => new ProductImageDto
         //                    {
-        //                        Id = pi.Id,
+        //                        ProductOptionId = pi.ProductOptionId,
         //                        Image = pi.Image
         //                    }).ToList()
         //                }).ToList()
