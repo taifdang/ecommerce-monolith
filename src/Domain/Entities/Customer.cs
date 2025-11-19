@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class Customer : Entity<int>
+public class Customer : Entity<Guid>
 {
     public Guid UserId { get; set; }
     public string? FullName { get; set; }

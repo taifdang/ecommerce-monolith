@@ -8,6 +8,11 @@ public static class Extensions
     {
         services.AddSwaggerGen(option =>
         {
+            option.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Ecommerce API",
+                Version = "v1",
+            });
             // Bearer token scheme
             option.AddSecurityDefinition(
                 "Bearer",
@@ -21,6 +26,21 @@ public static class Extensions
                     Description =
                         "Enter 'Bearer' [space] and your token in the text input below.\n\nExample: 'Bearer mlJhbXoiOiJIUzI1NiIsInR5cCI6IkpXKvJ9...'",
                 });
+            // Require
+            option.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
 
             // Api Key scheme
             //option.AddSecurityDefinition(

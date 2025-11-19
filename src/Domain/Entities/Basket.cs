@@ -2,8 +2,8 @@
 
 namespace Domain.Entities;
 
-public class Basket : Entity<int>
+public class Basket : Entity<Guid>
 {
-    public int CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
     public ICollection<BasketItem> Items { get; set; } = new List<BasketItem>();
 }

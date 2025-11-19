@@ -6,19 +6,14 @@ using MediatR;
 
 namespace Application.Customer.Queries.GetCustomerByUserId;
 
-public record GetCustomerByUserIdQuery : IRequest<CustomerDto>
-{
-    public Guid UserId { get; set; }
-}
+public record GetCustomerByUserIdQuery(Guid UserId) : IRequest<CustomerDto>;
 
 public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByUserIdQuery, CustomerDto>
 {
     private readonly IReadRepository<Domain.Entities.Customer> _customerRepository;
-    private readonly IMapper _mapper;
-    public GetCustomerByIdQueryHandler(IReadRepository<Domain.Entities.Customer> customerRepository, IMapper mapper)
+    public GetCustomerByIdQueryHandler(IReadRepository<Domain.Entities.Customer> customerRepository)
     {
         _customerRepository = customerRepository;
-        _mapper = mapper;
     }
     public async Task<CustomerDto> Handle(GetCustomerByUserIdQuery request, CancellationToken cancellationToken)
     {

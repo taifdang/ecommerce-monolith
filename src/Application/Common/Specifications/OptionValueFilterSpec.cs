@@ -5,7 +5,7 @@ namespace Application.Common.Specifications;
 
 public class OptionValueFilterSpec : Specification<OptionValue>
 {
-    public OptionValueFilterSpec(int? optionValueId, int productOptionId)
+    public OptionValueFilterSpec(Guid? optionValueId, Guid productOptionId)
     {        
         Query
             .Include(x => x.ProductOption)

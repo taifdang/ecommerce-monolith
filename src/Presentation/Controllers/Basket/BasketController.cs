@@ -22,7 +22,7 @@ public class BasketController(ICurrentUserProdvider currentUserProdvider) : Base
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateItem(UpdateItemCommand command)
+    public async Task<IActionResult> UpdateItem([FromBody]UpdateItemCommand command)
     {
         return Ok(await Mediator.Send(command));
     }

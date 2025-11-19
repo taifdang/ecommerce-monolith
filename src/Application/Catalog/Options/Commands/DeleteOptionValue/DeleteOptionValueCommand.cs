@@ -6,11 +6,7 @@ using MediatR;
 
 namespace Application.Catalog.Options.Commands.DeleteOptionValue;
 
-public record DeleteOptionValueCommand : IRequest<Unit>
-{
-    public int OptionValueId { get; init; }
-    public int ProductOptionId { get; init; }
-}
+public record DeleteOptionValueCommand(Guid OptionValueId, Guid ProductOptionId) : IRequest<Unit>;
 
 public class DeleteOptionValueCommandHandler : IRequestHandler<DeleteOptionValueCommand, Unit>
 {

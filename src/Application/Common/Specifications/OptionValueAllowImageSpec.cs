@@ -5,7 +5,7 @@ namespace Application.Common.Specifications;
 
 public class OptionValueAllowImageSpec : Specification<OptionValue>
 {
-    public OptionValueAllowImageSpec(int optionValueId, int productId)
+    public OptionValueAllowImageSpec(Guid optionValueId, Guid productId)
     {
         Query
             .Include(x => x.ProductOption)

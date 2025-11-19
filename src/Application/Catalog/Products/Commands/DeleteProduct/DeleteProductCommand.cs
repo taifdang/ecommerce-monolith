@@ -5,10 +5,7 @@ using MediatR;
 
 namespace Application.Catalog.Products.Commands.DeleteProduct;
 
-public record DeleteProductCommand : IRequest<Unit>
-{
-    public int Id { get; init; }
-}
+public record DeleteProductCommand(Guid Id) : IRequest<Unit>;
 
 public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Unit>
 {

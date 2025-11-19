@@ -14,7 +14,7 @@ public class CustomersController(ICurrentUserProdvider currentUserProdvider) : B
     public async Task<CustomerDto> GetCurrentCustomer()
     {
         var userId = _currentUserProdvider.GetCurrentUserId();
-        var customer = await Mediator.Send(new GetCustomerByUserIdQuery { UserId = userId ?? Guid.Empty});
+        var customer = await Mediator.Send(new GetCustomerByUserIdQuery(userId ?? Guid.Empty));
         return customer;
     }
 }

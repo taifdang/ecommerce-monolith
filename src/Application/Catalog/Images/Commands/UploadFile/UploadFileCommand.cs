@@ -9,12 +9,9 @@ using Microsoft.AspNetCore.Http;
 //ref: https://code-maze.com/cqrs-mediatr-fluentvalidation
 namespace Application.Catalog.Images.Commands.UploadFile;
 
-public record UploadFileCommand  : IRequest<Unit>
+public record UploadFileCommand(Guid ProductId, Guid? OptionValueId, bool IsMain = false)  : IRequest<Unit>
 {
-    public int ProductId { get; init; }
-    public int? OptionValueId { get; init; }
     public IFormFile MediaFile { get; init; }
-    public bool IsMain { get; init; } = false;
 }
 
 public class CreateImageCommandHandler : IRequestHandler<UploadFileCommand, Unit>

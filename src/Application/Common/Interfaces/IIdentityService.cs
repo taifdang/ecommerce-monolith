@@ -6,7 +6,7 @@ namespace Application.Common.Interfaces;
 public interface IIdentityService
 {
     Task<TokenResult> SignIn(SignInRequest request, CancellationToken cancellationToken);
-    Task SignUp(SignUpRequest request, CancellationToken cancellationToken);
+    Task<Guid> SignUp(SignUpRequest request, CancellationToken cancellationToken);
     Task SignOut();
     Task<UserReadModel> GetProfile(CancellationToken cancellationToken);
     Task<TokenResult> RefreshToken(string token, CancellationToken cancellationToken);

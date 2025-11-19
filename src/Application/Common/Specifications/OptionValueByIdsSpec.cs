@@ -6,17 +6,12 @@ namespace Application.Common.Specifications;
 
 public class OptionValueByIdsSpec : Specification<OptionValue, OptionValueDto>
 {
-    public OptionValueByIdsSpec(List<int> optionValues)
+    public OptionValueByIdsSpec(List<Guid> optionValues)
     {
         Query
             .Where(x => optionValues.Contains(x.Id));
 
         Query
-            .Select(x => new OptionValueDto
-            {
-                Id = x.Id,
-                Value = x.Value,
-                Label = x.Label
-            });
+            .Select(x => new OptionValueDto(x.Id, x.Value, x.Label));
     }
 }

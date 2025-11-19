@@ -1,28 +1,19 @@
-﻿using Application.Common.Exceptions;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Common.Specifications;
-using AutoMapper;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Catalog.Options.Commands.CreateOptionValue;
 
-public record CreateOptionValueCommand : IRequest<Unit>
-{
-    public int ProductOptionId { get; init; }
-    public string Value { get; init; } 
-    public string? Label { get; init; }
-}
+public record CreateOptionValueCommand(Guid ProductOptionId, string Value, string? Label) : IRequest<Unit>;
 
 public class CreateOptionValueCommandHandler : IRequestHandler<CreateOptionValueCommand, Unit>
 {
     //private readonly IUnitOfWork _unitOfWork;
     private readonly IRepository<OptionValue> _optionValueRepository;
-    private readonly IMapper _mapper;
-    public CreateOptionValueCommandHandler(IRepository<OptionValue> optionValueRepository, IMapper mapper)
+    public CreateOptionValueCommandHandler(IRepository<OptionValue> optionValueRepository)
     {
         _optionValueRepository = optionValueRepository;
-        _mapper = mapper;
     }
     public async Task<Unit> Handle(CreateOptionValueCommand request, CancellationToken cancellationToken)
     {

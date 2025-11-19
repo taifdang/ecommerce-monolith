@@ -4,40 +4,41 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class ProductVariantByIdSpec : Specification<ProductVariant, VariantDto>
+public class ProductVariantByIdSpec : Specification<ProductVariant>
 {
-    public ProductVariantByIdSpec(int productVariantId)
+    public ProductVariantByIdSpec(Guid productVariantId)
     {
-        Query
-            .Where(x => x.Id == productVariantId);
+        Query       
+            .Where(x => x.Id == productVariantId)
+            .AsNoTracking()
+            .AsSplitQuery()
+            .Include(x => x.Product)
+            .Include(x => x.VariantOptionValues)
+                .ThenInclude(vov => vov.OptionValue)
+                    .ThenInclude(ov => ov.ProductImages)
+            .Include(x => x.VariantOptionValues)
+                .ThenInclude(vov => vov.OptionValue)
+                    .ThenInclude(po => po.ProductOption);
 
-        Query
-            .Select(x => new VariantDto
-            {
-                Id = x.Id,
-                Title = x.Title ?? string.Empty,
-                ProductId = x.ProductId,
-                ProductName = x.Product.Title,
-                RegularPrice = x.RegularPrice,
-                Percent = x.Percent,
-                Quantity = x.Quantity,
-                Sku = x.Sku ?? string.Empty,
-                Image = x.VariantOptionValues
-                        .SelectMany(vov => vov.OptionValue.ProductImages!
-                            .Where(img => img.OptionValueId == vov.OptionValueId))
-                        .Select(img => new VariantImageDto
-                        {
-                            Id = img.Id,
-                            Url = img.ImageUrl
-                        })
-                        .OrderBy(img => img.Id)
-                        .FirstOrDefault() ?? new(),
-                Options = x.VariantOptionValues.Select(y => new VariantOptionValueDto
-                {
-                    Title = y.OptionValue.ProductOption.OptionName,
-                    Value = y.OptionValue.Value
-                }).ToList()
-            });
+        //Query
+        //    .Select(x => new VariantDto(
+        //        x.Id,
+        //        x.ProductId,
+        //        x.Product.Title,
+        //        x.Title ?? "",
+        //        x.RegularPrice,
+        //        x.Percent,
+        //        x.Quantity,
+        //        x.Sku ?? "",
+        //        x.VariantOptionValues
+        //            .SelectMany(vov => vov.OptionValue.ProductImages!
+        //                .Where(img => img.OptionValueId == vov.OptionValueId))
+        //            .Select(img => new VariantImageDto(img.Id, img.ImageUrl))
+        //            .OrderBy(img => img.Id)
+        //            .FirstOrDefault(),
+        //        x.VariantOptionValues
+        //            .Select(y => new VariantOptionValueDto(y.OptionValue.ProductOption.OptionName, y.OptionValue.Value))
+        //            .ToList()));
 
         /// All in
         //Image = (
@@ -62,5 +63,33 @@ public class ProductVariantByIdSpec : Specification<ProductVariant, VariantDto>
         //        Url = img.ImageUrl!
         //    }
         //).FirstOrDefault() ?? new VariantImageDto(),
+
+
+        //Query.Select(x => new VariantDto
+        // {
+        //     Id = x.Id,
+        //     Title = x.Title ?? string.Empty,
+        //     ProductId = x.ProductId,
+        //     ProductName = x.Product.Title,
+        //     RegularPrice = x.RegularPrice,
+        //     Percent = x.Percent,
+        //     Quantity = x.Quantity,
+        //     Sku = x.Sku ?? string.Empty,
+        //     Image = x.VariantOptionValues
+        //                .SelectMany(vov => vov.OptionValue.ProductImages!
+        //                    .Where(img => img.OptionValueId == vov.OptionValueId))
+        //                .Select(img => new VariantImageDto
+        //                {
+        //                    Id = img.Id,
+        //                    Url = img.ImageUrl
+        //                })
+        //                .OrderBy(img => img.Id)
+        //                .FirstOrDefault() ?? new(),
+        //     Options = x.VariantOptionValues.Select(y => new VariantOptionValueDto
+        //     {
+        //         Title = y.OptionValue.ProductOption.OptionName,
+        //         Value = y.OptionValue.Value
+        //     }).ToList()
+        // });
     }
 }

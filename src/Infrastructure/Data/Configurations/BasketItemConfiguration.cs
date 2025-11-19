@@ -15,10 +15,6 @@ public class BasketItemConfiguration : IEntityTypeConfiguration<BasketItem>
         builder.Property(ci => ci.Quantity)
             .IsRequired();
 
-        builder.Property(ci => ci.Price)
-            .IsRequired()
-            .HasColumnType("decimal(18,2)");
-
         builder.HasIndex(ci => ci.BasketId);
         builder.HasIndex(ci => ci.ProductVariantId);
 

@@ -4,7 +4,7 @@ namespace Application.Catalog.Products.Dtos;
 
 public class ProductItemDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Title { get; set; }
     public decimal MinPrice { get; set; }
     public decimal MaxPrice { get; set; }

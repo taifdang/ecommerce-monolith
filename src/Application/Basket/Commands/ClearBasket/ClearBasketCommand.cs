@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.Basket.Commands.ClearBasket;
 
-public record ClearBasketCommand(int customerId) : IRequest<Unit>;
+public record ClearBasketCommand(Guid CustomerId) : IRequest<Unit>;
 
 public class ClearCartCommandHandler : IRequestHandler<ClearBasketCommand, Unit>
 {
@@ -15,10 +15,10 @@ public class ClearCartCommandHandler : IRequestHandler<ClearBasketCommand, Unit>
     }
     public async Task<Unit> Handle(ClearBasketCommand request, CancellationToken cancellationToken)
     {
-        var basket = await _basketRepository.FirstOrDefaultAsync(new BasketWithItemsByCustomerIdSpec(request.customerId));
+        var basket = await _basketRepository.FirstOrDefaultAsync(new BasketWithItemsByCustomerIdSpec(request.CustomerId));
         if (basket != null)
         {          
-            await _basketRepository.DeleteRangeAsync((IEnumerable<Domain.Entities.Basket>)basket.Items, cancellationToken);
+            await _basketRepository.DeleteAsync(basket);
         }
         return Unit.Value;
     }

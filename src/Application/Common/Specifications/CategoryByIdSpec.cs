@@ -5,7 +5,7 @@ namespace Application.Common.Specifications;
 
 public class CategoryByIdSpec : Specification<Category>
 {
-    public CategoryByIdSpec(int CategoryId)
+    public CategoryByIdSpec(Guid CategoryId)
     {
         Query
             .Where(x => x.Id == CategoryId)

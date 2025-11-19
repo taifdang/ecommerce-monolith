@@ -9,6 +9,6 @@ public class CustomerByUserIdSpec : Specification<Domain.Entities.Customer, Cust
     {
         Query.Where(x => x.UserId == UserId);
 
-        Query.Select(x => new CustomerDto { Id = x.Id, FullName = x.FullName, Email = x.Email, Phone = x.Phone, Address = x.Address });
+        Query.Select(x => new CustomerDto(x.Id, x.FullName, x.Email, x.Phone, x.Address));
     }
 }

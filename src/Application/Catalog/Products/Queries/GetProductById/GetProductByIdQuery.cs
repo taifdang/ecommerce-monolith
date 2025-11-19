@@ -5,10 +5,7 @@ using MediatR;
 
 namespace Application.Catalog.Products.Queries.GetProductById;
 
-public record GetProductByIdQuery : IRequest<ProductItemDto>
-{
-    public int Id { get; set; } // product id
-}
+public record GetProductByIdQuery(Guid Id) : IRequest<ProductItemDto>;
 
 public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductItemDto>
 {
@@ -24,8 +21,12 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
     {
         // *When user click product, we will load all options, option values, images for product to client side
         // *Then user select option values, we will generate variant on client side (based on option values selected) to show price, sku, quantity, image...
-        var productDetail = await _productRepository.FirstOrDefaultAsync(new ProductDetailSpec(request.Id));
-        return productDetail;
+        var product = await _productRepository.FirstOrDefaultAsync(new ProductDetailSpec(request.Id), cancellationToken);
+        if (product == null)
+        {
+            return null!;
+        }
+        return product.ToDto();
         #region
         //var productVm = await _unitOfWork.ProductRepository.GetByIdAsync(
         //    filter: x => x.ProductOptionId == request.ProductOptionId,
@@ -65,6 +66,6 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
         //        }).ToList(),
         //    });
         #endregion
-        
+
     }
 }

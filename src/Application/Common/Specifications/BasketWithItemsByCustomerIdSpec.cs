@@ -4,7 +4,7 @@ namespace Application.Common.Specifications;
 
 public class BasketWithItemsByCustomerIdSpec : Specification<Domain.Entities.Basket>
 {
-    public BasketWithItemsByCustomerIdSpec(int customerId)
+    public BasketWithItemsByCustomerIdSpec(Guid customerId)
     {
         Query
             .Where(x => x.CustomerId == customerId)

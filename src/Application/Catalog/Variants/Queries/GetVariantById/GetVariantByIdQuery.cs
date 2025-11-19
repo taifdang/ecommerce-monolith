@@ -6,10 +6,7 @@ using MediatR;
 
 namespace Application.Catalog.Variants.Queries.GetVariantById;
 
-public record GetVariantByIdQuery : IRequest<VariantDto>
-{
-    public int Id { get; init; }
-}
+public record GetVariantByIdQuery(Guid Id) : IRequest<VariantDto>;
 
 public class GetVariantByIdQueryHandler : IRequestHandler<GetVariantByIdQuery, VariantDto>
 {
@@ -21,11 +18,20 @@ public class GetVariantByIdQueryHandler : IRequestHandler<GetVariantByIdQuery, V
     public async Task<VariantDto> Handle(GetVariantByIdQuery request, CancellationToken cancellationToken)
     {
         var variant = await _productVariantRepository.FirstOrDefaultAsync(new ProductVariantByIdSpec(request.Id), cancellationToken);
-        if(variant!.Image!.Url == null)
+       
+        if (variant is null)
+            return null!;
+
+        var dto = variant.ToVariantDto();
+
+        // fallback mainImage if image with optionValue null
+        if (dto!.Image?.Url == null)
         {
             var mainImage = await _productVariantRepository.FirstOrDefaultAsync(new ProductVariantWithImageByProductIdSpec(variant.ProductId), cancellationToken);
-            variant.Image = mainImage?.Image;
+            var image = mainImage?.GetMainImage();           
+            dto = dto with { Image = image };
         }
-        return variant;
+
+        return dto;
     }
 }

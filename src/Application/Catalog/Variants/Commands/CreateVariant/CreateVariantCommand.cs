@@ -5,14 +5,9 @@ using MediatR;
 namespace Application.Catalog.Variants.Commands.CreateVariant;
 
 //Non option
-public record CreateVariantCommand : IRequest<int>
-{
-    public int ProductId { get; set; }
-    public decimal RegularPrice { get; set; }
-    public int Quantity { get; set; }
-}
+public record CreateVariantCommand(Guid ProductId, decimal RegularPrice, int Quantity) : IRequest<Guid>;
 
-public class CreateVariantCommandHandler : IRequestHandler<CreateVariantCommand, int>
+public class CreateVariantCommandHandler : IRequestHandler<CreateVariantCommand, Guid>
 {
     private readonly IRepository<ProductVariant> _productVariantRepository;
 
@@ -21,7 +16,7 @@ public class CreateVariantCommandHandler : IRequestHandler<CreateVariantCommand,
         _productVariantRepository = productVariantRepository;
     }
 
-    public async Task<int> Handle(CreateVariantCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateVariantCommand request, CancellationToken cancellationToken)
     {
         var variant = new ProductVariant
         {

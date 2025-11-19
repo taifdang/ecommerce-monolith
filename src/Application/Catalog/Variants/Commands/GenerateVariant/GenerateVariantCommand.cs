@@ -7,11 +7,7 @@ using MediatR;
 
 namespace Application.Catalog.Variants.Commands.GenerateVariant;
 
-public record GenerateVariantCommand : IRequest<Unit>
-{
-    public int ProductId { get; init; } // product id
-    public Dictionary<int, List<int>> OptionValueFilter { get; init; } = new();
-}
+public record GenerateVariantCommand(Guid ProductId, Dictionary<Guid, List<Guid>>? OptionValueFilter) : IRequest<Unit>;
 
 public class GenerateVariantCommandHandler : IRequestHandler<GenerateVariantCommand, Unit>
 {

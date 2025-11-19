@@ -6,11 +6,8 @@ using Application.Common.Specifications;
 
 namespace Application.Catalog.Options.Commands.DeleteOption;
 
-public record DeleteOptionCommand : IRequest<Unit>
-{
-    public int ProductOptionId { get; init; }// option id
-    public int ProductId { get; set; }
-}
+public record DeleteOptionCommand(Guid Id, Guid ProductId) : IRequest<Unit>;
+
 
 public class DeleteOptionCommandHandler : IRequestHandler<DeleteOptionCommand, Unit>
 {
@@ -22,8 +19,8 @@ public class DeleteOptionCommandHandler : IRequestHandler<DeleteOptionCommand, U
 
     public async Task<Unit> Handle(DeleteOptionCommand request, CancellationToken cancellationToken)
     {
-        var productOption = await _productOptionRepository.FirstOrDefaultAsync(new ProductOptionFilterSpec(request.ProductId, request.ProductOptionId))
-            ?? throw new EntityNotFoundException(nameof(ProductOption), request.ProductOptionId);
+        var productOption = await _productOptionRepository.FirstOrDefaultAsync(new ProductOptionFilterSpec(request.ProductId, request.Id))
+            ?? throw new EntityNotFoundException(nameof(ProductOption), request.Id);
 
         await _productOptionRepository.DeleteAsync(productOption, cancellationToken);
         return Unit.Value;

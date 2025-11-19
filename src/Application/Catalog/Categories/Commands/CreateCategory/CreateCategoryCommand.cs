@@ -4,13 +4,9 @@ using MediatR;
 
 namespace Application.Catalog.Categories.Commands.CreateCategory;
 
-public record CreateCategoryCommand : IRequest<int>
-{
-    public string Title { get; set; }
-    public string? Label { get; set; }
-}
+public record CreateCategoryCommand(string Title, string? Label) : IRequest<Guid>;
 
-public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, int>
+public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand, Guid>
 {
     private readonly IRepository<Category> _categoryRepository;
     public CreateCategoryCommandHandler(IRepository<Category> categoryRepository)
@@ -18,7 +14,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         _categoryRepository = categoryRepository;
     }
 
-    public async Task<int> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
         var category = new Category
         {

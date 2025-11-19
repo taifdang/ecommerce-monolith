@@ -2,8 +2,8 @@
 
 public class ProductOption
 {
-    public int Id { get; set; } 
-    public int ProductId { get; set; }
+    public Guid Id { get; set; } 
+    public Guid ProductId { get; set; }
     public string OptionName { get; set; }
     public bool AllowImage { get; set; } = false;
     public Product Product { get; set; }

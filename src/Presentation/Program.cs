@@ -10,8 +10,8 @@ builder.AddPresentation();
 
 var app = builder.Build();
 
-app.UsePresentation();  
 app.UseInfrastructure();
+app.UsePresentation();
 
 app.Run();
 

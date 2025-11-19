@@ -1,8 +1,8 @@
 ﻿namespace Application.Catalog.Products.Dtos;
 
-public class ProductListDto
+public record ProductListDto
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     public string Title { get; set; }
     public decimal Price { get; set; } // Min Price of all variants
     public string Description { get; set; }

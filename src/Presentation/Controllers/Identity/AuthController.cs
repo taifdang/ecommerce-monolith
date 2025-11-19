@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Customer.Commands;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models.Auth;
 using Shared.Web;
@@ -20,7 +21,10 @@ public class AuthController(IIdentityService identityService) : BaseController
     [HttpPost("register")]
     public async Task<IActionResult> Register(SignUpRequest request, CancellationToken cancellationToken)
     {
-        await _identityService.SignUp(request, cancellationToken);
+        var userId = await _identityService.SignUp(request, cancellationToken);
+
+        await Mediator.Send(new CreateCustomerCommand(userId, request.Email));
+
         return NoContent();
     }
 

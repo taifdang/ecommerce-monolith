@@ -1,26 +1,19 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Specifications;
-using AutoMapper;
 using Domain.Entities;
 using MediatR;
 
 namespace Application.Catalog.Options.Commands.CreateOption;
 
-public record CreateOptionCommand : IRequest<Unit>
-{
-    public int ProductId { get; init; }
-    public string OptionName { get; init; }
-    public bool AllowImage { get; init; } = false;
-}
+public record CreateOptionCommand(Guid ProductId, string OptionName, bool AllowImage = false) : IRequest<Unit>;
+
 
 public class CreateOptionCommandHandler : IRequestHandler<CreateOptionCommand, Unit>
 {
     private readonly IRepository<ProductOption> _productOptionRepository;
-    private readonly IMapper _mapper;
-    public CreateOptionCommandHandler(IRepository<ProductOption> productOptionrepository, IMapper mapper)
+    public CreateOptionCommandHandler(IRepository<ProductOption> productOptionrepository)
     {
         _productOptionRepository = productOptionrepository;
-        _mapper = mapper;
     }
     public async Task<Unit> Handle(CreateOptionCommand request, CancellationToken cancellationToken)
     {

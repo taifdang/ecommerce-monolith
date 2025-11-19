@@ -3,9 +3,9 @@ using Domain.Enums;
 
 namespace Domain.Entities;
 
-public class Order : Entity<int>
+public class Order : Entity<Guid>
 {
-    public int CustomerId { get; set; }
+    public Guid CustomerId { get; set; }
     public OrderStatus Status { get; set; }
     public decimal TotalAmount { get; set; }
     //public string Phone { get; set; }

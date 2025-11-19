@@ -17,7 +17,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(c => c.UserId)
             .IsRequired();
 
-        builder.HasIndex(c => c.UserId);
+        builder.HasIndex(c => c.UserId).IsUnique();
 
         builder.Property(x => x.Version)
            .IsConcurrencyToken();

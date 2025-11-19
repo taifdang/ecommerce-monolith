@@ -5,16 +5,8 @@ using MediatR;
 
 namespace Application.Catalog.Products.Commands.UpdateProduct;
 
-public record UpdateProductCommand : IRequest<Unit>
-{
-    public int Id { get; init; }
-    public int CategoryId { get; init; }
-    public string Title { get; init; }
-    //public decimal MinPrice { get; init; }
-    //public decimal MaxPrice { get; init; }
-    //public int Quantity { get; init; }
-    public string Description { get; init; }
-}   
+public record UpdateProductCommand(Guid Id, Guid CategoryId, string Title, string Description) : IRequest<Unit>;
+  
 
 public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Unit>
 {

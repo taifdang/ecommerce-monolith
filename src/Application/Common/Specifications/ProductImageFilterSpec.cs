@@ -5,7 +5,7 @@ namespace Application.Common.Specifications;
 
 public class ProductImageFilterSpec : Specification<ProductImage>
 {
-    public ProductImageFilterSpec(int productId, int? optionValueId)
+    public ProductImageFilterSpec(Guid productId, Guid? optionValueId)
     {
         Query
             .Where(x => 

@@ -6,15 +6,9 @@ using MediatR;
 
 namespace Application.Catalog.Variants.Commands.UpdateManyVariant;
 
-public record UpdateManyVariantCommand : IRequest<int>
-{
-    public int ProductId { get; set; }
-    public decimal? Price { get; set; }
-    public int? Quantity { get; set; }
-    public string? Sku { get; set; }
-}
+public record UpdateManyVariantCommand(Guid ProductId, decimal? Price, int? Quantity, string? Sku) : IRequest<Guid>;
 
-public class UpdateManyVariantCommandHandler : IRequestHandler<UpdateManyVariantCommand, int>
+public class UpdateManyVariantCommandHandler : IRequestHandler<UpdateManyVariantCommand, Guid>
 {
     private readonly IRepository<ProductVariant> _productVariantRepository;
 
@@ -23,10 +17,10 @@ public class UpdateManyVariantCommandHandler : IRequestHandler<UpdateManyVariant
         _productVariantRepository = productVariantRepository;
     }
 
-    public async Task<int> Handle(UpdateManyVariantCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(UpdateManyVariantCommand request, CancellationToken cancellationToken)
     {
         var variants = await _productVariantRepository.ListAsync(new VariantByProductIdSpec(request.ProductId))
-            ?? throw new EntityNotFoundException(nameof(Product),"null");
+            ?? throw new EntityNotFoundException(nameof(Product), "null");
 
         foreach (var v in variants)
         {

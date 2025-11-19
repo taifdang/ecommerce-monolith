@@ -96,7 +96,8 @@ public class LocalStorageService : IFileService
     }
 
     // Convert physical url to public url
-    private string GetPublicUrl(string fileName) => $"{_baseUrl.TrimEnd('/')}/{_fileStorage.Path}/{fileName}";
+    private string GetPublicUrl(string fileName) => $"/{_fileStorage.Path}/{fileName}";
+    //private string GetPublicUrl(string fileName) => $"{_baseUrl.TrimEnd('/')}/{_fileStorage.Path}/{fileName}";
 
     public string GetFileUrl(string fileName)
     {

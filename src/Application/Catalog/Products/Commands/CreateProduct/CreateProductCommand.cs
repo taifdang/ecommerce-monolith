@@ -5,28 +5,18 @@ using MediatR;
 
 namespace Application.Catalog.Products.Commands.CreateProduct;
 
-public record CreateProductCommand : IRequest<int>
-{
-    public int CategoryId { get; init; }
-    public string Title { get; init; }
-    //public decimal MinPrice { get; init; }
-    //public decimal MaxPrice { get; init; }
-    //public int Quantity { get; init; }
-    public string Description { get; init; }
-}
+public record CreateProductCommand(Guid CategoryId, string Title, string Description) : IRequest<Guid>;
 
-public class CreateProductHandler : IRequestHandler<CreateProductCommand, int>
+public class CreateProductHandler : IRequestHandler<CreateProductCommand, Guid>
 {
     private readonly IRepository<Product> _productRepository;
-    private readonly IMapper _mapper;
 
-    public CreateProductHandler(IRepository<Product> productRepository, IMapper mapper)
+    public CreateProductHandler(IRepository<Product> productRepository)
     {
         _productRepository = productRepository;
-        _mapper = mapper;
     }
 
-    public async Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         //var product = _mapper.Map<Domain.Entities.Product>(request);
         var product = new Product

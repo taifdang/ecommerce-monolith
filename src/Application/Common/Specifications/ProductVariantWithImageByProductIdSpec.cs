@@ -1,31 +1,36 @@
-﻿using Application.Catalog.Variants.Dtos;
-using Ardalis.Specification;
+﻿using Ardalis.Specification;
 using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class ProductVariantWithImageByProductIdSpec : Specification<ProductVariant, VariantWithImageDto>
+public class ProductVariantWithImageByProductIdSpec : Specification<ProductVariant>
 {
-    public ProductVariantWithImageByProductIdSpec(int productId)
+    public ProductVariantWithImageByProductIdSpec(Guid productId)
     {
-        Query
+        Query            
             .Include(x => x.Product)
-                .ThenInclude(x => x.ProductImages)
+                .ThenInclude(x => x.ProductImages
+                    .Where(img => img.IsMain && img.OptionValueId == null))
             .Where(x => x.ProductId == productId);
+
+        //Query
+        //   .Select(x => new VariantWithImageDto(
+        //   x.Id,
+        //   x.ProductId,
+        //   x.Product.ProductImages
+        //       .Where(img => img.IsMain && img.OptionValueId == null)
+        //       .Select(img => new VariantImageDto(img.Id, img.ImageUrl))
+        //       .FirstOrDefault()));
 
         //x.Product.ProductImages.Any(img => img.IsMain && img.ProductOptionId == null));
 
-        Query.Select(x => new VariantWithImageDto
-        {
-            Id = x.Id,
-            ProductId = x.ProductId,
-            Image = x.Product.ProductImages
-                .Where(img => img.IsMain && img.OptionValueId == null)
-                .Select(img => new VariantImageDto
-                {
-                    Id = img.Id,
-                    Url = img.ImageUrl,
-                }).FirstOrDefault() ?? new VariantImageDto()
-        }); 
+        //Query
+        //    .Select(x =>
+        //        x.Product.ProductImages
+        //            .Where(img => img.IsMain && img.OptionValueId == null)
+        //            .Select(img => new VariantImageDto(img.Id, img.ImageUrl))
+        //            .FirstOrDefault()
+        //    );
+
     }
 }

@@ -6,11 +6,7 @@ using MediatR;
 
 namespace Application.Catalog.Variants.Commands.DeleteVariant;
 
-public record DeleteVariantCommand : IRequest<Unit>
-{
-    public int Id { get; init; }// variant id
-    public int ProductId { get; init; }
-}
+public record DeleteVariantCommand(Guid Id, Guid ProductId) : IRequest<Unit>;
 
 public class DeleteVariantCommandHandler : IRequestHandler<DeleteVariantCommand, Unit>
 {

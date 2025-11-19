@@ -8,7 +8,6 @@ using Shared.Constants;
 using Shared.Models.Auth;
 using Shared.Models.User;
 using Shared.Web;
-using System.Security.Claims;
 
 namespace Infrastructure.Identity.Services;
 
@@ -80,7 +79,7 @@ public class IdentityService(
         await _signInManager.SignOutAsync();
     }
 
-    public async Task SignUp(SignUpRequest request, CancellationToken cancellationToken)
+    public async Task<Guid> SignUp(SignUpRequest request, CancellationToken cancellationToken)
     {
         if(await _userManager.FindByNameAsync(request.UserName) != null)
         {
@@ -114,7 +113,9 @@ public class IdentityService(
 
         //var scopeClaim = new Claim("scope", string.Join(" ", scopes));
 
-        //await _userManager.AddClaimAsync(user, scopeClaim);
+        //await _userManager.AddClaimAsync(user, scopeClaim);     
+
+        return user.Id;
     }
 
     public async Task<TokenResult> RefreshToken(string token, CancellationToken cancellationToken)
@@ -186,8 +187,7 @@ public class IdentityService(
 
         await _appIdentityDbContext.AddAsync(forgotPassword, cancellationToken);
         // send email => hangfire
-        //
-        //
+
     }
 
 }

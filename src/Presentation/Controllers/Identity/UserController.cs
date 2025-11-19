@@ -1,9 +1,11 @@
 ﻿using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Constants;
 using Shared.Models.User;
 using Shared.Web;
+using System.Security.Claims;
 
 namespace Api.Controllers.Identity;
 
@@ -13,6 +15,7 @@ public class UserController(IUserManagerService userManagerService) : BaseContro
     private readonly IUserManagerService _userManagerService = userManagerService;
 
     [HttpGet]
+    [Authorize(Roles = IdentityConstant.Role.Admin)]
     public async Task<IActionResult> GetList(CancellationToken cancellationToken)
     {
         return Ok(await _userManagerService.GetList(cancellationToken));
@@ -37,6 +40,15 @@ public class UserController(IUserManagerService userManagerService) : BaseContro
     {
         await _userManagerService.Delete(userId);
         return NoContent();
+    }
+    [HttpGet("info")]
+    public IActionResult info()
+    {
+        return Ok(new
+        {
+            user = User.Identity?.Name,
+            roles = User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value)
+        });
     }
 
 }

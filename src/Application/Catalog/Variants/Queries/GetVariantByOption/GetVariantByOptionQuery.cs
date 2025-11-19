@@ -7,12 +7,7 @@ using MediatR;
 
 namespace Application.Catalog.Variants.Queries.GetVariantByOption;
 
-public record GetVariantByOptionQuery : IRequest<VariantListDto>
-{
-    public int ProductId { get; init; }
-    //public Dictionary<int, int> OptionFilter { get; set; }
-    public List<int> OptionValueMap { get; init; }
-}
+public record GetVariantByOptionQuery(Guid ProductId, List<Guid> OptionValueMap) : IRequest<VariantListDto>;
 
 public class GetVariantByOptionQueryHandler : IRequestHandler<GetVariantByOptionQuery, VariantListDto>
 {
@@ -39,27 +34,32 @@ public class GetVariantByOptionQueryHandler : IRequestHandler<GetVariantByOption
 
         if (!variants.Any())
             throw new EntityNotFoundException(nameof(VariantDto), "No variant found matching the specified options.");
+
+        var dto = variants.Select(v => v.ToVariantDto()).ToList();
         
-        var exactVariant = isExactMatch && variants.Count == 1 ? variants.First() : null;
+        var exactVariant = isExactMatch && variants.Count == 1 
+            ? dto.First() 
+            : null;
 
-        decimal minPrice = variants.Min(v => v.RegularPrice);
-        decimal maxPrice = variants.Max(v => v.RegularPrice);
+        decimal minPrice = exactVariant?.RegularPrice ?? dto.Min(v => v.RegularPrice);
+        decimal maxPrice = exactVariant?.RegularPrice ?? dto.Max(v => v.RegularPrice);
 
-        if(exactVariant != null)
-            minPrice = maxPrice = exactVariant.RegularPrice;
+
+        //if(exactVariant != null)
+        //    minPrice = maxPrice = exactVariant.RegularPrice;
 
         var image = exactVariant?.Image;
 
         // Combinations
-        var vm = new VariantListDto
-        {           
-            Variants = variants,
-            TotalStock = variants.Sum(v => v.Quantity),
-            Image = image,
-            MinPrice = minPrice,
-            MaxPrice = maxPrice,
-            //MinPrice = exactVariant?.RegularPrice,
-        };
+        var vm = new VariantListDto(dto, image, minPrice, maxPrice, variants.Sum(v => v.Quantity));
+        //{           
+        //    Variants = variants,
+        //    TotalStock = variants.Sum(v => v.Quantity),
+        //    Image = image,
+        //    MinPrice = minPrice,
+        //    MaxPrice = maxPrice,
+        //    //MinPrice = exactVariant?.RegularPrice,
+        //};
 
         return vm;
     }

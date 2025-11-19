@@ -1,4 +1,6 @@
-﻿using Infrastructure.Identity.Models;
+﻿using Application.Customer.Commands;
+using Infrastructure.Identity.Models;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.Constants;
@@ -11,15 +13,18 @@ public class IdentityDataSeeder : IDataSeeder
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly AppIdentityDbContext _appIdentityDbContext;
+    private readonly IMediator _mediator;
 
     public IdentityDataSeeder(
         RoleManager<ApplicationRole> roleManager,
         AppIdentityDbContext appIdentityDbContext,
-        UserManager<ApplicationUser> userManager)
+        UserManager<ApplicationUser> userManager,
+        IMediator mediator)
     {
         _roleManager = roleManager;
         _appIdentityDbContext = appIdentityDbContext;
         _userManager = userManager;
+        _mediator = mediator;
     }
 
     public async Task SendAllAsync()
@@ -58,6 +63,7 @@ public class IdentityDataSeeder : IDataSeeder
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(InitialData.Users.First(), IdentityConstant.Role.Admin);
+                    await _mediator.Send(new CreateCustomerCommand(InitialData.Users.First().Id, InitialData.Users.First().Email));
                 }
             }
 
@@ -67,6 +73,7 @@ public class IdentityDataSeeder : IDataSeeder
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(InitialData.Users.Last(), IdentityConstant.Role.User);
+                    await _mediator.Send(new CreateCustomerCommand(InitialData.Users.Last().Id, InitialData.Users.Last().Email));
                 }
             }
         }

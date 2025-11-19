@@ -7,7 +7,7 @@ public class GetVariantByOptionQueryValidator : AbstractValidator<GetVariantByOp
     public GetVariantByOptionQueryValidator()
     {
         RuleFor(x => x.ProductId)
-            .GreaterThan(0).WithMessage("ProductId must be greater than 0.");
+            .NotNull().WithMessage("ProductId must be greater than 0.");
         RuleFor(x => x.OptionValueMap)
             .NotNull().WithMessage("OptionFilter cannot be null.")
             .Must(of => of != null && of.Count > 0).WithMessage("OptionFilter must contain at least one option.");

@@ -3,7 +3,7 @@ using Domain.Enums;
 
 namespace Domain.Entities;
 
-public class Product : Entity<int>
+public class Product : Entity<Guid>
 {
     public string Title { get; set; }
     //public decimal RegularPrice { get; set; }
@@ -12,7 +12,7 @@ public class Product : Entity<int>
     public string Description { get; set; }
     //public ProductStatus Status { get; set; }
     public ProductStatus Status { get; set; }
-    public int CategoryId { get; set; }
+    public Guid CategoryId { get; set; }
     public Category Category { get; set; }
     public ICollection<ProductOption> ProductOptions { get; set; } = new List<ProductOption>();
     public ICollection<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();

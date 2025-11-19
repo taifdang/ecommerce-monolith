@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.Basket.Queries.GetBasketByCustomerId;
 
-public record GetBasketByCustomerIdQuery(int CustomerId) : IRequest<BasketDto>;
+public record GetBasketByCustomerIdQuery(Guid CustomerId) : IRequest<BasketDto>;
 
 public class GetBasketByCustomerIdQueryHandler : IRequestHandler<GetBasketByCustomerIdQuery, BasketDto>
 {
@@ -26,35 +26,17 @@ public class GetBasketByCustomerIdQueryHandler : IRequestHandler<GetBasketByCust
         // If basket doesn't exist, return an empty basket
         if (basket == null)
         {
-            return new BasketDto
-            {
-                CustomerId = request.CustomerId,
-                Items = new List<BasketItemDto>(),
-                CreatedAt = DateTime.UtcNow,
-                LastModified = null
-            };
+            return new BasketDto(basket.Id, request.CustomerId, new List<BasketItemDto>(), DateTime.UtcNow, null);
         }
 
-        BasketDto vm = new BasketDto { 
-            CustomerId = basket.CustomerId,
-            Items = new List<BasketItemDto>(),
-            CreatedAt = (DateTime)basket.CreatedAt,
-            LastModified = basket.LastModified
-        };
+        BasketDto vm = new BasketDto(basket.Id, request.CustomerId, new List<BasketItemDto>(), (DateTime)basket.CreatedAt, basket.LastModified);
 
         foreach (var item in basket.Items)
         {
-            var productVariant = await _mediator.Send(new GetVariantByIdQuery { Id = item.ProductVariantId });
+            var productVariant = await _mediator.Send(new GetVariantByIdQuery(item.ProductVariantId));
             var cartItem = basket.Items.FirstOrDefault(x => x.ProductVariantId == productVariant.Id);
 
-            vm.Items.Add(new BasketItemDto
-            {
-                ProductVariantId = cartItem.ProductVariantId,
-                ProductName = productVariant.Title,
-                RegularPrice = productVariant.RegularPrice,
-                ImageUrl = productVariant.Image.Url ?? "",
-                Quantity = cartItem.Quantity,
-            });
+            vm.Items.Add(new BasketItemDto(cartItem.ProductVariantId, productVariant.ProductName , productVariant.Title, productVariant.RegularPrice, productVariant.Image.Url ?? "", cartItem.Quantity));
         }
 
         return vm;

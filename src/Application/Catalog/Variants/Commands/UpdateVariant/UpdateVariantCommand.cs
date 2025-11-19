@@ -6,14 +6,7 @@ using MediatR;
 
 namespace Application.Catalog.Variants.Commands.UpdateVariant;
 
-public record UpdateVariantCommand : IRequest<Unit>
-{
-    public int Id { get; init; } // variant id
-    public decimal RegularPrice { get; init; }
-    public int Quantity { get; init; }
-    public decimal? Percent { get; init; }
-    //public string? Sku { get; init; }
-}
+public record UpdateVariantCommand(Guid Id, decimal RegularPrice, int Quantity, decimal? Percent) : IRequest<Unit>;
 
 public class UpdateVariantCommandHandler : IRequestHandler<UpdateVariantCommand, Unit>
 {
@@ -31,7 +24,14 @@ public class UpdateVariantCommandHandler : IRequestHandler<UpdateVariantCommand,
 
         //variant.Sku = variant.Sku;
         variant.RegularPrice = request.RegularPrice;
-        variant.Quantity = request.Quantity;
+        if(request.Quantity > 0)
+        {
+            variant.Quantity = request.Quantity;
+        }
+        else
+        {
+            throw new Exception("Quantity is not negative");
+        }
         //no update variant option value, percent
 
         await _productVariantRepository.SaveChangesAsync(cancellationToken);

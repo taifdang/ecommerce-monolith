@@ -30,7 +30,7 @@ public class CookieService(IHttpContextAccessor httpContextAccessor) : ICookieSe
                 SameSite = SameSiteMode.None,
                 Secure = true,
                 HttpOnly = true,
-                MaxAge = TimeSpan.FromMinutes(30)
+                MaxAge = TimeSpan.FromDays(30)
             });
 
     public void Delete() => _httpContextAccessor.HttpContext?.Response.Cookies.Delete("token_key");

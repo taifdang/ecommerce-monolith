@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
+using Infrastructure.Data.Seed;
 using Infrastructure.Identity.Data;
 using Infrastructure.Identity.Data.Seed;
 using Infrastructure.Identity.Extensions;
@@ -47,9 +48,10 @@ public static class DependencyInjection
         builder.Services.AddScoped<IIdentityService, IdentityService>();
         builder.Services.AddScoped<IUserManagerService, UserManagerService>();
 
-        // Seeders
+        // Seeders    
         builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
-    
+        builder.Services.AddScoped<IDataSeeder, CatalogDataSeeder>();
+
         return builder;
     }
 

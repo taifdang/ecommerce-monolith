@@ -14,7 +14,11 @@ public static class JwtExtensions
     {
         var jwtOptions = services.GetOptions<Identity>("Identity");
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
         .AddJwtBearer(options =>
         {
             options.Authority = jwtOptions.Authority;
@@ -24,26 +28,26 @@ public static class JwtExtensions
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidIssuers = [jwtOptions.Authority],
+                ValidIssuer = jwtOptions.Authority,
                 ValidateAudience = true,
-                ValidAudiences = [jwtOptions.Audience],
+                ValidAudience = jwtOptions.Audience,
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.FromSeconds(2), // Reduce default clock skew
 
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
 
-                NameClaimType = "name", // map claim, User.Identity.Name = "name"
-                RoleClaimType = ClaimTypes.Role, // map claim, User.Identity.Role = "role"
+                NameClaimType = ClaimTypes.Name,
+                RoleClaimType = ClaimTypes.Role,
             };
 
-            options.MapInboundClaims = true;
+            options.MapInboundClaims = false;      
         });
 
         services.AddAuthorization(
             options =>
             {
-                // Role-bases
+               //Role-bases
                 options.AddPolicy(
                     IdentityConstant.Role.Admin,
                     x =>

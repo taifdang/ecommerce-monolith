@@ -6,12 +6,8 @@ using Shared.Core.Pagination;
 
 namespace Application.Catalog.Products.Queries.GetListProduct;
 
-public record GetListProductQuery : IRequest<PageList<ProductListDto>>
-{
-    public int pageIndex { get; init; }
-    public int pageSize { get; init; }  
-    // filter ??
-}
+public record GetListProductQuery(int PageIndex, int PageSize) : IRequest<PageList<ProductListDto>>;
+
 
 public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, PageList<ProductListDto>>
 {
@@ -25,17 +21,17 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
     {
         // implement filter ???
 
-        var specification = new ProductListPaginationSpec(request.pageIndex * request.pageSize, take: request.pageSize);
+        var specification = new ProductListPaginationSpec(request.PageIndex * request.PageSize, take: request.PageSize);
         var productList = await _productRepository.ListAsync(specification, cancellationToken);
         return new PageList<ProductListDto>(
            productList!,
            productList.Count,
-           request.pageIndex,
-           request.pageSize);
+           request.PageIndex,
+           request.PageSize);
         #region
         //var listProductVm = await _unitOfWork.ProductRepository.ToPagination(
-        //        pageIndex: request.pageIndex,
-        //        pageSize: request.pageSize,
+        //        PageIndex: request.PageIndex,
+        //        PageSize: request.PageSize,
         //        orderBy: x => x.ProductOptionId,
         //        ascending: true,
         //        selector: x => new ProductListDto
@@ -60,8 +56,8 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
         #endregion
         #region List product with options and option values
         //var listProductVm = await _orderRepository.ProductRepository.ToPagination(
-        //        pageIndex: request.pageIndex,
-        //        pageSize: request.pageSize,
+        //        PageIndex: request.PageIndex,
+        //        PageSize: request.PageSize,
         //        orderBy: x => x.ProductOptionId,
         //        ascending: true,
         //        selector: x => new ProductVm

@@ -25,7 +25,7 @@ public class UploadFileCommandValidator : AbstractValidator<UploadFileCommand>
             .When(x => x.MediaFile != null);
     }
 
-    private async Task<bool> ProductExists(int Id, CancellationToken ct)
+    private async Task<bool> ProductExists(Guid Id, CancellationToken ct)
     {
         var specification = new ProductByIdSpec(Id);
         await _productImageRepository.AnyAsync();

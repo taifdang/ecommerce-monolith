@@ -1,8 +1,3 @@
 ﻿namespace Application.Catalog.Options.Dtos;
 
-public class OptionValueDto
-{
-    public int Id { get; set; }
-    public string Value { get; set; }
-    public string Label { get; set; }
-}
+public record OptionValueDto(Guid Id, string Value, string Label);

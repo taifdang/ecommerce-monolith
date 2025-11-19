@@ -22,47 +22,27 @@ public class GetBasketQueryHandler : IRequestHandler<GetBasketQuery, BasketDto>
     public async Task<BasketDto> Handle(GetBasketQuery request, CancellationToken cancellationToken)
     {      
         // Directly call the GetCustomerByUserIdQuery handler instead of gRPC
-        var customer = await _mediator.Send(new GetCustomerByUserIdQuery { UserId = request.UserId })
+        var customer = await _mediator.Send(new GetCustomerByUserIdQuery(request.UserId),cancellationToken)
                 ?? throw new EntityNotFoundException("Customer not found");
 
         // Get basket
-        var basket = await _basketRepository.FirstOrDefaultAsync(new BasketWithItemsByCustomerIdSpec(customer.Id));
+        var basket = await _basketRepository.FirstOrDefaultAsync(new BasketWithItemsByCustomerIdSpec(customer.Id), cancellationToken);
 
         // If basket doesn't exist, return an empty basket
         if (basket == null)
         {
-            return new BasketDto
-            {
-                CustomerId = customer.Id,
-                Items = new List<BasketItemDto>(),
-                CreatedAt = DateTime.UtcNow,
-                LastModified = null
-            };
+            return new BasketDto(Guid.NewGuid(), customer.Id, new List<BasketItemDto>(), DateTime.UtcNow, null);
         }
 
-        BasketDto vm = new BasketDto
-        {
-            CustomerId = basket.CustomerId,
-            Items = new List<BasketItemDto>(),
-            CreatedAt = (DateTime)basket.CreatedAt,
-            LastModified = basket.LastModified
-        };
+        BasketDto basketDto = new BasketDto(basket.Id, customer.Id, new List<BasketItemDto>(), (DateTime)basket.CreatedAt, basket.LastModified);
 
         foreach (var item in basket.Items)
         {
-            var productVariant = await _mediator.Send(new GetVariantByIdQuery { Id = item.ProductVariantId });
-            var cartItem = basket.Items.FirstOrDefault(x => x.ProductVariantId == productVariant.Id);
-
-            vm.Items.Add(new BasketItemDto
-            {
-                ProductVariantId = cartItem.ProductVariantId,
-                ProductName = productVariant.Title,
-                RegularPrice = productVariant.RegularPrice,
-                ImageUrl = productVariant.Image.Url ?? "", // if product variant not image , use default image of product
-                Quantity = cartItem.Quantity,
-            });
+            var productVariant = await _mediator.Send(new GetVariantByIdQuery(item.ProductVariantId));
+            var cartItem = basket.Items.First(x => x.ProductVariantId == productVariant.Id);
+            basketDto.Items.Add(new BasketItemDto(cartItem.ProductVariantId, productVariant.ProductName ,productVariant.Title, productVariant.RegularPrice, productVariant.Image.Url ?? "", cartItem.Quantity));
         }
 
-        return vm;
+        return basketDto;
     }
 }

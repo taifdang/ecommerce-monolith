@@ -1,29 +1,29 @@
 ﻿using Application.Basket.Queries.GetBasketByCustomerId;
+using Application.Catalog.Variants.Commands.ReduceStock;
 using Application.Catalog.Variants.Queries.GetVariantById;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
+using Application.Order.Dtos;
+using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
 using MediatR;
 
 namespace Application.Order.Commands.CreateOrder;
 
-public record CreateOrderCommand : IRequest<int>
-{
-    public int CustomerId { get; init; }
-    public string ShippingAddress { get; init; }
-}
-
-public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, int>
+public record CreateOrderCommand(Guid CustomerId, string ShippingAddress) : IRequest<Guid>;
+public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Guid>
 {
     private readonly IRepository<Domain.Entities.Order> _orderRepository;
     private readonly IMediator _mediator;
-    public CreateOrderCommandHandler(IRepository<Domain.Entities.Order> orderRepository, IMediator mediator)
+    private readonly IMapper _mapper;
+    public CreateOrderCommandHandler(IRepository<Domain.Entities.Order> orderRepository, IMediator mediator, IMapper mapper)
     {
         _orderRepository = orderRepository;
         _mediator = mediator;
+        _mapper = mapper;
     }
-    public async Task<int> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         var basket = await _mediator.Send(new GetBasketByCustomerIdQuery(request.CustomerId));
 
@@ -37,11 +37,16 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, int
 
         foreach (var basketItem in basket.Items)
         {
-            var productVariant = await _mediator.Send(new GetVariantByIdQuery { Id = basketItem.ProductVariantId });
+            var productVariant = await _mediator.Send(new GetVariantByIdQuery(basketItem.ProductVariantId));
 
             if (productVariant == null)
             {
                 throw new EntityNotFoundException();
+            }
+
+            if(productVariant.Quantity < basketItem.Quantity)
+            {
+                throw new Exception("Not enough product variant quantity");
             }
 
             var orderItem = new OrderItem
@@ -70,6 +75,11 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, int
         };
 
         await _orderRepository.AddAsync(order, cancellationToken);
+
+        var orderItemsAdded = _mapper.Map<List<OrderItemDto>>(orderItems);
+
+        // Update product variant quanity
+        await _mediator.Send(new ReduceStockCommand(orderItemsAdded));
 
         // Clear the basket after creating the order
         await _mediator.Send(new Basket.Commands.ClearBasket.ClearBasketCommand(request.CustomerId));

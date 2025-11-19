@@ -8,44 +8,44 @@ using MediatR;
 using Shared.Web;
 
 namespace Application.Basket.Commands.UpdateItem;
+public record UpdateItemCommand(Guid Id, int Quantity) : IRequest<Guid>;
 
-public record UpdateItemCommand : IRequest<int>
-{
-    public Guid UserId { get; set; }
-    public int Id { get; set; }
-    public decimal UnitPrice { get; set; }
-    public int Quantity { get; set; }
-}
-
-public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, int>
+public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Guid>
 {
     private readonly IRepository<Domain.Entities.Basket> _basketRepository;
-    private ICurrentUserProdvider _currentUserProvider;
     private readonly IMediator _mediator;
+    private readonly ICurrentUserProdvider _currentUserProdvider;
     public UpdateItemCommandHandler(
-        ICurrentUserProdvider currentUserProvider, 
-        IMediator mediator, 
-        IRepository<Domain.Entities.Basket> basketRepository)
+        IMediator mediator,
+        IRepository<Domain.Entities.Basket> basketRepository,
+        ICurrentUserProdvider currentUserProdvider)
     {
-        _currentUserProvider = currentUserProvider;
         _mediator = mediator;
         _basketRepository = basketRepository;
+        _currentUserProdvider = currentUserProdvider;
     }
-    public async Task<int> Handle(UpdateItemCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(UpdateItemCommand request, CancellationToken cancellationToken)
     {
-        //var userId = _currentUserProvider.GetCurrentUserId()
-        //    ?? throw new ArgumentException("User not found");
+        var userId = _currentUserProdvider.GetCurrentUserId();
 
+        if(userId == null)
+            throw new ArgumentException("User is required");
         if (request.Quantity < 0)
             throw new ArgumentException("Quantity cannot be negative.");
 
         // Directly call the GetCustomerByUserIdQuery handler instead of gRPC
-        var customer = await _mediator.Send(new GetCustomerByUserIdQuery { UserId = request.UserId })
+        var customer = await _mediator.Send(new GetCustomerByUserIdQuery(userId!.Value))
                 ?? throw new EntityNotFoundException("Customer not found");
 
         // Validate ProductVariant exists
-        var variant = await _mediator.Send(new GetVariantByIdQuery { Id =  request.Id })
+        var variant = await _mediator.Send(new GetVariantByIdQuery(request.Id))
                 ?? throw new EntityNotFoundException("Product variant not found");
+
+        // ProductVariant quantity not enough
+        if(request.Quantity > variant.Quantity)
+        {
+            throw new EntityNotFoundException("Not enough product variant quanity");
+        }
 
         // Get or create basket
         var basket = await _basketRepository.FirstOrDefaultAsync(new BasketWithItemsByCustomerIdSpec(customer.Id));
@@ -54,14 +54,14 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, int>
             basket = new Domain.Entities.Basket()
             {
                 CustomerId = customer.Id,
-                Items = new List<BasketItem>()
+                Items = new List<BasketItem>(),
+                CreatedAt = DateTime.UtcNow,
             };
-            //await _basketRepository.AddAsync(basket);
-
+            await _basketRepository.AddAsync(basket);
         }
         // Update basket items
         var existingItem = basket.Items.FirstOrDefault(x => x.ProductVariantId == request.Id);
-
+      
         if (existingItem == null)
         {
             if (request.Quantity > 0)
@@ -70,7 +70,6 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, int>
                 {
                     ProductVariantId = request.Id,
                     Quantity = request.Quantity,
-                    Price = request.UnitPrice
                 });
             }       
         }

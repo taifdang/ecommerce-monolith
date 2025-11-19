@@ -6,11 +6,7 @@ using MediatR;
 
 namespace Application.Catalog.Images.Commands.DeleteFile;
 
-public record DeleteFileCommand : IRequest<Unit>
-{
-    public int ProductId { get; set; }
-    public int Id { get; set; }
-}
+public record DeleteFileCommand(Guid ProductId, Guid Id) : IRequest<Unit>;
 
 public class DeleteFileCommandHandler : IRequestHandler<DeleteFileCommand, Unit>
 {

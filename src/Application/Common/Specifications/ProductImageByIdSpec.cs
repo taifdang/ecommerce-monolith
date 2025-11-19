@@ -5,7 +5,7 @@ namespace Application.Common.Specifications;
 
 public class ProductImageByIdSpec : Specification<ProductImage>
 {
-    public ProductImageByIdSpec(int productId, int Id)
+    public ProductImageByIdSpec(Guid productId, Guid Id)
     {
         Query
             .Where(x => x.ProductId == productId && x.Id == Id);

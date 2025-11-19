@@ -27,77 +27,114 @@ public class TokenService(
 
     public async Task<TokenResult> GenerateToken(string username, string[] scopes, CancellationToken cancellationToken)
     {
-        var result = new TokenResult();
-
-        //token
         var user = await _userManager.FindByNameAsync(username);
-        if (user == null) throw new EntityNotFoundException(username);
 
         var roles = await _userManager.GetRolesAsync(user);
 
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Uri, user?.AvatarUrl ?? "default.png"),
-            new Claim(ClaimTypes.Role, roles == null ? IdentityConstant.Role.User.ToString() : string.Join(";", roles)),
-            new Claim("scope", string.Join(" ", scopes)) // Adding scope claim
-        };
+        var result = new TokenResult();
 
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Identity.Key));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Name, user.UserName)
+        };
+
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
+
         var expires = DateTime.UtcNow.AddDays(_jwt.ExpiredTime);
 
         var token = new JwtSecurityToken(
-            issuer: _jwt.Authority,
-            audience: _jwt.Audience,
-            claims: claims,
-            expires: expires,
-            signingCredentials: credentials);
-
+                claims: claims,
+                expires: expires,
+                audience: _appSettings.Identity.Audience,
+                issuer: _appSettings.Identity.Authority,
+                signingCredentials: credentials
+            );
         var tokenResult = new JwtSecurityTokenHandler().WriteToken(token);
 
-        //set result
         result.Token = tokenResult;
         result.UserId = user.Id;
         result.Expire = expires;
 
-        //refresh token  
-        var refreshToken = new RefreshToken
-        {
-            Token = tokenResult,
-            UserId = user.Id,
-            Expires = expires,
-            Created = DateTime.UtcNow
-        };
+        return result;
 
-        var existToken = await _appIdentityDbContext.RefreshTokens.FirstOrDefaultAsync(x => x.UserId == user.Id);
+        //token
+        //var user = await _userManager.FindByNameAsync(username);
+        //if (user == null) throw new EntityNotFoundException(username);
 
-        if (existToken == null)
-        {
-            await _appIdentityDbContext.RefreshTokens.AddAsync(refreshToken, cancellationToken);
-        }
+        //var roles = await _userManager.GetRolesAsync(user);
 
-        else if (existToken.Expires > DateTime.UtcNow)
-        {
-            existToken.Token = tokenResult;
-            existToken.Expires = expires;
-            existToken.Created = DateTime.UtcNow;
 
-            //_appIdentityDbContext.RefreshTokens.Update(refreshToken);
-            await _appIdentityDbContext.SaveChangesAsync(cancellationToken);
-        }
-        else
-        {
-            await _unitOfWork.ExecuteTransactionAsync(
-               async () =>
-               {
-                   _appIdentityDbContext.RefreshTokens.Remove(existToken);
-                   await _appIdentityDbContext.RefreshTokens.AddAsync(refreshToken);
-               }, cancellationToken);
-        }
+        //var claims = new[]
+        //{
+        //    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        //    new Claim(ClaimTypes.Name, user.UserName),
+        //    new Claim(ClaimTypes.Email, user.Email),
+        //    new Claim(ClaimTypes.Uri, user?.AvatarUrl ?? "default.png"),
+        //    new Claim(ClaimTypes.Role, roles == null ? IdentityConstant.Role.User.ToString() : string.Join(";", roles)),
+        //    new Claim("scope", string.Join(" ", scopes)) // Adding scope claim
+        //};
+
+        //var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.Identity.Key));
+        //var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        //var expires = DateTime.UtcNow.AddDays(_jwt.ExpiredTime);
+
+        //var token = new JwtSecurityToken(
+        //    issuer: "https://localhost:7129",
+        //    audience: "ecommerce-monolith",
+        //    claims: claims,
+        //    expires: expires,
+        //    signingCredentials: credentials);
+
+        //var tokenResult = new JwtSecurityTokenHandler().WriteToken(token);
+
+        ////set result
+        //result.Token = tokenResult;
+        //result.UserId = user.Id;
+        //result.Expire = expires;
+
+        ////refresh token  
+        //var refreshToken = new RefreshToken
+        //{
+        //    Token = tokenResult,
+        //    UserId = user.Id,
+        //    Expires = expires,
+        //    Created = DateTime.UtcNow
+        //};
+
+        //var existToken = await _appIdentityDbContext.RefreshTokens.FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+        //if (existToken == null)
+        //{
+        //    await _unitOfWork.ExecuteTransactionAsync(async() =>
+        //         await _appIdentityDbContext.RefreshTokens.AddAsync(refreshToken), cancellationToken);
+        //}
+
+        //else if (existToken.Expires > DateTime.UtcNow)
+        //{
+        //    existToken.Token = tokenResult;
+        //    existToken.Expires = expires;
+        //    existToken.Created = DateTime.UtcNow;
+
+        //    await _appIdentityDbContext.SaveChangesAsync(cancellationToken);
+        //}
+        //else
+        //{
+        //    await _unitOfWork.ExecuteTransactionAsync(
+        //       async () =>
+        //       {
+        //           _appIdentityDbContext.RefreshTokens.Remove(existToken);
+        //           await _appIdentityDbContext.RefreshTokens.AddAsync(refreshToken);
+        //       }, cancellationToken);
+        //}
         return result;
     }
 
