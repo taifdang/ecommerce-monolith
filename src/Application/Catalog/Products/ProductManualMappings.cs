@@ -1,4 +1,5 @@
-﻿using Application.Catalog.Products.Dtos;
+﻿using Application.Catalog.Products.Queries.GetProductById;
+using Application.Common.Models;
 using Domain.Entities;
 
 namespace Application.Catalog.Products;
@@ -15,7 +16,7 @@ public static class ProductManualMappings
             MaxPrice = product.ProductVariants.Max(x => x.RegularPrice),
             Description = product.Description ?? string.Empty,
             Category = product.Category.Title,
-            Images = product.ProductImages.Select(img => new ProductImageDto
+            Images = product.ProductImages.Select(img => new ImageLookupDto
             {
                 Id = img.Id,
                 Url = img.ImageUrl,
@@ -33,7 +34,7 @@ public static class ProductManualMappings
                 {
                     Title = ov.Value,
                     Label = ov.Label,
-                    Images = ov.ProductImages!.Select(pi => new ProductImageDto
+                    Images = ov.ProductImages!.Select(pi => new ImageLookupDto
                     {
                         Id = pi.Id,
                         Url = pi.ImageUrl

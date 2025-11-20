@@ -1,5 +1,4 @@
-﻿using Application.Catalog.Variants.Dtos;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Common.Specifications;
 using Domain.Entities;
 using MediatR;
@@ -28,8 +27,8 @@ public class GetVariantByIdQueryHandler : IRequestHandler<GetVariantByIdQuery, V
         if (dto!.Image?.Url == null)
         {
             var mainImage = await _productVariantRepository.FirstOrDefaultAsync(new ProductVariantWithImageByProductIdSpec(variant.ProductId), cancellationToken);
-            var image = mainImage?.GetMainImage();           
-            dto = dto with { Image = image };
+            var image = mainImage?.GetMainImage();
+            dto.Image = image;
         }
 
         return dto;

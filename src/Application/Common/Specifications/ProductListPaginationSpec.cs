@@ -1,4 +1,5 @@
-﻿using Application.Catalog.Products.Dtos;
+﻿using Application.Catalog.Products.Queries.GetListProduct;
+using Application.Common.Models;
 using Ardalis.Specification;
 using Domain.Entities;
 
@@ -26,7 +27,7 @@ public class ProductListPaginationSpec : Specification<Product, ProductListDto>
             Category = x.Category.Title,
             Image = x.ProductImages
                     .Where(c => c.IsMain && c.OptionValueId == null) // Main image not linked to option value
-                    .Select(pi => new ProductImageDto
+                    .Select(pi => new ImageLookupDto
                     {
                         Id = pi.Id,
                         Url = pi.ImageUrl

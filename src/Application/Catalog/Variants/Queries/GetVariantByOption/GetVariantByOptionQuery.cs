@@ -1,4 +1,4 @@
-﻿using Application.Catalog.Variants.Dtos;
+﻿using Application.Catalog.Variants.Queries.GetVariantById;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Specifications;
@@ -51,16 +51,15 @@ public class GetVariantByOptionQueryHandler : IRequestHandler<GetVariantByOption
         var image = exactVariant?.Image;
 
         // Combinations
-        var vm = new VariantListDto(dto, image, minPrice, maxPrice, variants.Sum(v => v.Quantity));
-        //{           
-        //    Variants = variants,
-        //    TotalStock = variants.Sum(v => v.Quantity),
-        //    Image = image,
-        //    MinPrice = minPrice,
-        //    MaxPrice = maxPrice,
-        //    //MinPrice = exactVariant?.RegularPrice,
-        //};
-
+        var vm = new VariantListDto
+        {
+            Variants = dto,
+            TotalStock = variants.Sum(v => v.Quantity),
+            Image = image,
+            MinPrice = minPrice,
+            MaxPrice = maxPrice,
+            //MinPrice = exactVariant?.RegularPrice,
+        };
         return vm;
     }
 }

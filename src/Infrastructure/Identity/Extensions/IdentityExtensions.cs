@@ -20,10 +20,10 @@ public static class IdentityExtensions
            .AddEntityFrameworkStores<AppIdentityDbContext>()
            .AddDefaultTokenProviders();
 
-        builder.Services.Configure<IdentityOptions>(options =>
-        {
-            options.SignIn.RequireConfirmedEmail = true;
-        });
+        //builder.Services.Configure<IdentityOptions>(options =>
+        //{
+        //    options.SignIn.RequireConfirmedEmail = true;
+        //});
 
         return builder;
     }

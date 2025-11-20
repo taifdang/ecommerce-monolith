@@ -1,17 +1,14 @@
-﻿using Application.Catalog.Products.Dtos;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
+using Application.Common.Models;
 using Application.Common.Specifications;
 using MediatR;
-using Shared.Core.Pagination;
 
 namespace Application.Catalog.Products.Queries.GetListProduct;
 
 public record GetListProductQuery(int PageIndex, int PageSize) : IRequest<PageList<ProductListDto>>;
 
-
 public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, PageList<ProductListDto>>
 {
-    //private readonly IUnitOfWork _unitOfWork;
     private readonly IRepository<Domain.Entities.Product> _productRepository;
     public GetListProductQueryHandler(IRepository<Domain.Entities.Product> productRepository)
     {
@@ -19,7 +16,6 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
     }
     public async Task<PageList<ProductListDto>> Handle(GetListProductQuery request, CancellationToken cancellationToken)
     {
-        // implement filter ???
 
         var specification = new ProductListPaginationSpec(request.PageIndex * request.PageSize, take: request.PageSize);
         var productList = await _productRepository.ListAsync(specification, cancellationToken);
@@ -46,7 +42,7 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
         //            ProductType = x.Category.ProductType.Title,
         //            Image = x.ProductImages
         //            .Where(c => c.IsMain && c.ProductOptionId == null) // Main image not linked to option value
-        //            .Select(pi => new ProductImageDto
+        //            .Select(pi => new ImageLookupDto
         //            {
         //                ProductOptionId = pi.ProductOptionId,
         //                Url = pi.Image
@@ -69,12 +65,12 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
         //            Description = x.Description ?? string.Empty,
         //            Category = x.Category.Title,
         //            ProductType = x.Category.ProductType.Title,
-        //            Images = x.ProductImages.Select(img => new ProductImageDto
+        //            Images = x.ProductImages.Select(img => new ImageLookupDto
         //            {
         //                ProductOptionId = img.ProductOptionId,
         //                Image = img.Image
         //            }).ToList(),
-        //            Options = x.ProductOptions.Select(po => new OptionDto
+        //            Options = x.ProductOptions.Select(po => new OptionLookupDto
         //            {
         //                Title = po.OptionName,
         //                Values = po.OptionValues.Select(v => v.Value).ToList()
@@ -87,7 +83,7 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
         //                {
         //                    Title = ov.Value,
         //                    Label = ov.Label,
-        //                    Image = ov.ProductImages!.Select(pi => new ProductImageDto
+        //                    Image = ov.ProductImages!.Select(pi => new ImageLookupDto
         //                    {
         //                        ProductOptionId = pi.ProductOptionId,
         //                        Image = pi.Image

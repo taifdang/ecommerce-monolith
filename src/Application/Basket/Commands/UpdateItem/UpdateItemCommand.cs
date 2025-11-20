@@ -8,6 +8,7 @@ using MediatR;
 using Shared.Web;
 
 namespace Application.Basket.Commands.UpdateItem;
+
 public record UpdateItemCommand(Guid Id, int Quantity) : IRequest<Guid>;
 
 public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Guid>
@@ -34,8 +35,7 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Guid>
             throw new ArgumentException("Quantity cannot be negative.");
 
         // Directly call the GetCustomerByUserIdQuery handler instead of gRPC
-        var customer = await _mediator.Send(new GetCustomerByUserIdQuery(userId!.Value))
-                ?? throw new EntityNotFoundException("Customer not found");
+        var customerId = await _mediator.Send(new GetCustomerByUserIdQuery(userId.Value));
 
         // Validate ProductVariant exists
         var variant = await _mediator.Send(new GetVariantByIdQuery(request.Id))
@@ -48,12 +48,12 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Guid>
         }
 
         // Get or create basket
-        var basket = await _basketRepository.FirstOrDefaultAsync(new BasketWithItemsByCustomerIdSpec(customer.Id));
+        var basket = await _basketRepository.FirstOrDefaultAsync(new BasketWithItemsByCustomerIdSpec(customerId));
         if (basket == null)
         {
             basket = new Domain.Entities.Basket()
             {
-                CustomerId = customer.Id,
+                CustomerId = customerId,
                 Items = new List<BasketItem>(),
                 CreatedAt = DateTime.UtcNow,
             };

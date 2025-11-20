@@ -1,5 +1,4 @@
-﻿using Application.Catalog.Variants.Dtos;
-using Ardalis.Specification;
+﻿using Ardalis.Specification;
 using Domain.Entities;
 
 namespace Application.Common.Specifications;

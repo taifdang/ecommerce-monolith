@@ -1,4 +1,4 @@
-﻿using Application.Catalog.Categories.Dtos;
+﻿using Application.Catalog.Categories.Queries.GetListCategory;
 using Ardalis.Specification;
 using Domain.Entities;
 

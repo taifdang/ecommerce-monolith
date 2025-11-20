@@ -32,7 +32,7 @@ public class ProductDetailSpec : Specification<Product>
         //        MaxPrice = x.ProductVariants.Max(x => x.RegularPrice),
         //        Description = x.Description ?? string.Empty,
         //        Category = x.Category.Title,
-        //        Images = x.ProductImages.Select(img => new ProductImageDto
+        //        Images = x.ProductImages.Select(img => new ImageLookupDto
         //        {
         //            Id = img.Id,
         //            Url = img.ImageUrl,
@@ -50,7 +50,7 @@ public class ProductDetailSpec : Specification<Product>
         //            {
         //                Title = ov.Value,
         //                Label = ov.Label,
-        //                Images = ov.ProductImages!.Select(pi => new ProductImageDto
+        //                Images = ov.ProductImages!.Select(pi => new ImageLookupDto
         //                {
         //                    Id = pi.Id,
         //                    Url = pi.ImageUrl

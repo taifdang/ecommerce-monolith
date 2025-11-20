@@ -1,4 +1,4 @@
-﻿using Application.Catalog.Options.Dtos;
+﻿using Application.Catalog.Options.Queries.GetOptionValueById;
 using Ardalis.Specification;
 using Domain.Entities;
 

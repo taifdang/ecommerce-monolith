@@ -1,8 +1,8 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Catalog.Images.Commands.DeleteFile;
+using Application.Common.Interfaces;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Shared.Models.Media;
 using Shared.Models.User;
 using System.Security.Claims;
 

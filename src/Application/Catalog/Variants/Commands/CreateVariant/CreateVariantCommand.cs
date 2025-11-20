@@ -15,7 +15,6 @@ public class CreateVariantCommandHandler : IRequestHandler<CreateVariantCommand,
     {
         _productVariantRepository = productVariantRepository;
     }
-
     public async Task<Guid> Handle(CreateVariantCommand request, CancellationToken cancellationToken)
     {
         var variant = new ProductVariant

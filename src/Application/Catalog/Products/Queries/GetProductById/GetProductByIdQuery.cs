@@ -1,5 +1,4 @@
-﻿using Application.Catalog.Products.Dtos;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Common.Specifications;
 using MediatR;
 
@@ -9,7 +8,6 @@ public record GetProductByIdQuery(Guid Id) : IRequest<ProductItemDto>;
 
 public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductItemDto>
 {
-    //private readonly IUnitOfWork _unitOfWork;
     private readonly IRepository<Domain.Entities.Product> _productRepository;
 
     public GetProductByIdQueryHandler(IRepository<Domain.Entities.Product> productRepository)
@@ -39,12 +37,12 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
         //        Description = x.Description ?? string.Empty,
         //        Category = x.Category.Title,
         //        ProductType = x.Category.ProductType.Title,
-        //        Images = x.ProductImages.Select(img => new ProductImageDto
+        //        Images = x.ProductImages.Select(img => new ImageLookupDto
         //        {
         //            ProductOptionId = img.ProductOptionId,
         //            Url = img.Image,
         //        }).ToList(),
-        //        Options = x.ProductOptions.Select(po => new OptionDto 
+        //        Options = x.ProductOptions.Select(po => new OptionLookupDto 
         //        { 
         //            Title = po.OptionName,
         //            Values = po.OptionValues.Select(v => v.Value).ToList()
@@ -57,7 +55,7 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
         //            {
         //                Title = ov.Value,
         //                Label = ov.Label,
-        //                Image = ov.ProductImages!.Select(pi => new ProductImageDto
+        //                Image = ov.ProductImages!.Select(pi => new ImageLookupDto
         //                {
         //                    ProductOptionId = pi.ProductOptionId,
         //                    Url = pi.Image

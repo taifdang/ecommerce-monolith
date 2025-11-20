@@ -1,5 +1,5 @@
-﻿using Application.Basket.Queries.GetBasketByCustomerId;
-using Application.Catalog.Variants.Commands.ReduceStock;
+﻿using Application.Basket.Queries.GetCartList;
+using Application.Catalog.Variants.EventHandlers;
 using Application.Catalog.Variants.Queries.GetVariantById;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
@@ -25,7 +25,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
     }
     public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var basket = await _mediator.Send(new GetBasketByCustomerIdQuery(request.CustomerId));
+        var basket = await _mediator.Send(new GetBasketQuery(request.CustomerId));
 
         if(basket?.Items == null || !basket.Items.Any())
         {

@@ -1,5 +1,5 @@
 ﻿using Application.Catalog.Variants.Commands.GenerateVariant;
-using Application.Catalog.Variants.Commands.UpdateManyVariant;
+using Application.Catalog.Variants.Commands.UpdateVariants;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.EFCore;
@@ -106,7 +106,7 @@ public class CatalogDataSeeder : IDataSeeder
 
                     await _mediator.Send(generateCommand);
 
-                    var updateCommand = new UpdateManyVariantCommand(product.Id, 40000, 20, null);
+                    var updateCommand = new UpdateVariantsCommand(product.Id, 40000, 20, null);
 
                     await _mediator.Send(updateCommand);
                 }

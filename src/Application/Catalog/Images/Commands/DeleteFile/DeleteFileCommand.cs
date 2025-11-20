@@ -30,7 +30,7 @@ public class DeleteFileCommandHandler : IRequestHandler<DeleteFileCommand, Unit>
         {
             if(productImage.ImageUrl != null)
             {
-               await _storageService.DeleteFileAsync(new Shared.Models.Media.DeleteFileRequest { FileName = productImage.ImageUrl });
+               await _storageService.DeleteFileAsync(new DeleteFileRequest { FileName = productImage.ImageUrl });
             }
             await _productImageRepository.DeleteAsync(productImage, cancellationToken);
         }

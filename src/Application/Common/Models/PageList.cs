@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Shared.Core.Pagination;
+namespace Application.Common.Models;
 
 public class PageList<T>(List<T> items, int count, int pageIndex, int pageSize)
 {

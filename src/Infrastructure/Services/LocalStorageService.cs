@@ -1,9 +1,10 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Catalog.Images.Commands.DeleteFile;
+using Application.Catalog.Images.Commands.UploadFile;
+using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Shared.Constants;
-using Shared.Models.Media;
 using System.Net.Http.Headers;
 
 namespace Infrastructure.Services;
