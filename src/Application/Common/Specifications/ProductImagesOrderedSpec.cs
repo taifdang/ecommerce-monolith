@@ -4,23 +4,27 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class ProductImagesOrderedSpec : Specification<ProductImage, ImageLookupDto>
+public class ProductImagesOrderedSpec : Specification<ProductImage, ImageWithOptionValueLookupDto>
 {
     public ProductImagesOrderedSpec(Guid ProductId, Guid? OptionValueId)
     {
         Query.Where(x => x.ProductId == ProductId);
 
         Query
-            .OrderBy(x => 
+            .OrderBy(x =>
                   x.OptionValueId == OptionValueId ? 0 :
                   x.IsMain && x.OptionValueId == null ? 1 :
                   x.OptionValueId == null ? 2 : 3)
             .ThenBy(x => x.Id);
 
-        Query.Select(x => new ImageLookupDto 
-        { 
-            Id = x.ProductId,
-            Url = x.ImageUrl,
+        Query.Select(x => new ImageWithOptionValueLookupDto 
+        {
+            LookupDto = new ImageLookupDto
+            {
+                Id = x.Id,
+                Url = x.ImageUrl
+            },
+            OptionValueId =  x.OptionValueId
         });
     }
 

@@ -3,9 +3,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class ProductVariantInStockSpec : Specification<ProductVariant>
+public class ProductVariantInStockByIdSpec : Specification<ProductVariant>
 {
-    public ProductVariantInStockSpec(Guid Id)
+    public ProductVariantInStockByIdSpec(Guid Id)
     {
         Query
             .Where(x => 

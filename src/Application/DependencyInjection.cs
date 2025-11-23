@@ -1,4 +1,5 @@
-﻿using Application.Common.Behaviors;
+﻿using Application.Catalog.Images.Services;
+using Application.Common.Behaviors;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,9 @@ public static class DependencyInjection
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
+
+        // Service
+        builder.Services.AddScoped<IProductImageService, ProductImageService>();
 
         return builder;
     }

@@ -3,9 +3,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class ProductImageByIdSpec : Specification<ProductImage>
+public class ProductImageByProductIdAndIdSpec : Specification<ProductImage>
 {
-    public ProductImageByIdSpec(Guid productId, Guid Id)
+    public ProductImageByProductIdAndIdSpec(Guid productId, Guid Id)
     {
         Query
             .Where(x => x.ProductId == productId && x.Id == Id);

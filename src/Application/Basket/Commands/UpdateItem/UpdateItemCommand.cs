@@ -49,7 +49,7 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Guid>
         }
 
         // Get or create basket
-        var spec = new BasketWithItemsBySpec(customerId);
+        var spec = new BasketWithItemsByCustomerIdSpec(customerId);
         var basket = await _basketRepo.FirstOrDefaultAsync(spec);
 
         if (basket == null)

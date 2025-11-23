@@ -23,7 +23,7 @@ public class DeleteFileCommandHandler : IRequestHandler<DeleteFileCommand, Unit>
 
     public async Task<Unit> Handle(DeleteFileCommand request, CancellationToken cancellationToken)
     {
-        var spec = new ProductImageByIdSpec(request.ProductId, request.Id);
+        var spec = new ProductImageByProductIdAndIdSpec(request.ProductId, request.Id);
         var productImage = await _productImageRepository.FirstOrDefaultAsync(spec, cancellationToken);
         Guard.Against.NotFound(request.Id, productImage);
 

@@ -4,9 +4,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class OptionValueByIdsSpec : Specification<OptionValue, OptionValueDto>
+public class OptionValuesByIdsSpec : Specification<OptionValue, OptionValueDto>
 {
-    public OptionValueByIdsSpec(List<Guid> optionValues)
+    public OptionValuesByIdsSpec(List<Guid> optionValues)
     {
         Query
             .Where(x => optionValues.Contains(x.Id));

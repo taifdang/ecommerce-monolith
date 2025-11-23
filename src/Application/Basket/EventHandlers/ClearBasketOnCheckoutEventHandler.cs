@@ -16,7 +16,7 @@ public class ClearBasketOnCheckoutEventHandler : INotificationHandler<BasketShou
 
     public async Task Handle(BasketShouldBeClearedEvent notification, CancellationToken cancellationToken)
     {
-        var spec = new BasketWithItemsBySpec(notification.CustomerId);
+        var spec = new BasketWithItemsByCustomerIdSpec(notification.CustomerId);
         var basket = await _basketRepo.FirstOrDefaultAsync(spec);
 
         if (basket != null)

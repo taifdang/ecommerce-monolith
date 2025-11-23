@@ -1,14 +1,13 @@
-﻿using Application.Catalog.Variants.Queries.GetVariantById;
-using Application.Catalog.Variants.Queries.GetVariantByOption;
+﻿using Application.Catalog.Variants.Queries.GetVariantByOption;
 using Application.Common.Models;
 using Ardalis.Specification;
 using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class ProductVariantOptionFilterSpec : Specification<ProductVariant, VariantItemDto>
+public class ProductVariantsByOptionValuesSpec : Specification<ProductVariant, VariantItemDto>
 {
-    public ProductVariantOptionFilterSpec(
+    public ProductVariantsByOptionValuesSpec(
         Guid productId, 
         List<Guid> optionValues, 
         bool exactMatch)

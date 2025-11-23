@@ -21,7 +21,7 @@ public class ReserveStockOnOrderCreatedEventHandler : INotificationHandler<Order
         foreach (var item in notification.Items)
         {
             var variantInStock = await _productVariantRepository
-                .FirstOrDefaultAsync(new ProductVariantInStockSpec(item.ProductVariantId), cancellationToken);
+                .FirstOrDefaultAsync(new ProductVariantInStockByIdSpec(item.ProductVariantId), cancellationToken);
 
             if (variantInStock is null)
             {

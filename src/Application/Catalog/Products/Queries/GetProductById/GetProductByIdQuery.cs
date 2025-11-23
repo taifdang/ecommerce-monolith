@@ -1,9 +1,9 @@
-﻿using Application.Common.Interfaces;
-using Application.Common.Models;
+﻿using Application.Catalog.Images.Services;
+using Application.Common.Interfaces;
 using Application.Common.Specifications;
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace Application.Catalog.Products.Queries.GetProductById;
 
@@ -12,78 +12,38 @@ public record GetProductByIdQuery(Guid Id) : IRequest<ProductItemDto>;
 public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, ProductItemDto>
 {
     private readonly IRepository<Domain.Entities.Product> _productRepository;
-    private readonly IMapper _mapper;
-    private readonly IApplicationDbContext _context;
+    private readonly IProductImageService _productImageService;
 
     public GetProductByIdQueryHandler(
         IRepository<Domain.Entities.Product> productRepository,
+        IProductImageService productImageService,
         IMapper mapper,
         IApplicationDbContext context)
     {
         _productRepository = productRepository;
-        _mapper = mapper;
-        _context = context;
+        _productImageService = productImageService;
     }
 
     public async Task<ProductItemDto> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
         // *When user click product, we will load all options, option values, images for product to client side
         // *Then user select option values, we will generate variant on client side (based on option values selected) to show Price, sku, quantity, image...
-        var products = await _productRepository.FirstOrDefaultAsync(new ProductDetailSpec(request.Id), cancellationToken);
+        var products = await _productRepository.FirstOrDefaultAsync(new ProductDetailsByIdSpec(request.Id), cancellationToken);
         if (products == null)
         {
             return null!;
         }
 
-        var rawImages = await _context.ProductImages
-            .Where(x => x.ProductId == request.Id)
-            .AsNoTracking()
-            .Select(x => new ProductImageLookupDto
-            {
-                Id = x.Id,
-                Url = x.ImageUrl,
-                OptionValueId = x.OptionValueId,
-                IsMain = x.IsMain,
-            })
-            .ToListAsync();
+        var images = await _productImageService.GetOrderedImagesAsync(request.Id, null);
 
-        var imageLookup = rawImages.Select(x => new ImageLookupDto
-        {
-            Id = x.Id,
-            Url = x.Url
-        });
-
-        products.MainImage = rawImages
-            .Where(x => x.OptionValueId == null &&  x.IsMain)
-            .Select(x => new ImageLookupDto
-            {
-                Id = x.Id,
-                Url = x.Url
-            }).FirstOrDefault();
-
-        products.Images = rawImages
-            .Where(x => x.OptionValueId == null && !x.IsMain)
-            .Select(x => new ImageLookupDto
-            {
-                Id = x.Id,
-                Url = x.Url,
-            })
-            .ToList();
-
-        var optionValueImages = rawImages
-                .Where(i => i.OptionValueId != null)
-                .ToDictionary(
-                    i => i.OptionValueId!.Value,
-                    i => imageLookup.First(x => x.Id == i.Id)
-                );
+        products.MainImage = images.MainImage;
+        products.Images = images.CommonImages;
 
         var options = products.Options.Select(po => new ProductOptionDto
         {
             OptionValues = po.OptionValues.Select(x => new ProductOptionValueDto
             {
-                Image = optionValueImages.TryGetValue(x.Id, out var img) 
-                        ? img
-                        : null
+                Image = images.VariantImages.TryGetValue(x.Id, out var img) ? img : null
             }).ToList()
         }).ToList();
 

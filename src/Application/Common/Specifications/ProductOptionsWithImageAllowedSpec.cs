@@ -3,9 +3,9 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class ProductOptionAllowImage : Specification<ProductOption>
+public class ProductOptionsWithImageAllowedSpec : Specification<ProductOption>
 {
-    public ProductOptionAllowImage(Guid productId)
+    public ProductOptionsWithImageAllowedSpec(Guid productId)
     {
         Query
             .Where(x => x.ProductId == productId && x.AllowImage);

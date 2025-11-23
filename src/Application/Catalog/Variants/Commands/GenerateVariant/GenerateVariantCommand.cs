@@ -36,7 +36,7 @@ public class GenerateVariantCommandHandler : IRequestHandler<GenerateVariantComm
         // Implementation for generating variants would go here
         var optionValues = request.OptionValueFilter.SelectMany(x => x.Value).ToList();
 
-        var optionValueEntities = await _optionValueRepository.ListAsync(new OptionValueByIdsSpec(optionValues), cancellationToken);
+        var optionValueEntities = await _optionValueRepository.ListAsync(new OptionValuesByIdsSpec(optionValues), cancellationToken);
 
         // Logic to create variants based on optionValueEntities would be implemented here
         var optionValueDict = optionValueEntities.ToDictionary(x => x.Id, x => x.Value ?? x.Label );

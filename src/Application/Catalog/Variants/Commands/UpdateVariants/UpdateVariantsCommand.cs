@@ -19,7 +19,7 @@ public class UpdateVariantsCommandHandler : IRequestHandler<UpdateVariantsComman
 
     public async Task<Guid> Handle(UpdateVariantsCommand request, CancellationToken cancellationToken)
     {
-        var variants = await _productVariantRepository.ListAsync(new VariantByProductIdSpec(request.ProductId));     
+        var variants = await _productVariantRepository.ListAsync(new ProductVariantByProductIdSpec(request.ProductId));     
         Guard.Against.NotFound(request.ProductId, variants);
 
         foreach (var v in variants)

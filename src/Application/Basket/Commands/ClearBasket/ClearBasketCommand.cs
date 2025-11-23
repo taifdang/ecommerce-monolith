@@ -17,7 +17,7 @@ public class ClearCartCommandHandler : IRequestHandler<ClearBasketCommand, Unit>
 
     public async Task<Unit> Handle(ClearBasketCommand request, CancellationToken cancellationToken)
     {
-        var spec = new BasketWithItemsBySpec(request.CustomerId);
+        var spec = new BasketWithItemsByCustomerIdSpec(request.CustomerId);
         var basket = await _basketRepo.FirstOrDefaultAsync(spec);
 
         if (basket != null)

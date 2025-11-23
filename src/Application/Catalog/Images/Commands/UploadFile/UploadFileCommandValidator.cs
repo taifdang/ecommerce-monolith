@@ -1,5 +1,4 @@
 ﻿using Application.Common.Interfaces;
-using Application.Common.Specifications;
 using Application.Common.Validation;
 using FluentValidation;
 
@@ -16,34 +15,35 @@ public class UploadFileCommandValidator : AbstractValidator<UploadFileCommand>
 
         RuleFor(x => x.MediaFile).SetValidator(new FileValidator(1, [".jpg", ".jpeg", ".png"]));
 
-        RuleFor(x => x.ProductId)
-          .MustAsync(ProductExists).WithMessage("Product not found.");
+        RuleFor(x => x.ProductId).NotNull().WithMessage("ProductId is requried.");
+        //RuleFor(x => x.ProductId)
+        //  .MustAsync(ProductExists).WithMessage("Product not found.");
 
-        RuleFor(x => x)
-            .MustAsync(BeValidImageRules)
-            .WithMessage("Invalid image rules.")
-            .When(x => x.MediaFile != null);
+        //RuleFor(x => x)
+        //    .MustAsync(BeValidImageRules)
+        //    .WithMessage("Invalid image rules.")
+        //    .When(x => x.MediaFile != null);
     }
 
-    private async Task<bool> ProductExists(Guid Id, CancellationToken ct)
-    {
-        var specification = new ProductByIdSpec(Id);
-        await _productImageRepository.AnyAsync();
-        return false;
-    }
+    //private async Task<bool> ProductExists(Guid Id, CancellationToken ct)
+    //{
+    //    var specification = new ProductByIdSpec(Id);
+    //    await _productImageRepository.AnyAsync();
+    //    return false;
+    //}
 
-    private async Task<bool> BeValidImageRules(UploadFileCommand cmd, CancellationToken ct)
-    {
-        var specification = new ProductImageFilterSpec(cmd.ProductId, cmd.OptionValueId);
+    //private async Task<bool> BeValidImageRules(UploadFileCommand cmd, CancellationToken ct)
+    //{
+    //    var specification = new ProductImageFilterSpec(cmd.ProductId, cmd.OptionValueId);
 
-        if (cmd.OptionValueId is null)
-        {  
-            var imgs = await _productImageRepository.ListAsync(specification);
-            var main = imgs.Count(x => x.IsMain);
-            var subs = imgs.Count(x => !x.IsMain);
-            return cmd.IsMain ? main < 1 : subs < 8;
-        }
-        // If image linked to option value, only one image allowed
-        return !await _productImageRepository.AnyAsync(specification);
-    }
+    //    if (cmd.OptionValueId is null)
+    //    {  
+    //        var imgs = await _productImageRepository.ListAsync(specification);
+    //        var main = imgs.Count(x => x.IsMain);
+    //        var subs = imgs.Count(x => !x.IsMain);
+    //        return cmd.IsMain ? main < 1 : subs < 8;
+    //    }
+    //    // If image linked to option value, only one image allowed
+    //    return !await _productImageRepository.AnyAsync(specification);
+    //}
 }

@@ -29,7 +29,7 @@ public class GetVariantByOptionQueryHandler : IRequestHandler<GetVariantByOption
         // boolean
         var exact = request.OptionValueMap.Count == optionCount;
 
-        var spec = new ProductVariantOptionFilterSpec(request.ProductId, request.OptionValueMap, exact);
+        var spec = new ProductVariantsByOptionValuesSpec(request.ProductId, request.OptionValueMap, exact);
         var variants = await _productVariantRepository.ListAsync(spec, cancellationToken);
 
         if (!variants.Any())

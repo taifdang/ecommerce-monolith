@@ -1,6 +1,8 @@
-﻿using Application.Common.Exceptions;
+﻿using Application.Catalog.Images.Services;
+using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Specifications;
+using Ardalis.GuardClauses;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -18,21 +20,28 @@ public class CreateImageCommandHandler : IRequestHandler<UploadFileCommand, Unit
     private readonly IRepository<ProductImage> _productImageRepository;
     private readonly IRepository<OptionValue> _optionValueRepository;
     private readonly IFileService _storageService;
+    private readonly IProductImageService _productImageService;
     public CreateImageCommandHandler(
         IRepository<ProductImage> productImageRepository,
         IRepository<OptionValue> optionValueRepository,
-        IFileService storageService)
+        IFileService storageService,
+        IProductImageService productImageService)
     {
         _productImageRepository = productImageRepository;
         _optionValueRepository = optionValueRepository;
-        _storageService = storageService;    
+        _storageService = storageService;
+        _productImageService = productImageService;
     }
 
     public async Task<Unit> Handle(UploadFileCommand request, CancellationToken cancellationToken)
     {
+        // check rule
+        if (await _productImageService.BeValidImageRules(request, cancellationToken) == false)
+            throw new Exception("Input invalid");
+
         if (request.OptionValueId.HasValue)
         {       
-            if(!await _optionValueRepository.AnyAsync(new OptionValueAllowImageSpec(request.OptionValueId.Value, request.ProductId)))
+            if(!await _optionValueRepository.AnyAsync(new OptionValueWithImageAllowedSpec(request.OptionValueId.Value, request.ProductId)))
             {
                 throw new EntityNotFoundException(nameof(OptionValue), "This OptionValue not support add image");
             }

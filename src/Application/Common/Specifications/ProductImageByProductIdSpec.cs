@@ -3,11 +3,10 @@ using Domain.Entities;
 
 namespace Application.Common.Specifications;
 
-public class ProductImageListSpec : Specification<ProductImage>
+public class ProductImageByProductIdSpec : Specification<ProductImage>
 {
-    public ProductImageListSpec(Guid ProductId)
+    public ProductImageByProductIdSpec(Guid ProductId)
     {
         Query.Where(x => x.ProductId == ProductId);
-             //.OrderBy(y => y.Id);
     }
 }

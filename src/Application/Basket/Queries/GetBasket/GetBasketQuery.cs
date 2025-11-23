@@ -47,7 +47,7 @@ public class GetBasketQueryHandler : IRequestHandler<GetBasketQuery, BasketDto>
             throw new EntityNotFoundException("User not found");
 
         // Get basket
-        var spec = new BasketWithItemsBySpec(customerId.Value);
+        var spec = new BasketWithItemsByCustomerIdSpec(customerId.Value);
         var basket = await _basketRepo.FirstOrDefaultAsync(spec, cancellationToken);
 
         // If basket doesn't exist, return an empty basket
