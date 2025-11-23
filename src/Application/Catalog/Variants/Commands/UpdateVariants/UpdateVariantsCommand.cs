@@ -1,7 +1,6 @@
-﻿using Application.Common;
-using Application.Common.Exceptions;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Common.Specifications;
+using Ardalis.GuardClauses;
 using Domain.Entities;
 using MediatR;
 
@@ -20,23 +19,14 @@ public class UpdateVariantsCommandHandler : IRequestHandler<UpdateVariantsComman
 
     public async Task<Guid> Handle(UpdateVariantsCommand request, CancellationToken cancellationToken)
     {
-        var variants = await _productVariantRepository.ListAsync(new VariantByProductIdSpec(request.ProductId))
-            ?? throw new EntityNotFoundException(nameof(Product), "null");
+        var variants = await _productVariantRepository.ListAsync(new VariantByProductIdSpec(request.ProductId));     
+        Guard.Against.NotFound(request.ProductId, variants);
 
         foreach (var v in variants)
         {
-            if (request.Price.HasValue)
-            {
-                v.Price = request.Price.Value;
-            }
-            if (request.Quantity.HasValue)
-            {
-                v.Quantity = request.Quantity.Value;
-            }
-            if(!string.IsNullOrWhiteSpace(request.Sku)) 
-            { 
-                v.Sku = request.Sku;
-            }       
+            if (request.Price.HasValue) v.Price = request.Price.Value;       
+            if (request.Quantity.HasValue) v.Quantity = request.Quantity.Value;
+            if(!string.IsNullOrWhiteSpace(request.Sku)) v.Sku = request.Sku;   
         }
 
         await _productVariantRepository.UpdateRangeAsync(variants, cancellationToken);

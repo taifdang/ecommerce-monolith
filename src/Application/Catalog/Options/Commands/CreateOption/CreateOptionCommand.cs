@@ -7,14 +7,15 @@ namespace Application.Catalog.Options.Commands.CreateOption;
 
 public record CreateOptionCommand(Guid ProductId, string OptionName, bool AllowImage = false) : IRequest<Unit>;
 
-
 public class CreateOptionCommandHandler : IRequestHandler<CreateOptionCommand, Unit>
 {
     private readonly IRepository<ProductOption> _productOptionRepository;
+
     public CreateOptionCommandHandler(IRepository<ProductOption> productOptionrepository)
     {
         _productOptionRepository = productOptionrepository;
     }
+
     public async Task<Unit> Handle(CreateOptionCommand request, CancellationToken cancellationToken)
     {
         var existing = await _productOptionRepository.AnyAsync(new ProductOptionAllowImage(request.ProductId));
@@ -24,7 +25,6 @@ public class CreateOptionCommandHandler : IRequestHandler<CreateOptionCommand, U
             throw new Exception("Only one product option can allow images per product.");
         }
 
-        //var productOption = _mapper.Map<ProductOption>(request);
         var productOption = new ProductOption
         {
             ProductId = request.ProductId,
@@ -33,6 +33,7 @@ public class CreateOptionCommandHandler : IRequestHandler<CreateOptionCommand, U
         };
 
         await _productOptionRepository.AddAsync(productOption, cancellationToken);
+
         return Unit.Value;
     }
 }

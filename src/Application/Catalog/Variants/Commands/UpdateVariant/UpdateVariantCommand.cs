@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Specifications;
+using Ardalis.GuardClauses;
 using Domain.Entities;
 using MediatR;
 
@@ -19,11 +20,11 @@ public class UpdateVariantCommandHandler : IRequestHandler<UpdateVariantCommand,
 
     public async Task<Unit> Handle(UpdateVariantCommand request, CancellationToken cancellationToken)
     {
-        var variant = await _productVariantRepository.FirstOrDefaultAsync(new ProductVariantFilterSpec(null, request.Id))
-            ?? throw new EntityNotFoundException(nameof(ProductVariant), request.Id);
+        var variant = await _productVariantRepository.FirstOrDefaultAsync(new ProductVariantFilterSpec(null, request.Id));
+        Guard.Against.NotFound(request.Id, variant);
 
-        //variant.Sku = variant.Sku;
         variant.Price = request.RegularPrice;
+
         if(request.Quantity > 0)
         {
             variant.Quantity = request.Quantity;
@@ -32,8 +33,7 @@ public class UpdateVariantCommandHandler : IRequestHandler<UpdateVariantCommand,
         {
             throw new Exception("Quantity is not negative");
         }
-        //no update variant option value, percent
-
+        
         await _productVariantRepository.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;

@@ -18,6 +18,7 @@ public class GetListCategoryQueryHandler : IRequestHandler<GetListCategoryQuery,
         _categoryRepo = categoryRepo;
         _mapper = mapper;
     }
+
     public async Task<List<CategoryDto>> Handle(GetListCategoryQuery request, CancellationToken cancellationToken)
     {
         var categories = _categoryRepo.ListAsync();

@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 //ref: https://www.codesimple.dev/blogPost/ea8c4560-36a5-4d72-9ed6-5f6d74a22036
 //ref: https://code-maze.com/cqrs-mediatr-fluentvalidation
 namespace Application.Catalog.Images.Commands.UploadFile;
-
 public record UploadFileCommand(Guid ProductId, Guid? OptionValueId, bool IsMain = false)  : IRequest<Unit>
 {
     public IFormFile MediaFile { get; init; }
@@ -28,12 +27,9 @@ public class CreateImageCommandHandler : IRequestHandler<UploadFileCommand, Unit
         _optionValueRepository = optionValueRepository;
         _storageService = storageService;    
     }
+
     public async Task<Unit> Handle(UploadFileCommand request, CancellationToken cancellationToken)
     {
-        // Validate
-        //if (request.MediaFile is null)
-        //    throw new ArgumentException("Media file cannot be null.", nameof(request.MediaFile));
-
         if (request.OptionValueId.HasValue)
         {       
             if(!await _optionValueRepository.AnyAsync(new OptionValueAllowImageSpec(request.OptionValueId.Value, request.ProductId)))
@@ -41,7 +37,7 @@ public class CreateImageCommandHandler : IRequestHandler<UploadFileCommand, Unit
                 throw new EntityNotFoundException(nameof(OptionValue), "This OptionValue not support add image");
             }
         }
-        // Save file
+
         if (request.MediaFile != null)
         {
             var pathMedia = await _storageService.AddFileAsync(request.MediaFile);

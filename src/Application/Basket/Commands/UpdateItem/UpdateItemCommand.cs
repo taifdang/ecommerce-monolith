@@ -5,7 +5,6 @@ using Application.Common.Specifications;
 using Application.Customer.Queries.GetCustomerByUserId;
 using Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Shared.Web;
 
 namespace Application.Basket.Commands.UpdateItem;
@@ -26,6 +25,7 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Guid>
         _mediator = mediator;
         _currentUserProdvider = currentUserProdvider;
     }
+
     public async Task<Guid> Handle(UpdateItemCommand request, CancellationToken cancellationToken)
     {
         var userId = _currentUserProdvider.GetCurrentUserId();

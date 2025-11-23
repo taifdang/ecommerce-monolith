@@ -23,6 +23,7 @@ public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerComman
         };
 
         await _customerRepository.AddAsync(customer, cancellationToken);
+
         return Unit.Value;
     }
 }

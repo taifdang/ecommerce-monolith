@@ -27,6 +27,7 @@ public class ReserveStockOnOrderCreatedEventHandler : INotificationHandler<Order
             {
                 throw new EntityNotFoundException();
             }
+
             if (item.Quantity > variantInStock.Quantity)
             {
                 throw new Exception("Not enough quantity");

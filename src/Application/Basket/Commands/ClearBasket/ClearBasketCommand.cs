@@ -9,10 +9,12 @@ public record ClearBasketCommand(Guid CustomerId) : IRequest<Unit>;
 public class ClearCartCommandHandler : IRequestHandler<ClearBasketCommand, Unit>
 {
     private readonly IRepository<Domain.Entities.Basket> _basketRepo;
+
     public ClearCartCommandHandler(IRepository<Domain.Entities.Basket> basketRepo)
     {
         _basketRepo = basketRepo;
     }
+
     public async Task<Unit> Handle(ClearBasketCommand request, CancellationToken cancellationToken)
     {
         var spec = new BasketWithItemsBySpec(request.CustomerId);

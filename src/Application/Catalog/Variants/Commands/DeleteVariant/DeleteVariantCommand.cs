@@ -1,6 +1,7 @@
 ﻿using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Specifications;
+using Ardalis.GuardClauses;
 using Domain.Entities;
 using MediatR;
 
@@ -18,8 +19,8 @@ public class DeleteVariantCommandHandler : IRequestHandler<DeleteVariantCommand,
 
     public async Task<Unit> Handle(DeleteVariantCommand request, CancellationToken cancellationToken)
     {
-        var variant = await _productVariantRepository.FirstOrDefaultAsync(new ProductVariantFilterSpec(request.ProductId, request.Id))
-            ?? throw new EntityNotFoundException(nameof(ProductVariant), request.Id);
+        var variant = await _productVariantRepository.FirstOrDefaultAsync(new ProductVariantFilterSpec(request.ProductId, request.Id));
+        Guard.Against.NotFound(request.Id, variant);
 
         await _productVariantRepository.DeleteAsync(variant, cancellationToken);
 

@@ -2,7 +2,6 @@
 using Application.Catalog.Variants.Queries.GetVariantById;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using AutoMapper;
 using Domain.Entities;
 using MediatR;
 
@@ -13,16 +12,15 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
 {
     private readonly IRepository<Domain.Entities.Order> _orderRepo;
     private readonly IMediator _mediator;
-    private readonly IMapper _mapper;
+
     public CreateOrderCommandHandler(
         IRepository<Domain.Entities.Order> orderRepo,
-        IMediator mediator,
-        IMapper mapper)
+        IMediator mediator)
     {
         _orderRepo = orderRepo;
         _mediator = mediator;
-        _mapper = mapper;
     }
+
     public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
         var basket = await _mediator.Send(new GetBasketQuery(request.CustomerId));
@@ -63,16 +61,6 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
             totalAmount += orderItem.TotalPrice;
         }
 
-        //var order = new Domain.Entities.Order
-        //{
-        //    CustomerId = request.CustomerId,
-        //    Status = OrderStatus.Pending,
-        //    TotalAmount = totalAmount,
-        //    ShippingAddress = request.ShippingAddress,
-        //    Items = orderItems,
-        //    OrderDate = DateTime.UtcNow,
-        //    CreatedAt = DateTime.UtcNow
-        //};
         var order = Domain.Entities.Order.Create(Guid.NewGuid(), request.CustomerId,
                 request.ShippingAddress, orderItems, totalAmount);
 

@@ -1,6 +1,6 @@
-﻿using Application.Common.Exceptions;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Common.Specifications;
+using Ardalis.GuardClauses;
 using MediatR;
 
 namespace Application.Catalog.Products.Commands.DeleteProduct;
@@ -16,12 +16,11 @@ public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand,
         _productRepository = productRepository;
     }
 
-
     public async Task<Unit> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.FirstOrDefaultAsync(new ProductByIdSpec(request.Id))
-            ?? throw new EntityNotFoundException(nameof(Products), request.Id);
-
+        var product = await _productRepository.FirstOrDefaultAsync(new ProductByIdSpec(request.Id));
+        Guard.Against.NotFound(request.Id, product);
+         
         await _productRepository.DeleteAsync(product, cancellationToken);
 
         return Unit.Value;

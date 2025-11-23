@@ -9,6 +9,7 @@ public record GetCustomerByUserIdQuery(Guid UserId) : IRequest<Guid>;
 public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByUserIdQuery, Guid>
 {
     private readonly IReadRepository<Domain.Entities.Customer> _customerRepo;
+
     public GetCustomerByIdQueryHandler(IReadRepository<Domain.Entities.Customer> customerRepo)
     {
         _customerRepo = customerRepo;

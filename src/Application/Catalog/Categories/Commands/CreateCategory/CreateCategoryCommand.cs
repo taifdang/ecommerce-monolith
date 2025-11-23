@@ -13,7 +13,6 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
     {
         _categoryRepo = categoryRepo;
     }
-
     public async Task<Guid> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
         var category = new Category

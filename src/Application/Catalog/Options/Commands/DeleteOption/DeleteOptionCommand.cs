@@ -1,17 +1,17 @@
 ﻿using MediatR;
-using Application.Common.Exceptions;
 using Domain.Entities;
 using Application.Common.Interfaces;
 using Application.Common.Specifications;
+using Ardalis.GuardClauses;
 
 namespace Application.Catalog.Options.Commands.DeleteOption;
 
 public record DeleteOptionCommand(Guid Id, Guid ProductId) : IRequest<Unit>;
 
-
 public class DeleteOptionCommandHandler : IRequestHandler<DeleteOptionCommand, Unit>
 {
     private readonly IRepository<ProductOption> _productOptionRepository;
+
     public DeleteOptionCommandHandler(IRepository<ProductOption> productOptionRepository)
     {
         _productOptionRepository = productOptionRepository;
@@ -19,10 +19,11 @@ public class DeleteOptionCommandHandler : IRequestHandler<DeleteOptionCommand, U
 
     public async Task<Unit> Handle(DeleteOptionCommand request, CancellationToken cancellationToken)
     {
-        var productOption = await _productOptionRepository.FirstOrDefaultAsync(new ProductOptionFilterSpec(request.ProductId, request.Id))
-            ?? throw new EntityNotFoundException(nameof(ProductOption), request.Id);
+        var productOption = await _productOptionRepository.FirstOrDefaultAsync(new ProductOptionFilterSpec(request.ProductId, request.Id));
+        Guard.Against.NotFound(request.Id, productOption);
 
         await _productOptionRepository.DeleteAsync(productOption, cancellationToken);
+
         return Unit.Value;
     }
 }

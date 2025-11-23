@@ -25,9 +25,8 @@ public class DeleteFileCommandHandler : IRequestHandler<DeleteFileCommand, Unit>
     {
         var spec = new ProductImageByIdSpec(request.ProductId, request.Id);
         var productImage = await _productImageRepository.FirstOrDefaultAsync(spec, cancellationToken);
-        Guard.Against.Null(productImage);
+        Guard.Against.NotFound(request.Id, productImage);
 
-        // Remove file
         if (productImage != null)
         {
             if(productImage.ImageUrl != null)

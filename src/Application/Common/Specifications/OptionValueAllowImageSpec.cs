@@ -7,11 +7,11 @@ public class OptionValueAllowImageSpec : Specification<OptionValue>
 {
     public OptionValueAllowImageSpec(Guid optionValueId, Guid productId)
     {
-        Query   
-            .Where(x => 
+        Query
+            .Where(x =>
                 x.ProductOption.ProductId == productId &&
-                x.Id == optionValueId && 
-                x.ProductOption.AllowImage)
-            .Include(x => x.ProductOption);
+                x.Id == optionValueId &&
+                x.ProductOption.AllowImage);
+            //.Include(x => x.ProductOption);
     }
 }

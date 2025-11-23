@@ -41,7 +41,7 @@ public class GenerateVariantCommandHandler : IRequestHandler<GenerateVariantComm
         // Logic to create variants based on optionValueEntities would be implemented here
         var optionValueDict = optionValueEntities.ToDictionary(x => x.Id, x => x.Value ?? x.Label );
 
-        //var combinations = request.OptionValueFilter.Values.ToList();
+        //var combinations = request.OptionValueFilter.OptionValues.ToList();
         var combinations = CombinationHelper.CartesianProduct(request.OptionValueFilter.Values).ToList();
         if (combinations.Count == 0)
             throw new InvalidOperationException("No combinations generated.");

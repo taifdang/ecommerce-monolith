@@ -26,6 +26,7 @@ public class GetVariantByOptionQueryHandler : IRequestHandler<GetVariantByOption
             new ProductOptionFilterSpec(request.ProductId, null), 
             cancellationToken);
 
+        // boolean
         var exact = request.OptionValueMap.Count == optionCount;
 
         var spec = new ProductVariantOptionFilterSpec(request.ProductId, request.OptionValueMap, exact);

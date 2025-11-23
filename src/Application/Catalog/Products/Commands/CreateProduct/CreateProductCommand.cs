@@ -17,16 +17,16 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, Guid>
 
     public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        //var product = _mapper.Map<Domain.Entities.Product>(request);
         var product = new Product
         {
             CategoryId = request.CategoryId,
             Title = request.Title,
             Description = request.Description,
             Status = Domain.Enums.ProductStatus.Draft
-
         };
+
         await _productRepository.AddAsync(product, cancellationToken);
+
         return product.Id;
     }
 }

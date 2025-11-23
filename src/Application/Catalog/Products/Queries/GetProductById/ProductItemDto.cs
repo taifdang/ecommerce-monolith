@@ -12,8 +12,9 @@ public class ProductItemDto
     public decimal MaxPrice { get; init; }
     public string Description { get; init; }
     public string Category { get; init; }
-    public List<ImageLookupDto> Images { get; init; }
-    public List<ProductOptionDto> Options { get; init; }
+    public ImageLookupDto? MainImage { get; set; }
+    public List<ImageLookupDto>? Images { get; set; }
+    public List<ProductOptionDto> Options { get; set; }
 
     private class Mapping : Profile
     {
@@ -28,7 +29,7 @@ public class ProductItemDto
 
             CreateMap<ProductOption, ProductOptionDto>()
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.OptionName))
-                .ForMember(dest => dest.Values, opt => opt.MapFrom(src => src.OptionValues));
+                .ForMember(dest => dest.OptionValues, opt => opt.MapFrom(src => src.OptionValues));
 
             CreateMap<Product, ProductItemDto>()
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Title))

@@ -1,6 +1,6 @@
-﻿using Application.Common.Exceptions;
-using Application.Common.Interfaces;
+﻿using Application.Common.Interfaces;
 using Application.Common.Specifications;
+using Ardalis.GuardClauses;
 using MediatR;
 
 namespace Application.Catalog.Products.Commands.UpdateProduct;
@@ -18,14 +18,15 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
 
     public async Task<Unit> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.FirstOrDefaultAsync(new ProductByIdSpec(request.Id))
-            ?? throw new EntityNotFoundException(nameof(Products), request.Id);
+        var product = await _productRepository.FirstOrDefaultAsync(new ProductByIdSpec(request.Id));
+        Guard.Against.NotFound(request.Id, product);
 
         product.CategoryId = request.CategoryId;
         product.Title = request.Title;
         product.Description = request.Description;
 
         await _productRepository.SaveChangesAsync(cancellationToken);
+
         return Unit.Value;
     }
 }
