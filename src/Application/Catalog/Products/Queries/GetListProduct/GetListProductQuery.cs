@@ -1,6 +1,7 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Catalog.Products.Specifications;
+using Application.Common.Interfaces;
 using Application.Common.Models;
-using Application.Common.Specifications;
+using Ardalis.Specification;
 using MediatR;
 
 namespace Application.Catalog.Products.Queries.GetListProduct;
@@ -16,8 +17,12 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
     }
     public async Task<PageList<ProductListDto>> Handle(GetListProductQuery request, CancellationToken cancellationToken)
     {
-        var specification = new ProductListPaginationSpec(request.PageIndex * request.PageSize, request.PageSize);
-        var productList = await _productRepository.ListAsync(specification, cancellationToken);
+        var spec = new ProductSpec()
+            .WithIsPublished()
+            .ApplyPaging(request.PageIndex * request.PageSize, request.PageSize)
+            .WithProjectionOf(new ProductListProjectionSpec());
+
+        var productList = await _productRepository.ListAsync(spec, cancellationToken);
 
         return new PageList<ProductListDto>(
            productList!,

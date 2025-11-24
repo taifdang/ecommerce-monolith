@@ -1,8 +1,8 @@
-﻿using Application.Catalog.Images.Commands.DeleteFile;
-using Application.Catalog.Images.Commands.UploadFile;
-using Shared.Web;
+﻿using Shared.Web;
 using Microsoft.AspNetCore.Mvc;
-using Application.Catalog.Images.Queries.GetProductImage;
+using Application.Catalog.Products.Commands.UploadFile;
+using Application.Catalog.Products.Commands.DeleteFile;
+using Application.Catalog.Products.Queries.GetProductImage;
 
 namespace Api.Controllers.Catalog;
 

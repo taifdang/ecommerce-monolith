@@ -5,8 +5,8 @@ namespace Application.Common.Models;
 
 public class ImageLookupDto 
 { 
-    public Guid Id { get; init; }
-    public string? Url { get; init; }
+    public Guid Id { get; set; }
+    public string? Url { get; set; }
     private class Mapping : Profile
     {
         public Mapping()

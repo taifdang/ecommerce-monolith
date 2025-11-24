@@ -10,10 +10,9 @@ public class CustomersController(ICurrentUserProdvider currentUserProdvider) : B
     private readonly ICurrentUserProdvider _currentUserProdvider = currentUserProdvider;
 
     [HttpGet]
-    public async Task<Guid> GetCurrentCustomer()
+    public async Task<IActionResult> GetCurrentCustomer()
     {
         var userId = _currentUserProdvider.GetCurrentUserId();
-        var customer = await Mediator.Send(new GetCustomerByUserIdQuery(Guid.Parse(userId)));
-        return customer;
+        return Ok(await Mediator.Send(new GetCustomerByUserIdQuery(Guid.Parse(userId))));
     }
 }

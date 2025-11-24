@@ -1,5 +1,5 @@
-﻿using Application.Common.Interfaces;
-using Application.Common.Specifications;
+﻿using Application.Basket.Specifications;
+using Application.Common.Interfaces;
 using Domain.Events;
 using MediatR;
 
@@ -16,14 +16,16 @@ public class ClearBasketEventHandler : INotificationHandler<BasketShouldBeCleare
 
     public async Task Handle(BasketShouldBeClearedEvent e, CancellationToken cancellationToken)
     {
-        var spec = new BasketWithItemsByCustomerIdSpec(e.CustomerId);
+        var spec = new BasketSpec()
+            .ByCustomerId(e.CustomerId)
+            .WithItems();
+
         var basket = await _basketRepo.FirstOrDefaultAsync(spec);
 
         if (basket != null)
         {
             basket.ClearItems();
             await _basketRepo.SaveChangesAsync(cancellationToken);
-            //await _basketRepo.DeleteAsync(basket);
         }
     }
 }

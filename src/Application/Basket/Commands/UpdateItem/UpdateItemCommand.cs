@@ -1,7 +1,7 @@
-﻿using Application.Catalog.Variants.Queries.GetVariantById;
+﻿using Application.Basket.Specifications;
+using Application.Catalog.Products.Queries.GetVariantById;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Application.Common.Specifications;
 using Application.Customer.Queries.GetCustomerByUserId;
 using Domain.Entities;
 using MediatR;
@@ -36,7 +36,8 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Guid>
             throw new ArgumentException("Quantity cannot be negative.");
 
         // Directly call the GetCustomerByUserIdQuery handler instead of gRPC
-        var customerId = await _mediator.Send(new GetCustomerByUserIdQuery(Guid.Parse(userId)));
+        var customer = await _mediator.Send(new GetCustomerByUserIdQuery(Guid.Parse(userId)))
+            ?? throw new EntityNotFoundException("Customer not found");
 
         // Validate ProductVariant exists
         var variant = await _mediator.Send(new GetVariantByIdQuery(request.Id))
@@ -49,14 +50,17 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Guid>
         }
 
         // Get or create basket
-        var spec = new BasketWithItemsByCustomerIdSpec(customerId);
+        var spec = new BasketSpec()
+             .ByCustomerId(customer.Id)
+             .WithItems();
+
         var basket = await _basketRepo.FirstOrDefaultAsync(spec);
 
         if (basket == null)
         {
             basket = new Domain.Entities.Basket()
             {
-                CustomerId = customerId,
+                CustomerId = customer.Id,
                 Items = new List<BasketItem>(),
                 CreatedAt = DateTime.UtcNow,
             };

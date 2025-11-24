@@ -2,6 +2,6 @@
 
 public class ImageWithOptionValueLookupDto
 {
-    public ImageLookupDto LookupDto { get; init; }
-    public Guid? OptionValueId { get; init; }
+    public ImageLookupDto LookupDto { get; set; }
+    public Guid? OptionValueId { get; set; }
 }

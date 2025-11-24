@@ -15,7 +15,7 @@ public class BasketController(ICurrentUserProdvider currentUserProdvider) : Base
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GetBasket()
     {
-        return Ok(await Mediator.Send(new GetBasketQuery(null)));
+        return Ok(await Mediator.Send(new GetBasketQuery()));
     }
 
     [HttpPost]

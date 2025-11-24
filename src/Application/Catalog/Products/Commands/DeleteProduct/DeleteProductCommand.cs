@@ -1,5 +1,4 @@
 ﻿using Application.Common.Interfaces;
-using Application.Common.Specifications;
 using Ardalis.GuardClauses;
 using MediatR;
 
@@ -18,7 +17,7 @@ public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand,
 
     public async Task<Unit> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await _productRepository.FirstOrDefaultAsync(new ProductByIdSpec(request.Id));
+        var product = await _productRepository.GetByIdAsync(request.Id);
         Guard.Against.NotFound(request.Id, product);
          
         await _productRepository.DeleteAsync(product, cancellationToken);

@@ -1,7 +1,7 @@
-﻿using Application.Catalog.Images.Commands.DeleteFile;
-using Application.Catalog.Options.Commands.CreateOption;
-using Application.Catalog.Options.Commands.CreateOptionValue;
-using Application.Catalog.Options.Commands.DeleteOptionValue;
+﻿using Application.Catalog.Products.Commands.CreateOption;
+using Application.Catalog.Products.Commands.CreateOptionValue;
+using Application.Catalog.Products.Commands.DeleteFile;
+using Application.Catalog.Products.Commands.DeleteOptionValue;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Web;
 

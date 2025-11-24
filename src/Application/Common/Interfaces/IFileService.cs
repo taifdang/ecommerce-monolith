@@ -1,5 +1,5 @@
-﻿using Application.Catalog.Images.Commands.DeleteFile;
-using Application.Catalog.Images.Commands.UploadFile;
+﻿using Application.Catalog.Products.Commands.DeleteFile;
+using Application.Catalog.Products.Commands.UploadFile;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Common.Interfaces;

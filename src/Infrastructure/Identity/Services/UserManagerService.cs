@@ -1,4 +1,4 @@
-﻿using Application.Catalog.Images.Commands.DeleteFile;
+﻿using Application.Catalog.Products.Commands.DeleteFile;
 using Application.Common.Interfaces;
 using Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Identity;

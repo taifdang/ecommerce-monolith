@@ -2,6 +2,6 @@
 
 public class ProductOptionDto
 {
-    public string Title { get; init; }
-    public List<ProductOptionValueDto> OptionValues { get; init; }
+    public string Title { get; set; }
+    public List<ProductOptionValueDto> OptionValues { get; set; }
 }

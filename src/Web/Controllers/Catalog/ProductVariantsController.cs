@@ -1,10 +1,10 @@
-﻿using Application.Catalog.Variants.Commands.CreateVariant;
-using Application.Catalog.Variants.Commands.DeleteVariant;
-using Application.Catalog.Variants.Commands.GenerateVariant;
-using Application.Catalog.Variants.Commands.UpdateVariant;
-using Application.Catalog.Variants.Commands.UpdateVariants;
-using Application.Catalog.Variants.Queries.GetVariantById;
-using Application.Catalog.Variants.Queries.GetVariantByOption;
+﻿using Application.Catalog.Products.Commands.CreateVariant;
+using Application.Catalog.Products.Commands.DeleteVariant;
+using Application.Catalog.Products.Commands.GenerateVariant;
+using Application.Catalog.Products.Commands.UpdateVariant;
+using Application.Catalog.Products.Commands.UpdateVariants;
+using Application.Catalog.Products.Queries.GetVariantById;
+using Application.Catalog.Products.Queries.GetVariantByOption;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Web;
 

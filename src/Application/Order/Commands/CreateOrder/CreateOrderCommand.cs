@@ -1,5 +1,5 @@
 ﻿using Application.Basket.Queries.GetCartList;
-using Application.Catalog.Variants.Queries.GetVariantById;
+using Application.Catalog.Products.Queries.GetVariantById;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Domain.Entities;

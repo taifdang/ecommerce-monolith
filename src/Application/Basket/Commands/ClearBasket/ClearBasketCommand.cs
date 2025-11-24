@@ -1,5 +1,5 @@
-﻿using Application.Common.Interfaces;
-using Application.Common.Specifications;
+﻿using Application.Basket.Specifications;
+using Application.Common.Interfaces;
 using MediatR;
 
 namespace Application.Basket.Commands.ClearBasket;
@@ -17,7 +17,10 @@ public class ClearCartCommandHandler : IRequestHandler<ClearBasketCommand, Unit>
 
     public async Task<Unit> Handle(ClearBasketCommand request, CancellationToken cancellationToken)
     {
-        var spec = new BasketWithItemsByCustomerIdSpec(request.CustomerId);
+        var spec = new BasketSpec()
+            .ByCustomerId(request.CustomerId)
+            .WithItems();
+
         var basket = await _basketRepo.FirstOrDefaultAsync(spec);
 
         if (basket != null)

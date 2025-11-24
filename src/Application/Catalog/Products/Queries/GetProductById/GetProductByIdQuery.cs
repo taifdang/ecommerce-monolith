@@ -1,6 +1,7 @@
-﻿using Application.Catalog.Images.Services;
+﻿using Application.Catalog.Products.Services;
+using Application.Catalog.Products.Specifications;
 using Application.Common.Interfaces;
-using Application.Common.Specifications;
+using Ardalis.Specification;
 using AutoMapper;
 using MediatR;
 
@@ -28,7 +29,11 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
     {
         // *When user click product, we will load all options, option values, images for product to client side
         // *Then user select option values, we will generate variant on client side (based on option values selected) to show Price, sku, quantity, image...
-        var products = await _productRepository.FirstOrDefaultAsync(new ProductDetailsByIdSpec(request.Id), cancellationToken);
+        var spec = new ProductSpec()
+            .ById(request.Id)
+            .WithProjectionOf(new ProductItemProjectionSpec());
+
+        var products = await _productRepository.FirstOrDefaultAsync(spec, cancellationToken);
         if (products == null)
         {
             return null!;
@@ -38,19 +43,18 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
 
         products.MainImage = images.MainImage;
         products.Images = images.CommonImages;
-
-        var options = products.Options.Select(po => new ProductOptionDto
+        products.Options = products.Options.Select(po => new ProductOptionDto
         {
             OptionValues = po.OptionValues.Select(x => new ProductOptionValueDto
             {
-                Image = images.VariantImages.TryGetValue(x.Id, out var img) ? img : null
+                Id = x.Id,
+                Image = images.VariantImages.TryGetValue(x.Id, out var img) ? img : null,
             }).ToList()
         }).ToList();
 
         return products;
     }
 }
-//var productItemDtos = _mapper.Map<ProductItemDto>(products);
 
 #region
 //var productVm = await _unitOfWork.ProductRepository.GetByIdAsync(

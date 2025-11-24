@@ -1,4 +1,4 @@
-﻿using Application.Catalog.Images.Services;
+﻿using Application.Catalog.Products.Services;
 using Application.Common.Behaviors;
 using MediatR;
 using Microsoft.AspNetCore.Builder;

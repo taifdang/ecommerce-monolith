@@ -1,5 +1,5 @@
-﻿using Application.Catalog.Variants.Commands.GenerateVariant;
-using Application.Catalog.Variants.Commands.UpdateVariants;
+﻿using Application.Catalog.Products.Commands.GenerateVariant;
+using Application.Catalog.Products.Commands.UpdateVariants;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.EFCore;

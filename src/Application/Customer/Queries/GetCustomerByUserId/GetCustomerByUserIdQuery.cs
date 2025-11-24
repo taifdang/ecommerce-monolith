@@ -1,12 +1,13 @@
 ﻿using Application.Common.Interfaces;
-using Application.Common.Specifications;
+using Application.Customer.Specifications;
+using Ardalis.Specification;
 using MediatR;
 
 namespace Application.Customer.Queries.GetCustomerByUserId;
 
-public record GetCustomerByUserIdQuery(Guid UserId) : IRequest<Guid>;
+public record GetCustomerByUserIdQuery(Guid UserId) : IRequest<CustomerDto>;
 
-public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByUserIdQuery, Guid>
+public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByUserIdQuery, CustomerDto>
 {
     private readonly IReadRepository<Domain.Entities.Customer> _customerRepo;
 
@@ -14,12 +15,12 @@ public class GetCustomerByIdQueryHandler : IRequestHandler<GetCustomerByUserIdQu
     {
         _customerRepo = customerRepo;
     }
-    public async Task<Guid> Handle(GetCustomerByUserIdQuery request, CancellationToken cancellationToken)
+    public async Task<CustomerDto> Handle(GetCustomerByUserIdQuery request, CancellationToken cancellationToken)
     {
-        var spec = new CustomerByUserIdSpec(request.UserId);
+        var spec = new CustomerSpec().ByUserId(request.UserId).WithProjectionOf(new CustomerProjectionSpec());
 
         var customer = await _customerRepo.FirstOrDefaultAsync(spec);
 
-        return customer.Id;
+        return customer;
     }
 }

@@ -1,15 +1,15 @@
 ﻿using Application.Basket.Queries.GetBasket;
-using Application.Catalog.Variants.Queries.GetVariantById;
+using Application.Basket.Specifications;
+using Application.Catalog.Products.Queries.GetVariantById;
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
-using Application.Common.Specifications;
 using Application.Customer.Queries.GetCustomerByUserId;
 using MediatR;
 using Shared.Web;
 
 namespace Application.Basket.Queries.GetCartList;
 
-public record GetBasketQuery(Guid? CustomerId) : IRequest<BasketDto>;
+public record GetBasketQuery(Guid? CustomerId = null) : IRequest<BasketDto>;
 
 public class GetBasketQueryHandler : IRequestHandler<GetBasketQuery, BasketDto>
 {
@@ -36,7 +36,9 @@ public class GetBasketQueryHandler : IRequestHandler<GetBasketQuery, BasketDto>
                 throw new EntityNotFoundException("User not found");
 
             // Directly call the GetCustomerByUserIdQuery handler instead of gRPC
-            customerId = await _mediator.Send(new GetCustomerByUserIdQuery(Guid.Parse(userId)), cancellationToken);  
+            var customer = await _mediator.Send(new GetCustomerByUserIdQuery(Guid.Parse(userId)), cancellationToken)
+                ?? throw new EntityNotFoundException("Customer not found");
+            customerId = customer.Id;
         }
         else
         {
@@ -47,7 +49,10 @@ public class GetBasketQueryHandler : IRequestHandler<GetBasketQuery, BasketDto>
             throw new EntityNotFoundException("User not found");
 
         // Get basket
-        var spec = new BasketWithItemsByCustomerIdSpec(customerId.Value);
+        var spec = new BasketSpec()
+            .ByCustomerId(customerId.Value)
+            .WithItems();
+        
         var basket = await _basketRepo.FirstOrDefaultAsync(spec, cancellationToken);
 
         // If basket doesn't exist, return an empty basket
