@@ -37,4 +37,12 @@ public class UnitOfWork : IUnitOfWork
     {
         return await _dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = default)
+    {
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
+    public void Dispose() => _dbContext.Dispose();
 }

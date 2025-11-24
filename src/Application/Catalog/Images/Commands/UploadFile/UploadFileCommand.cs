@@ -2,7 +2,6 @@
 using Application.Common.Exceptions;
 using Application.Common.Interfaces;
 using Application.Common.Specifications;
-using Ardalis.GuardClauses;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Http;

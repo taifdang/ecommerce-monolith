@@ -2,5 +2,5 @@
 
 public interface IVersion
 {
-    int Version { get; set; }
+    long Version { get; set; }
 }

@@ -1,5 +1,3 @@
-﻿using Domain.Common;
-
-namespace Domain.Events;
+﻿namespace Domain.Events;
 
 public record BasketShouldBeClearedEvent(Guid CustomerId) : IDomainEvent;

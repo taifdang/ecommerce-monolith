@@ -1,14 +1,15 @@
-﻿
+﻿using Domain.Events;
+
 namespace Domain.Common;
 
-public abstract class Aggregate<T> : Entity<T>, IAggregate
+public abstract class Aggregate<T> : Entity<T>, IAggregate<T>
 {
-    private readonly List<IDomainEvent> _domainEvents = new();
+    private List<IDomainEvent> _domainEvents = new();
     public IReadOnlyList<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
-    public void AddDomainEvent(IDomainEvent domainEvent)
+    public void AddDomainEvent(IDomainEvent @event)
     {
-        _domainEvents.Add(domainEvent);
+        _domainEvents.Add(@event);
     }
     public void ClearDomainEvents()
     {

@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Data.Interceptors;
 using Infrastructure.Data.Repositories;
 using Infrastructure.Data.Seed;
 using Infrastructure.Identity.Data;
@@ -8,6 +9,7 @@ using Infrastructure.Identity.Extensions;
 using Infrastructure.Identity.Services;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Constants;
 using Shared.EFCore;
@@ -22,6 +24,10 @@ public static class DependencyInjection
         // Get Configuration
         var appSettings = builder.Configuration.GetOptions<AppSettings>();
         builder.Services.AddSingleton(appSettings);
+
+        // Interceptors
+        builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+        builder.Services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventIntercopter>();
 
         // DbContext
         builder.AddCustomDbContext<ApplicationDbContext>();

@@ -1,15 +1,14 @@
-﻿namespace Domain.Common
+﻿namespace Domain.Common;
+
+public interface IEntity<T> : IEntity
 {
-    public interface IEntity<T> : IEntity
-    {
-        public T Id { get; set; }
-    }
-    public interface IEntity : IVersion
-    {
-        public DateTime? CreatedAt { get; set; }
-        public Guid? CreatedBy { get; set; }
-        public DateTime? LastModified { get; set; }
-        public Guid? LastModifiedBy { get; set; }
-        public bool IsDeleted { get; set; }
-    }
+    public T Id { get; set; }
+}
+public interface IEntity : IVersion
+{
+    public DateTime? CreatedAt { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTime? LastModified { get; set; }
+    public string? LastModifiedBy { get; set; }
+    public bool IsDeleted { get; set; }
 }

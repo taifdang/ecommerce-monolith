@@ -32,11 +32,11 @@ public class GetBasketQueryHandler : IRequestHandler<GetBasketQuery, BasketDto>
         if (!request.CustomerId.HasValue)
         {
             var userId = _currentUserProdvider.GetCurrentUserId();
-            if (userId.HasValue) 
+            if (string.IsNullOrEmpty(userId)) 
                 throw new EntityNotFoundException("User not found");
 
             // Directly call the GetCustomerByUserIdQuery handler instead of gRPC
-            customerId = await _mediator.Send(new GetCustomerByUserIdQuery(userId.Value), cancellationToken);  
+            customerId = await _mediator.Send(new GetCustomerByUserIdQuery(Guid.Parse(userId)), cancellationToken);  
         }
         else
         {

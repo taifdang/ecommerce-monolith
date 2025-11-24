@@ -41,7 +41,7 @@ public class IdentityService(
                 Roles = u.UserRoles.Select(ur => ur.Role.Name).ToList(),
                 AvatarUrl = u.AvatarUrl
             })
-            .SingleOrDefaultAsync(x => x.Id == userId, cancellationToken)
+            .SingleOrDefaultAsync(x => x.Id == Guid.Parse(userId), cancellationToken)
             ?? throw new Exception("not found user");
 
         return user;
@@ -122,7 +122,7 @@ public class IdentityService(
     {
         var user = await _userManager.Users
             .Include(x => x.RefreshTokens)
-            .SingleOrDefaultAsync(x => x.Id == _currentUserProvider.GetCurrentUserId());
+            .SingleOrDefaultAsync(x => x.Id == Guid.Parse(_currentUserProvider.GetCurrentUserId()));
 
         var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
 

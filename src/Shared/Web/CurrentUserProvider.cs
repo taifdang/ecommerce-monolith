@@ -5,7 +5,7 @@ namespace Shared.Web;
 
 public interface ICurrentUserProdvider
 {
-    Guid? GetCurrentUserId();
+    string? GetCurrentUserId();
 }
 
 public class CurrentUserProvider : ICurrentUserProdvider
@@ -17,15 +17,21 @@ public class CurrentUserProvider : ICurrentUserProdvider
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public Guid? GetCurrentUserId()
+    public string? GetCurrentUserId()
     {
         var nameIdentifier = _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
-
-        if (Guid.TryParse(nameIdentifier, out var userId))
-        {
-            return userId;
-        }
-        return null;
+        
+        return nameIdentifier ?? string.Empty;
     }
 }
+ //public Guid? GetCurrentUserId()
+ //   {
+ //       var nameIdentifier = _httpContextAccessor?.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+
+ //       if (Guid.TryParse(nameIdentifier, out var userId))
+ //       {
+ //           return userId;
+ //       }
+ //       return null;
+ //   }
 

@@ -17,15 +17,41 @@ public class ProductImagesOrderedSpec : Specification<ProductImage, ImageWithOpt
                   x.OptionValueId == null ? 2 : 3)
             .ThenBy(x => x.Id);
 
-        Query.Select(x => new ImageWithOptionValueLookupDto 
+        Query.Select(x => new ImageWithOptionValueLookupDto
         {
             LookupDto = new ImageLookupDto
             {
                 Id = x.Id,
                 Url = x.ImageUrl
             },
-            OptionValueId =  x.OptionValueId
+            OptionValueId = x.OptionValueId
         });
+    }
+
+    public ProductImagesOrderedSpec ApplyOrdering(Guid? OptionValueId)
+    {
+        Query
+             .OrderBy(x =>
+                  x.OptionValueId == OptionValueId ? 0 :
+                  x.IsMain && x.OptionValueId == null ? 1 :
+                  x.OptionValueId == null ? 2 : 3)
+            .ThenBy(x => x.Id);
+        return this;
+    }
+
+    public ProductImagesOrderedSpec ApplyProjection()
+    {
+        Query.Select(x => new ImageWithOptionValueLookupDto
+        {
+            LookupDto = new ImageLookupDto
+            {
+                Id = x.Id,
+                Url = x.ImageUrl
+            },
+            OptionValueId = x.OptionValueId
+        });
+
+        return this;
     }
 
     public ProductImagesOrderedSpec WithTakeOne()

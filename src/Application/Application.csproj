@@ -26,4 +26,8 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Catalog\Products\Commands\CreateProductVariant\" />
+  </ItemGroup>
+
 </Project>

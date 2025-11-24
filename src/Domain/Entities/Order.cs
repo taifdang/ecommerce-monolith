@@ -31,7 +31,17 @@ public class Order : Aggregate<Guid>
             items.Select(x => new StockReservationItem(x.ProductVariantId, x.Quantity)).ToList();
 
         order.AddDomainEvent(new OrderCreatedEvent(order.Id, customerId, orderItems));
+        order.AddDomainEvent(new BasketShouldBeClearedEvent(customerId));
 
         return order;
+    }
+
+    public void Confirm()
+    {
+        Status = OrderStatus.Confirmed;
+    }
+    public void Cancel()
+    {
+        Status = OrderStatus.Cancelled;
     }
 }

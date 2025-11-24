@@ -22,7 +22,8 @@ public class ClearCartCommandHandler : IRequestHandler<ClearBasketCommand, Unit>
 
         if (basket != null)
         {
-            await _basketRepo.DeleteAsync(basket, cancellationToken);
+            basket.ClearItems();
+            await _basketRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
         }
         return Unit.Value;
     }

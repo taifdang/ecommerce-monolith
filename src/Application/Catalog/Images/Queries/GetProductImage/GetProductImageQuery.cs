@@ -1,5 +1,4 @@
 ﻿using Application.Catalog.Images.Services;
-using Domain.Entities;
 using MediatR;
 
 namespace Application.Catalog.Images.Queries.GetProductImage;

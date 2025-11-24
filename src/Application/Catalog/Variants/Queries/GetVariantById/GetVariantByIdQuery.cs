@@ -2,6 +2,7 @@
 using Application.Common.Interfaces;
 using Application.Common.Specifications;
 using Ardalis.GuardClauses;
+using Ardalis.Specification;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;

@@ -36,7 +36,7 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Guid>
             throw new ArgumentException("Quantity cannot be negative.");
 
         // Directly call the GetCustomerByUserIdQuery handler instead of gRPC
-        var customerId = await _mediator.Send(new GetCustomerByUserIdQuery(userId.Value));
+        var customerId = await _mediator.Send(new GetCustomerByUserIdQuery(Guid.Parse(userId)));
 
         // Validate ProductVariant exists
         var variant = await _mediator.Send(new GetVariantByIdQuery(request.Id))

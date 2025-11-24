@@ -1,8 +1,10 @@
 ﻿using Application.Catalog.Images.Commands.UploadFile;
 using Application.Catalog.Images.Queries.GetProductImage;
+using Application.Catalog.Images.Specifications;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.Common.Specifications;
+using Ardalis.Specification;
 using Domain.Entities;
 
 namespace Application.Catalog.Images.Services;
@@ -22,7 +24,12 @@ public class ProductImageService : IProductImageService
 
     public async Task<ProductImageResult> GetOrderedImagesAsync(Guid productId, Guid? optionValueId = null, CancellationToken ct = default)
     {
-        var spec = new ProductImagesOrderedSpec(productId, optionValueId);
+        //var spec = new ProductImagesOrderedSpec(productId, optionValueId);
+        var spec = new ProductImageSpec()
+            .ById(productId)
+            .ApplyOrderingBy(optionValueId)
+            .ProjectToLookupDto();
+
         var imagesWithMeta = await _productImageRepo.ListAsync(spec, ct);
 
         if (!imagesWithMeta.Any())

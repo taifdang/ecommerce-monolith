@@ -23,12 +23,11 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
 
     public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var basket = await _mediator.Send(new GetBasketQuery(request.CustomerId));
+        var basket = await _mediator.Send(new GetBasketQuery(request.CustomerId))
+            ?? throw new Exception("Basket not found");
 
-        if(basket?.Items == null || !basket.Items.Any())
-        {
+        if (!basket.Items.Any())
             throw new Exception("Basket is empty. Cannot create order.");
-        }
 
         var orderItems = new List<OrderItem>();
         decimal totalAmount = 0;
@@ -42,10 +41,10 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
                 throw new EntityNotFoundException();
             }
 
-            if(productVariant.Quantity < basketItem.Quantity)
-            {
-                throw new Exception("Not enough product variant quantity");
-            }
+            //if(productVariant.Quantity < basketItem.Quantity)
+            //{
+            //    throw new Exception("Not enough product variant quantity");
+            //}
 
             var orderItem = new OrderItem
             {
@@ -66,15 +65,15 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
 
         await _orderRepo.AddAsync(order);
 
-        // event
-        //var orderItemsAdded = _mapper.Map<List<OrderItemDto>>(orderItems);
-
-        // Update product variant quanity
-        // await _mediator.Send(new ReduceStockCommand(orderItemsAdded));
-
-        // Clear the basket after creating the order
-        //await _mediator.Send(new Basket.Commands.ClearBasket.ClearBasketCommand(request.CustomerId));
-
         return order.Id;
     }
 }
+
+// event
+//var orderItemsAdded = _mapper.Map<List<OrderItemDto>>(orderItems);
+
+// Update product variant quanity
+// await _mediator.Send(new ReduceStockCommand(orderItemsAdded));
+
+// Clear the basket after creating the order
+//await _mediator.Send(new Basket.Commands.ClearBasket.ClearBasketCommand(request.CustomerId));
