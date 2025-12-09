@@ -1,13 +1,12 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Utilities;
+using Contracts.Requests;
+using Contracts.Responses;
 using Infrastructure.Identity.Data;
 using Infrastructure.Identity.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.Constants;
-using Shared.Models.Auth;
-using Shared.Models.User;
-using Shared.Web;
 
 namespace Infrastructure.Identity.Services;
 
@@ -19,7 +18,7 @@ public class IdentityService(
     ICookieService cookieService,
     ITokenService tokenService,
     AppSettings appSettings,
-    ICurrentUserProdvider currentUserProvider) : IIdentityService
+    ICurrentUserProvider currentUserProvider) : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
@@ -27,13 +26,13 @@ public class IdentityService(
     private readonly ICookieService _cookieService = cookieService;
     private readonly ITokenService _tokenService = tokenService;
     private readonly AppSettings _appSettings = appSettings;
-    private readonly ICurrentUserProdvider _currentUserProvider = currentUserProvider;
+    private readonly ICurrentUserProvider _currentUserProvider = currentUserProvider;
 
-    public async Task<UserReadModel> GetProfile(CancellationToken cancellationToken)
+    public async Task<UserInfoResponse> GetProfile(CancellationToken cancellationToken)
     {
         var userId = _currentUserProvider.GetCurrentUserId();
         var user = await _userManager.Users
-            .Select(u => new UserReadModel
+            .Select(u => new UserInfoResponse
             {
                 Id = u.Id,
                 UserName = u.UserName,
@@ -47,7 +46,7 @@ public class IdentityService(
         return user;
     }
 
-    public async Task<TokenResult> Authenticate(SignInRequest request, CancellationToken cancellationToken)
+    public async Task<TokenResult> Authenticate(AuthorizeRequest request, CancellationToken cancellationToken)
     {
         var user = await _userManager.Users
             .Include(u => u.UserRoles)
@@ -79,7 +78,7 @@ public class IdentityService(
         await _signInManager.SignOutAsync();
     }
 
-    public async Task<Guid> Register(SignUpRequest request, CancellationToken cancellationToken)
+    public async Task<Guid> Register(RegisterRequest request, CancellationToken cancellationToken)
     {
         if(await _userManager.FindByNameAsync(request.UserName) != null)
         {

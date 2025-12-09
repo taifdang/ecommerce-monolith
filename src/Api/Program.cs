@@ -4,15 +4,19 @@ using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddApplication();
-builder.AddInfrastructure();
-builder.AddServiceCollections();
+builder.AddServiceDefaults();
+
+builder.AddApplicationServices();
+builder.AddInfrastructureServices();
+builder.AddWebServices();
 
 
 var app = builder.Build();
 
-app.UseInfrastructure();
-app.UseServiceCollections();
+app.MapDefaultEndpoints();
+
+app.UseInfrastructureServices();
+app.UseWebServices();
 
 app.Run();
 

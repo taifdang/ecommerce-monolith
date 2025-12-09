@@ -27,7 +27,7 @@ namespace Infrastructure;
 //ref: https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-9.0&tabs=visual-studio
 public static class DependencyInjection
 {
-    public static WebApplicationBuilder AddInfrastructure(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddInfrastructureServices(this WebApplicationBuilder builder)
     {
         // Get Configuration
         var appSettings = builder.Configuration.GetOptions<AppSettings>();
@@ -97,7 +97,7 @@ public static class DependencyInjection
         return builder;
     }
 
-    public static WebApplication UseInfrastructure(this WebApplication app)
+    public static WebApplication UseInfrastructureServices(this WebApplication app)
     {
         app.UseMigration<AppIdentityDbContext>();
 

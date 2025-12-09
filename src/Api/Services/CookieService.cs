@@ -1,13 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Application.Common.Interfaces;
 
-namespace Shared.Web;
-
-public interface ICookieService
-{
-    public void Set(string token);
-    public string Get();
-    public void Delete();
-}
+namespace Api.Services;
 
 public class CookieService(IHttpContextAccessor httpContextAccessor) : ICookieService
 {
@@ -21,8 +14,7 @@ public class CookieService(IHttpContextAccessor httpContextAccessor) : ICookieSe
             : token;
     }
 
-    public void Set(string token)
-        => _httpContextAccessor.HttpContext?.Response.Cookies.Append(
+    public void Set(string token) => _httpContextAccessor.HttpContext?.Response.Cookies.Append(
             "token_key",
             token,
             new CookieOptions

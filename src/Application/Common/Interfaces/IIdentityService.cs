@@ -1,14 +1,14 @@
-﻿using Shared.Models.Auth;
-using Shared.Models.User;
+﻿using Contracts.Requests;
+using Contracts.Responses;
 
 namespace Application.Common.Interfaces;
 
 public interface IIdentityService
 {
-    Task<TokenResult> Authenticate(SignInRequest request, CancellationToken cancellationToken);
-    Task<Guid> Register(SignUpRequest request, CancellationToken cancellationToken);
+    Task<TokenResult> Authenticate(AuthorizeRequest request, CancellationToken cancellationToken);
+    Task<Guid> Register(RegisterRequest request, CancellationToken cancellationToken);
     Task Logout();
-    Task<UserReadModel> GetProfile(CancellationToken cancellationToken);
+    Task<UserInfoResponse> GetProfile(CancellationToken cancellationToken);
     Task ConfirmEmail(CancellationToken cancellationToken);
     Task TwoFactor(CancellationToken cancellationToken);
     Task VerifyTwoFactor(CancellationToken cancellationToken);

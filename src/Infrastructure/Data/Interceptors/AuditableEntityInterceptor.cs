@@ -1,16 +1,16 @@
-﻿using Domain.SeedWork;
+﻿using Application.Common.Interfaces;
+using Domain.SeedWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Shared.Web;
 
 namespace Infrastructure.Data.Interceptors;
 
 // ref: https://learn.microsoft.com/en-us/ef/core/logging-events-diagnostics/interceptors
 public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
-    private readonly ICurrentUserProdvider _currentUser;
+    private readonly ICurrentUserProvider _currentUser;
 
-    public AuditableEntityInterceptor(ICurrentUserProdvider currentUser)
+    public AuditableEntityInterceptor(ICurrentUserProvider currentUser)
     {
         _currentUser = currentUser;
     }

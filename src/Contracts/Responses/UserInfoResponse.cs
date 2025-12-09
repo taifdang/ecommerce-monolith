@@ -1,6 +1,6 @@
-﻿namespace Shared.Models.User;
+﻿namespace Contracts.Responses;
 
-public class UserReadModel
+public class UserInfoResponse
 {
     public Guid? Id { get; set; }
     public string? UserName { get; set; }

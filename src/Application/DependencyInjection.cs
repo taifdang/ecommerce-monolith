@@ -8,7 +8,7 @@ namespace Application;
 
 public static class DependencyInjection
 {
-    public static WebApplicationBuilder AddApplication(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddApplicationServices(this WebApplicationBuilder builder)
     {
         // MediatR
         builder.Services.AddMediatR(cfg =>

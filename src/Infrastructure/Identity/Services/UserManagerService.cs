@@ -1,9 +1,10 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
+using Contracts.Requests;
+using Contracts.Responses;
 using Infrastructure.Identity.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Shared.Models.User;
 using System.Security.Claims;
 
 namespace Infrastructure.Identity.Services;
@@ -18,10 +19,10 @@ public class UserManagerService : IUserManagerService
         _userManager = userManager;
         _storageService = storageService;
     }
-    public async Task<List<UserReadModel>> GetList(CancellationToken cancellationToken)
+    public async Task<List<UserInfoResponse>> GetList(CancellationToken cancellationToken)
     {
         var users = await _userManager.Users
-            .Select(x => new UserReadModel
+            .Select(x => new UserInfoResponse
             {
                 Id = x.Id,
                 UserName = x.UserName,
@@ -77,30 +78,30 @@ public class UserManagerService : IUserManagerService
             await _userManager.AddClaimAsync(user, newScopeClaim);
         }
     }
-    public async Task Update(UserUpdateRequest request, CancellationToken cancellationToken)
-    {
-        var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken)
-            ?? throw new Exception("Not find user");
+    //public async Task Update(UserUpdateRequest request, CancellationToken cancellationToken)
+    //{
+    //    var user = await _userManager.Users.FirstOrDefaultAsync(x => x.Id == request.UserId, cancellationToken)
+    //        ?? throw new Exception("Not find user");
 
-        user.AvatarUrl = request.Avatar;
+    //    user.AvatarUrl = request.Avatar;
 
-        // update file & save image
-        if (request.MediaFile != null)
-        {
-            if (user.AvatarUrl != null)
-            {
-                await _storageService.DeleteFileAsync(new DeleteFileRequest { FileName = user.AvatarUrl });
-            }
-            await _storageService.AddFileAsync(request.MediaFile);
-        }
+    //    // update file & save image
+    //    if (request.MediaFile != null)
+    //    {
+    //        if (user.AvatarUrl != null)
+    //        {
+    //            await _storageService.DeleteFileAsync(new DeleteFileRequest { FileName = user.AvatarUrl });
+    //        }
+    //        await _storageService.AddFileAsync(request.MediaFile);
+    //    }
 
-        var result = await _userManager.UpdateAsync(user);
+    //    var result = await _userManager.UpdateAsync(user);
 
-        if (!result.Succeeded)
-        {
-            throw new Exception("Update user failed");
-        }
-    }
+    //    if (!result.Succeeded)
+    //    {
+    //        throw new Exception("Update user failed");
+    //    }
+    //}
     public async Task Delete(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId)

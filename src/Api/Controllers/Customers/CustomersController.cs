@@ -1,13 +1,14 @@
-﻿using Application.Customer.Queries.GetCustomerByUserId;
+﻿using Application.Common.Interfaces;
+using Application.Customer.Queries.GetCustomerByUserId;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Web;
 
 namespace Api.Controllers.Customers;
 
 [Route(BaseApiPath + "/customer")]
-public class CustomersController(ICurrentUserProdvider currentUserProdvider) : BaseController
+public class CustomersController(ICurrentUserProvider currentUserProdvider) : BaseController
 {
-    private readonly ICurrentUserProdvider _currentUserProdvider = currentUserProdvider;
+    private readonly ICurrentUserProvider _currentUserProdvider = currentUserProdvider;
 
     [HttpGet]
     public async Task<IActionResult> GetCurrentCustomer()

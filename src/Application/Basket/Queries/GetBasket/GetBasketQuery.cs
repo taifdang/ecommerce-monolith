@@ -5,7 +5,6 @@ using Application.Common.Interfaces;
 using Application.Customer.Queries.GetCustomerByUserId;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Shared.Web;
 
 namespace Application.Basket.Queries.GetCartList;
 
@@ -15,10 +14,10 @@ public class GetBasketQueryHandler : IRequestHandler<GetBasketQuery, BasketDto>
 {
     private readonly IApplicationDbContext _dbContext;
     private readonly IMediator _mediator;
-    private readonly ICurrentUserProdvider _currentUserProdvider;
+    private readonly ICurrentUserProvider _currentUserProdvider;
     public GetBasketQueryHandler(
         IMediator mediator,
-        ICurrentUserProdvider currentUserProdvider,
+        ICurrentUserProvider currentUserProdvider,
         IApplicationDbContext dbContext)
     {
         _mediator = mediator;

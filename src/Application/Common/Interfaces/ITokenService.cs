@@ -1,4 +1,4 @@
-﻿using Shared.Models.Auth;
+﻿using Contracts.Responses;
 using System.Security.Claims;
 
 namespace Application.Common.Interfaces;

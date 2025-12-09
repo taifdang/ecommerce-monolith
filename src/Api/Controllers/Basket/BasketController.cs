@@ -1,14 +1,15 @@
 ﻿using Application.Basket.Commands.UpdateItem;
 using Application.Basket.Queries.GetCartList;
+using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Web;
 
 namespace Api.Controllers.Basket;
 
 [Route(BaseApiPath + "/basket")]
-public class BasketController(ICurrentUserProdvider currentUserProdvider) : BaseController
+public class BasketController(ICurrentUserProvider currentUserProdvider) : BaseController
 {
-    public readonly ICurrentUserProdvider _currentUserProdvider = currentUserProdvider;
+    public readonly ICurrentUserProvider _currentUserProdvider = currentUserProdvider;
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]

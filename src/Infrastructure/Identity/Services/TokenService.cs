@@ -1,9 +1,9 @@
 ﻿using Application.Common.Interfaces;
+using Contracts.Responses;
 using Infrastructure.Identity.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Constants;
-using Shared.Models.Auth;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

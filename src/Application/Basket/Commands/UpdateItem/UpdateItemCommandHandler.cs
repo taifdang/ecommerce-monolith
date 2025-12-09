@@ -5,7 +5,7 @@ using Application.Customer.Queries.GetCustomerByUserId;
 using Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Shared.Web;
+
 
 namespace Application.Basket.Commands.UpdateItem;
 
@@ -13,11 +13,11 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, Guid>
 {
     private readonly IApplicationDbContext _dbContext;
     private readonly IMediator _mediator;
-    private readonly ICurrentUserProdvider _currentUserProdvider;
+    private readonly ICurrentUserProvider _currentUserProdvider;
     public UpdateItemCommandHandler(
         IApplicationDbContext dbContext,
         IMediator mediator,
-        ICurrentUserProdvider currentUserProdvider)
+        ICurrentUserProvider currentUserProdvider)
     {
         _dbContext = dbContext;
         _mediator = mediator;

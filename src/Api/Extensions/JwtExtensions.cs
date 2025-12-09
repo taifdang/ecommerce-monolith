@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Constants;
 using Shared.Web;
 using System.Security.Claims;
 using System.Text;
 
-namespace Shared.Jwt;
+namespace Api.Extensions;
 
 public static class JwtExtensions
 {
@@ -41,19 +40,19 @@ public static class JwtExtensions
                 RoleClaimType = ClaimTypes.Role,
             };
 
-            options.MapInboundClaims = false;      
+            options.MapInboundClaims = false;
         });
 
         services.AddAuthorization(
             options =>
             {
-               //Role-bases
+                //Role-bases
                 options.AddPolicy(
                     IdentityConstant.Role.Admin,
                     x =>
                     {
                         x.AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme);
-                        x.RequireRole(IdentityConstant.Role.Admin); 
+                        x.RequireRole(IdentityConstant.Role.Admin);
                     }
                 );
                 options.AddPolicy(

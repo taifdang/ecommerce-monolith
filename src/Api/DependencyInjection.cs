@@ -1,48 +1,41 @@
-﻿using Infrastructure.Services;
-using Shared.Jwt;
-using Shared.OpenApi;
-using Shared.Web;
+﻿using Api.Extensions;
+using Api.Services;
+using Application.Common.Interfaces;
+using Infrastructure.Services;
+using ServiceDefaults.OpenApi;
+
 
 namespace Api;
 
 public static class DependencyInjection
 {
-    public static WebApplicationBuilder AddServiceCollections(this WebApplicationBuilder builder)
+    public static WebApplicationBuilder AddWebServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddJwt();
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddAspnetOpenApi();
+
+        builder.Services.AddDefaultOpenApi();
 
         builder.Services.AddControllers();
 
         builder.Services.AddHttpContextAccessor();
 
-        builder.Services.AddTransient<ICurrentUserProdvider, CurrentUserProvider>();
-        builder.Services.AddScoped<ICookieService, CookieService>();
-
-
-        //.AddJsonOptions(opt =>
-        //{
-        //    // HandleAsync reference loops
-        //    opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        //    opt.JsonSerializerOptions.WriteIndented = true;
-
-        //});
+        builder.Services.AddTransient<ICurrentUserProvider, CurrentUserProvider>();
+        builder.Services.AddTransient<ICookieService, CookieService>();
 
         builder.Services.AddHostedService<GracePeriodBackgroundService>();
 
         return builder;
     }
 
-    public static WebApplication UseServiceCollections(this WebApplication app)
+    public static WebApplication UseWebServices(this WebApplication app)
     {  
         app.UseHttpsRedirection();
-
+    
         if (app.Environment.IsDevelopment())
         {
-            app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseDefaultOpenApi();
         }
         app.UseAuthentication();
         app.UseAuthorization();

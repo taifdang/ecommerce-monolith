@@ -1,9 +1,9 @@
 ﻿using Application.Common.Interfaces;
+using Contracts.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Constants;
-using Shared.Models.User;
 using Shared.Web;
 using System.Security.Claims;
 
@@ -28,12 +28,12 @@ public class UserController(IUserManagerService userManagerService) : BaseContro
         return NoContent();
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Update(UserUpdateRequest request, CancellationToken cancellationToken)
-    {
-        await _userManagerService.Update(request, cancellationToken);
-        return NoContent();
-    }
+    //[HttpPut]
+    //public async Task<IActionResult> Update(UserUpdateRequest request, CancellationToken cancellationToken)
+    //{
+    //    await _userManagerService.Update(request, cancellationToken);
+    //    return NoContent();
+    //}
 
     [HttpDelete]
     public async Task<IActionResult> Delete(string userId)

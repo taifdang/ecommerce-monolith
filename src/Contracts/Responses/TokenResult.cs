@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Contracts.Responses;
 
-namespace Contracts.Responses
+public class TokenResult
 {
-    internal class TokenResult
-    {
-    }
+    public string Token { get; set; }
+    public DateTime Expire { get; set; }
 }

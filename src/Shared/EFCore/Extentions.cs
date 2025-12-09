@@ -70,6 +70,6 @@ public static class Extentions
 
         var seedersManager = scope.ServiceProvider.GetRequiredService<ISeedManager>();
 
-        await seedersManager.ExecuteSeedAsync();
+        await seedersManager.ExecuteSeedAsync   ();
     }
 }
