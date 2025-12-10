@@ -15,7 +15,6 @@ using Infrastructure.ExternalServices;
 using Infrastructure.Identity;
 using Infrastructure.Identity.Data;
 using Infrastructure.Identity.Data.Seed;
-using Infrastructure.Identity.Services;
 using Infrastructure.Payments.Gateways;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
@@ -56,7 +55,6 @@ public static class DependencyInjection
         builder.AddCustomIdentity();
 
         // Jwt
-        builder.Services.AddScoped<ITokenService2, TokenService2>();
         builder.Services.AddScoped<ITokenService, TokenService>();
 
         // Repositores    
@@ -71,10 +69,7 @@ public static class DependencyInjection
         //    builder.Services.AddSingleton<IFileService, LocalStorageService>();
         //}
         builder.Services.AddScoped<IFileService, LocalStorageService>();
-        builder.Services.AddScoped<IIdentityService2, IdentityService2>();
         builder.Services.AddScoped<IIdentityService, IdentityService>();
-        builder.Services.AddScoped<IUserManagerService, UserManagerService>();
-
         builder.Services.AddScoped<IPaymentProvider, PaypalGateway>();
         builder.Services.AddScoped<IPaymentProvider, VnPayGateway>();
 

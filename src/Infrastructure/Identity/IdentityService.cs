@@ -81,6 +81,7 @@ public class IdentityService : IIdentityService
             UserId = user.Id,
             Token = result.Token,
             Expires = result.Expire,
+            Created = DateTime.UtcNow
         });
         await dbContext.SaveChangesAsync();
 
@@ -153,6 +154,7 @@ public class IdentityService : IIdentityService
             UserId = user.Id,
             Token = result.Token,
             Expires = result.Expire,
+            Created = DateTime.UtcNow
         });
         await dbContext.SaveChangesAsync();
 
