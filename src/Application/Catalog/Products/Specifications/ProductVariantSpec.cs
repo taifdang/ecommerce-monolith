@@ -59,7 +59,7 @@ namespace Application.Catalog.Products.Specifications;
 //        Query.Select(x => new VariantVm
 //        {
 //            Id = x.Id,
-//            Title = x.Title ?? "",
+//            Name = x.Name ?? "",
 //            ProductId = x.ProductId,
 //            ProductName = x.Product.Name,
 //            Price = x.Price,
@@ -69,7 +69,7 @@ namespace Application.Catalog.Products.Specifications;
 //            Image = null,
 //            Options = x.VariantOptionValues.Select(y => new OptionLookupDto
 //            {
-//                Title = y.OptionValue.ProductOption.Name,
+//                Name = y.OptionValue.ProductOption.Name,
 //                Id = y.Id,
 //                Value = y.OptionValue.Value,
 //                IsImage = y.OptionValue.ProductOption.AllowImage
@@ -94,7 +94,7 @@ namespace Application.Catalog.Products.Specifications;
 //                Id = y.Id,
 //                Value = y.OptionValue.Value
 //            })
-//             .OrderBy(o => o.Title)
+//             .OrderBy(o => o.Name)
 //             .ToList()
 //        });
 //    }

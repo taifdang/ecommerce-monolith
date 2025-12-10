@@ -1,6 +1,7 @@
 ﻿using Application.Basket.EventHandlers;
 using Application.Catalog.Products.EventHandlers;
 using Application.Common.Interfaces;
+using Application.Customer.EventHandlers;
 using Application.Order.IntegrationEventHandlers;
 using Contracts.IntegrationEvents;
 using EventBus;
@@ -9,11 +10,14 @@ using EventBus.InMemory;
 using Infrastructure.Data;
 using Infrastructure.Data.Interceptors;
 using Infrastructure.Data.Repositories;
+using Infrastructure.Data.Seed;
 using Infrastructure.ExternalServices;
+using Infrastructure.Identity;
 using Infrastructure.Identity.Data;
-using Infrastructure.Identity.Extensions;
+using Infrastructure.Identity.Data.Seed;
 using Infrastructure.Identity.Services;
 using Infrastructure.Payments.Gateways;
+using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -52,6 +56,7 @@ public static class DependencyInjection
         builder.AddCustomIdentity();
 
         // Jwt
+        builder.Services.AddScoped<ITokenService2, TokenService2>();
         builder.Services.AddScoped<ITokenService, TokenService>();
 
         // Repositores    
@@ -66,6 +71,7 @@ public static class DependencyInjection
         //    builder.Services.AddSingleton<IFileService, LocalStorageService>();
         //}
         builder.Services.AddScoped<IFileService, LocalStorageService>();
+        builder.Services.AddScoped<IIdentityService2, IdentityService2>();
         builder.Services.AddScoped<IIdentityService, IdentityService>();
         builder.Services.AddScoped<IUserManagerService, UserManagerService>();
 
@@ -73,8 +79,8 @@ public static class DependencyInjection
         builder.Services.AddScoped<IPaymentProvider, VnPayGateway>();
 
         // Seeders    
-        //builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
-        //builder.Services.AddScoped<IDataSeeder, CatalogDataSeeder>();
+        builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
+        builder.Services.AddScoped<IDataSeeder, CatalogDataSeeder>();
 
         // eventbus
         if(builder.Environment.EnvironmentName == "test")
@@ -90,7 +96,8 @@ public static class DependencyInjection
            .AddSubscription<PaymentSucceededIntegrationEvent, PaymentSucceededIntegrationEventHandler>()
            .AddSubscription<PaymentRejectedIntegrationEvent, PaymentRejectedIntegrationEventHandler>()
            .AddSubscription<ReserveStockRejectedIntegrationEvent, ReserveStockRejectedIntegrationEventHandler>()
-           .AddSubscription<ReserveStockSucceededIntegrationEvent, ReserveStockSucceededIntegrationEventHandler>();
+           .AddSubscription<ReserveStockSucceededIntegrationEvent, ReserveStockSucceededIntegrationEventHandler>()
+           .AddSubscription<UserCreatedIntegrationEvent, UserCreatedIntegrationEventHandler>();
         }
         builder.AddTransactionalOutbox();
 

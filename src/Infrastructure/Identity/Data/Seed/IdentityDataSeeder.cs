@@ -1,4 +1,6 @@
 ﻿using Application.Customer.Commands;
+using Contracts.IntegrationEvents;
+using EventBus.Abstractions;
 using Infrastructure.Identity.Entity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -14,17 +16,20 @@ public class IdentityDataSeeder : IDataSeeder
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly AppIdentityDbContext _appIdentityDbContext;
     private readonly IMediator _mediator;
+    private readonly IEventPublisher _eventPublisher;
 
     public IdentityDataSeeder(
         RoleManager<ApplicationRole> roleManager,
         AppIdentityDbContext appIdentityDbContext,
         UserManager<ApplicationUser> userManager,
-        IMediator mediator)
+        IMediator mediator,
+        IEventPublisher eventPublisher)
     {
         _roleManager = roleManager;
         _appIdentityDbContext = appIdentityDbContext;
         _userManager = userManager;
         _mediator = mediator;
+        _eventPublisher = eventPublisher;
     }
 
     public async Task SendAllAsync()
@@ -63,7 +68,12 @@ public class IdentityDataSeeder : IDataSeeder
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(InitialData.Users.First(), IdentityConstant.Role.Admin);
-                    await _mediator.Send(new CreateCustomerCommand(InitialData.Users.First().Id, InitialData.Users.First().Email));
+                    //await _mediator.Send(new CreateCustomerCommand(InitialData.Users.First().Id, InitialData.Users.First().Email));
+                    await _eventPublisher.PublishAsync(new UserCreatedIntegrationEvent
+                    {
+                        UserId = InitialData.Users.First().Id,
+                        Email = InitialData.Users.First().Email!
+                    });
                 }
             }
 
@@ -73,7 +83,12 @@ public class IdentityDataSeeder : IDataSeeder
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(InitialData.Users.Last(), IdentityConstant.Role.User);
-                    await _mediator.Send(new CreateCustomerCommand(InitialData.Users.Last().Id, InitialData.Users.Last().Email));
+                    //await _mediator.Send(new CreateCustomerCommand(InitialData.Users.Last().Id, InitialData.Users.Last().Email));
+                    await _eventPublisher.PublishAsync(new UserCreatedIntegrationEvent
+                    {
+                        UserId = InitialData.Users.Last().Id,
+                        Email = InitialData.Users.Last().Email!
+                    });
                 }
             }
         }

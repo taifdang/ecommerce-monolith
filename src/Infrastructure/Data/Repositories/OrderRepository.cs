@@ -28,9 +28,9 @@ public class OrderRepository : IOrderRepository
         return await _context.Orders.Include(m => m.Items).Where(x => x.Id == id).FirstOrDefaultAsync();
     }
 
-    public async Task<List<Order>?> GetListAsync()
+    public async Task<List<Order>?> GetListByCustomerAsync(Guid customerId)
     {
-        return await _context.Orders.ToListAsync();
+        return await _context.Orders.Where(x => x.CustomerId == customerId).ToListAsync();
     }
 
     public async Task<Order?> GetByOrderNumber(long orderNumber)

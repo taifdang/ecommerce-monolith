@@ -17,12 +17,12 @@ namespace Infrastructure.Identity.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.16")
+                .HasAnnotation("ProductVersion", "9.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Infrastructure.Identity.Models.ApplicationRole", b =>
+            modelBuilder.Entity("Infrastructure.Identity.Entity.ApplicationRole", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,7 +50,7 @@ namespace Infrastructure.Identity.Data.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Infrastructure.Identity.Models.ApplicationUser", b =>
+            modelBuilder.Entity("Infrastructure.Identity.Entity.ApplicationUser", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -120,7 +120,7 @@ namespace Infrastructure.Identity.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Infrastructure.Identity.Models.ApplicationUserRole", b =>
+            modelBuilder.Entity("Infrastructure.Identity.Entity.ApplicationUserRole", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
@@ -135,7 +135,7 @@ namespace Infrastructure.Identity.Data.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Infrastructure.Identity.Models.ForgetPassword", b =>
+            modelBuilder.Entity("Infrastructure.Identity.Entity.ForgetPassword", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,7 +168,7 @@ namespace Infrastructure.Identity.Data.Migrations
                     b.ToTable("ForgetPassword", (string)null);
                 });
 
-            modelBuilder.Entity("Infrastructure.Identity.Models.RefreshToken", b =>
+            modelBuilder.Entity("Infrastructure.Identity.Entity.RefreshToken", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -287,15 +287,15 @@ namespace Infrastructure.Identity.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Infrastructure.Identity.Models.ApplicationUserRole", b =>
+            modelBuilder.Entity("Infrastructure.Identity.Entity.ApplicationUserRole", b =>
                 {
-                    b.HasOne("Infrastructure.Identity.Models.ApplicationRole", "Role")
+                    b.HasOne("Infrastructure.Identity.Entity.ApplicationRole", "Role")
                         .WithMany("UserRoles")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.Identity.Models.ApplicationUser", "User")
+                    b.HasOne("Infrastructure.Identity.Entity.ApplicationUser", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -306,9 +306,9 @@ namespace Infrastructure.Identity.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Infrastructure.Identity.Models.RefreshToken", b =>
+            modelBuilder.Entity("Infrastructure.Identity.Entity.RefreshToken", b =>
                 {
-                    b.HasOne("Infrastructure.Identity.Models.ApplicationUser", "User")
+                    b.HasOne("Infrastructure.Identity.Entity.ApplicationUser", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -319,7 +319,7 @@ namespace Infrastructure.Identity.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Infrastructure.Identity.Models.ApplicationRole", null)
+                    b.HasOne("Infrastructure.Identity.Entity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -328,7 +328,7 @@ namespace Infrastructure.Identity.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Infrastructure.Identity.Models.ApplicationUser", null)
+                    b.HasOne("Infrastructure.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -337,7 +337,7 @@ namespace Infrastructure.Identity.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Infrastructure.Identity.Models.ApplicationUser", null)
+                    b.HasOne("Infrastructure.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -346,19 +346,19 @@ namespace Infrastructure.Identity.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Infrastructure.Identity.Models.ApplicationUser", null)
+                    b.HasOne("Infrastructure.Identity.Entity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Infrastructure.Identity.Models.ApplicationRole", b =>
+            modelBuilder.Entity("Infrastructure.Identity.Entity.ApplicationRole", b =>
                 {
                     b.Navigation("UserRoles");
                 });
 
-            modelBuilder.Entity("Infrastructure.Identity.Models.ApplicationUser", b =>
+            modelBuilder.Entity("Infrastructure.Identity.Entity.ApplicationUser", b =>
                 {
                     b.Navigation("RefreshTokens");
 

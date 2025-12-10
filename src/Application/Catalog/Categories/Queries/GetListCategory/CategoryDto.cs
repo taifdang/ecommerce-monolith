@@ -6,8 +6,8 @@ namespace Application.Catalog.Categories.Queries.GetListCategory;
 public class CategoryDto
 {
     public Guid Id { get; set; }
-    public string Title { get; set; }
-    public string? Lable { get; set; }
+    public string Name { get; set; }
+    public string UrlSlug { get; set; }
 
     private class Mapping : Profile
     {

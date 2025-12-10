@@ -21,7 +21,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .IsUnique();
 
         builder.Property(c => c.FullName)
-            .IsRequired()
             .HasMaxLength(255);
 
         builder.Property(c => c.Email)

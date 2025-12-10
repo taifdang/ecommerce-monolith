@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Catalog.Products.Commands.CreateProductImage;
 
-public record CreateProductImageCommand(Guid ProductId, bool IsMain = false) : IRequest<Unit>
-{
-    public IFormFile MediaFile { get; init; }
-}
+public record CreateProductImageCommand(Guid ProductId, bool IsMain = false, IFormFile? MediaFile = null) : IRequest<Unit>;
+//{
+//    public IFormFile MediaFile { get; init; }
+//}

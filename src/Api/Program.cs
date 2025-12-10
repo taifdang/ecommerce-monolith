@@ -1,4 +1,5 @@
 using Api;
+using Api.Endpoints;
 using Application;
 using Infrastructure;
 
@@ -10,13 +11,16 @@ builder.AddApplicationServices();
 builder.AddInfrastructureServices();
 builder.AddWebServices();
 
-
 var app = builder.Build();
-
-app.MapDefaultEndpoints();
 
 app.UseInfrastructureServices();
 app.UseWebServices();
+
+app.MapCatalogApi();
+app.MapBasketApi();
+app.MapOrderApi();
+app.MapCustomerApi();
+app.MapIdentityApi();
 
 app.Run();
 

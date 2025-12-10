@@ -1,12 +1,13 @@
 ﻿using Application.Common.Interfaces;
+using Ardalis.GuardClauses;
 using AutoMapper;
 using MediatR;
 
 namespace Application.Order.Queries.GetOrderById;
 
-public record GetOrderByIdQuery(Guid OrderId) : IRequest<OrderItemDto>;
+public record GetOrderByIdQuery(Guid OrderId) : IRequest<List<OrderItemDto>>;
 
-public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, OrderItemDto>
+public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, List<OrderItemDto>>
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IMapper _mapper;
@@ -17,10 +18,12 @@ public class GetOrderByIdQueryHandler : IRequestHandler<GetOrderByIdQuery, Order
         _mapper = mapper;
     }
 
-    public async Task<OrderItemDto> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
+    public async Task<List<OrderItemDto>> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
     {
         var order = await _orderRepository.GetAsync(request.OrderId);
 
-        return _mapper.Map<OrderItemDto>(order);
+        Guard.Against.NotFound(request.OrderId, order);
+
+        return _mapper.Map<List<OrderItemDto>>(order.Items);
     }
 }

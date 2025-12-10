@@ -1,7 +1,6 @@
 ﻿using Api.Extensions;
 using Api.Services;
 using Application.Common.Interfaces;
-using Infrastructure.Services;
 using ServiceDefaults.OpenApi;
 
 
@@ -24,23 +23,24 @@ public static class DependencyInjection
         builder.Services.AddTransient<ICurrentUserProvider, CurrentUserProvider>();
         builder.Services.AddTransient<ICookieService, CookieService>();
 
-        builder.Services.AddHostedService<GracePeriodBackgroundService>();
+        //builder.Services.AddHostedService<GracePeriodBackgroundService>();
 
         return builder;
     }
 
     public static WebApplication UseWebServices(this WebApplication app)
-    {  
-        app.UseHttpsRedirection();
-    
+    {
         if (app.Environment.IsDevelopment())
         {
             app.UseDefaultOpenApi();
         }
+        app.UseRouting();   
+        app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseStaticFiles();
         app.MapControllers();
+        app.MapDefaultEndpoints();
 
         return app;
     }

@@ -8,14 +8,16 @@ public class CookieService(IHttpContextAccessor httpContextAccessor) : ICookieSe
 
     public string Get()
     {
-        var token = _httpContextAccessor.HttpContext?.Request.Cookies["token_key"];
-        return string.IsNullOrEmpty(token)
-            ? throw new Exception("not exist token")
-            : token;
+        //var token = _httpContextAccessor.HttpContext?.Request.Cookies["refreshToken"];
+        //return string.IsNullOrEmpty(token)
+        //    ? throw new Exception("not exist token")
+        //    : token;
+        return _httpContextAccessor.HttpContext?.Request.Cookies["refreshToken"] ?? string.Empty;
     }
 
+
     public void Set(string token) => _httpContextAccessor.HttpContext?.Response.Cookies.Append(
-            "token_key",
+            "refreshToken",
             token,
             new CookieOptions
             {
@@ -25,5 +27,5 @@ public class CookieService(IHttpContextAccessor httpContextAccessor) : ICookieSe
                 MaxAge = TimeSpan.FromDays(30)
             });
 
-    public void Delete() => _httpContextAccessor.HttpContext?.Response.Cookies.Delete("token_key");
+    public void Delete() => _httpContextAccessor.HttpContext?.Response.Cookies.Delete("refreshToken");
 }
