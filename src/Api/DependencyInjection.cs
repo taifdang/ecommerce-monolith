@@ -35,7 +35,7 @@ public static class DependencyInjection
             app.UseDefaultOpenApi();
         }
         app.UseRouting();   
-        app.UseHttpsRedirection();
+       
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseStaticFiles();

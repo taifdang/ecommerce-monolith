@@ -503,7 +503,7 @@
   position: absolute;
   right: 0;
   bottom: 1px;
-  background-image: url("http://localhost:5173/src/assets/images/tick.svg");
+  background-image: url("/src/assets/images/tick.svg");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

@@ -1,11 +1,18 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ProductCard } from "./components/ProductCard";
 import { Pagination } from "../../shared/components/Pagination";
 
 export default function HomePage() {
   const [page, setPage] = useState(1);
   const totalPage = 1;
+
+  useEffect(() => {
+    fetch("api/v1/catalog/products/get-available?PageSize=10&PageIndex=0")
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err));
+    
+  }, []);
 
   return (
     <div>
