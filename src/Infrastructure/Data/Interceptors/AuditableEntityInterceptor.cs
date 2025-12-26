@@ -48,17 +48,17 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
                     {
                         case EntityState.Added:
                             entry.Entity.CreatedBy = userId;
-                            entry.Entity.CreatedAt = DateTime.Now;
+                            entry.Entity.CreatedAt = DateTime.UtcNow;
                             break;
                         case EntityState.Modified:
                             entry.Entity.LastModifiedBy = userId;
-                            entry.Entity.LastModified = DateTime.Now;
+                            entry.Entity.LastModified = DateTime.UtcNow;
                             entry.Entity.Version++;
                             break;
                         case EntityState.Deleted:
                             entry.State = EntityState.Modified;
                             entry.Entity.LastModifiedBy = userId;
-                            entry.Entity.LastModified = DateTime.Now;
+                            entry.Entity.LastModified = DateTime.UtcNow;
                             entry.Entity.IsDeleted = true;
                             entry.Entity.Version++;
                             break;

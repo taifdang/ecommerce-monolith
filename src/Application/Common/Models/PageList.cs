@@ -1,22 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿namespace Application.Common.Models;
 
-namespace Application.Common.Models;
-
-public class PageList<T>(List<T> items, int count, int pageIndex, int pageSize)
+public class PageList<TEntity>(IEnumerable<TEntity> items, int count, int pageIndex, int pageSize) where TEntity : class
 {
-    public int CurrentPage { get; private set; } = pageIndex;
-    public int TotalPage { get; private set; } = (int)Math.Ceiling(count / (double)pageSize);
-    public int PageSize { get; private set; } = pageSize;
-    public int TotalCount { get; private set; } = count;
-    public List<T>? Items { get; private set; } = items;
-
-    public static async Task<PageList<T>> ToPagedList(IQueryable<T> source, int pageIndex, int pageSize)
-    {
-        pageIndex = pageIndex <= 0 ? 1 : pageIndex;
-        pageSize = pageSize <= 0 ? 10 : pageSize;
-
-        var count = source.Count();
-        var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-        return new PageList<T>(items, count, pageIndex, pageSize);
-    }
+    public int PageIndex => pageIndex;
+    public int PageSize => pageSize;
+    public int Count => count;
+    public IEnumerable<TEntity> Items => items;
+    //public int TotalPage => (int)Math.Ceiling(count / (double)pageSize);
 }

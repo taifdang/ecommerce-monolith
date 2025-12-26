@@ -1,3 +1,5 @@
+import logo  from "@/assets/images/logo-brand-no-bg.png"
+
 export function Header() {
   return (
     <div
@@ -15,7 +17,7 @@ export function Header() {
               <div className="flex items-center">
                 <div>
                   <img
-                    src="src\assets\images\logo-brand-no-bg.png"
+                    src={logo}
                     width="162px"
                     height="50px"
                     alt=""

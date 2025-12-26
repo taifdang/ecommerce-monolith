@@ -1,19 +1,19 @@
 
 import NoPage from "@/pages/NoPage";
 import Layout from "@/shared/components/layout/Layout";
-import ProductDetailPage from "@/features/catalog/pages/ProductDetailPage";
 import LoginPage from "@/features/identity/pages/LoginPage";
 import RegisterPage from "@/features/identity/pages/RegisterPage";
 import CartPage from "../features/basket/pages/CartPage";
 import CheckoutPage from "../features/order/pages/CheckoutPage";
-import HomePage from "../pages/Home/HomePage";
+import HomePage from "../pages/HomePage";
+import { ProductDetailPage } from "@/features/catalog/pages/ProductDetail/ProductDetailPage";
 
 export const routes = [
   {
     element: <Layout />,
     children: [
       { path: "/", element: <HomePage /> },
-      { path: "/detail", element: <ProductDetailPage /> },
+      { path: "/product/:id", element: <ProductDetailPage /> },
     ],
     errorElement: <NoPage />,
   },

@@ -1,3 +1,5 @@
+import fallbackImage from "@/assets/images/default.jpg"
+
 export function NavBar() {
   return (
     <div className="bg-white">
@@ -11,10 +13,7 @@ export function NavBar() {
         <div className="flex flex-col flex-1">
           <div className="flex flex-row flex-1 justify-end">
             <div className="flex flex-end">
-              <ul
-                className="flex items-center m-0"
-                style={{ height: "34px" }}
-              >
+              <ul className="flex items-center m-0" style={{ height: "34px" }}>
                 {/* <li>
                   <a href="/notification">
                     <span>
@@ -44,10 +43,10 @@ export function NavBar() {
                         height="16"
                         viewBox="0 0 24 24"
                       >
-                        <g fill="none" stroke="currentColor" stroke-width="1.5">
+                        <g fill="none" stroke="currentColor" strokeWidth="1.5">
                           <path d="M22 12a10 10 0 1 1-20.001 0A10 10 0 0 1 22 12Z" />
                           <path d="M16 12c0 1.313-.104 2.614-.305 3.827c-.2 1.213-.495 2.315-.867 3.244c-.371.929-.812 1.665-1.297 2.168c-.486.502-1.006.761-1.531.761s-1.045-.259-1.53-.761c-.486-.503-.927-1.24-1.298-2.168c-.372-.929-.667-2.03-.868-3.244A23.6 23.6 0 0 1 8 12c0-1.313.103-2.614.304-3.827s.496-2.315.868-3.244c.371-.929.812-1.665 1.297-2.168C10.955 2.26 11.475 2 12 2s1.045.259 1.53.761c.486.503.927 1.24 1.298 2.168c.372.929.667 2.03.867 3.244C15.897 9.386 16 10.687 16 12Z" />
-                          <path stroke-linecap="round" d="M2 12h20" />
+                          <path strokeLinecap="round" d="M2 12h20" />
                         </g>
                       </svg>
                     </span>
@@ -72,7 +71,7 @@ export function NavBar() {
                     >
                       <div>
                         <img
-                          src="src/assets/images/default.jpg"
+                          src={fallbackImage}
                           alt=""
                           className="user__avatar"
                         />

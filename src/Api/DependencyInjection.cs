@@ -1,7 +1,12 @@
 ﻿using Api.Extensions;
 using Api.Services;
 using Application.Common.Interfaces;
+using Infrastructure.Data;
+using Infrastructure.Identity.Data;
+using Microsoft.EntityFrameworkCore;
 using ServiceDefaults.OpenApi;
+using Shared.EFCore;
+using System;
 
 
 namespace Api;
@@ -33,6 +38,7 @@ public static class DependencyInjection
         if (app.Environment.IsDevelopment())
         {
             app.UseDefaultOpenApi();
+         
         }
         app.UseRouting();   
        

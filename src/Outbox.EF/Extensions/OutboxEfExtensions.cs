@@ -13,10 +13,13 @@ public static class OutboxEfExtensions
 {
     public static void AddTransactionalOutbox(this IHostApplicationBuilder builder)
     {
+#if (sqlServer)
         builder.Services.AddDbContext<OutboxDbContext>((sp, options) =>
         {
             options.UseSqlServer("Server=LAPTOP-J20BGGNG\\SQLEXPRESS;Database=ecommerce_db;Trusted_Connection=true; MultipleActiveResultSets=true; TrustServerCertificate=True");
         });
+#endif
+        builder.AddNpgsqlDbContext<OutboxDbContext>("shopdb");
         builder.Services.AddScoped<IOutboxMessageProcessor, OutboxMessageProcessor>();
         builder.Services.AddScoped<IPollingOutboxMessageRepository, PollingOutboxMessageRepository>();
         builder.Services.AddSingleton<PollingOutboxMessageRepositoryOptions>();

@@ -2,4 +2,4 @@
 
 update-database -Context ApplicationDbContext
 
-add-migration update-customer-tbl -Context ApplicationDbContext -Project Infrastructure -StartupProject Api  -o Data\Migrations
+add-migration update-hasfilter -Context ApplicationDbContext -Project Infrastructure -StartupProject Api  -o Data\Migrations

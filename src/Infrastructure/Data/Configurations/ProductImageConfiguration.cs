@@ -16,7 +16,8 @@ public class ProductImageConfiguration : IEntityTypeConfiguration<ProductImage>
 
         builder.HasIndex(pi => new { pi.ProductId })
             .IsUnique()
-            .HasFilter("[IsMain] = 1"); // Ensures only one main image per product
+            .HasFilter("\"IsMain\" = true");
+            //.HasFilter("[IsMain] = 1"); // Ensures only one main image per product if use sql server
 
         // Relationships
         builder.HasOne(pi => pi.Image)

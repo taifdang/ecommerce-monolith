@@ -11,23 +11,11 @@ namespace Infrastructure.Data;
 
 public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
-    private readonly ILogger<ApplicationDbContext> _logger;
-    private readonly IMediator _mediator;
-
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options) : base(options)
     {
     }
 
-    public ApplicationDbContext(
-       DbContextOptions<ApplicationDbContext> options,
-       ILogger<ApplicationDbContext> logger,
-       IMediator mediator
-    ) : base(options)
-    {
-        _logger = logger;
-        _mediator = mediator;
-    }
 
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Product> Products => Set<Product>();
@@ -90,7 +78,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
         //ref: https://learn.microsoft.com/en-us/ef/core/saving/concurrency?tabs=data-annotations#resolving-concurrency-conflicts
         catch (DbUpdateConcurrencyException ex)
         {
-            _logger.LogWarning("Update concurrency conflict !!!");
+           // _logger.LogWarning("Update concurrency conflict !!!");
 
             foreach(var entry in ex.Entries)
             {
@@ -98,7 +86,7 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 
                 if (databaseValues == null)
                 {
-                    _logger.LogError("The record no longer exists in the database, The record has been deleted by another user.");
+                   // _logger.LogError("The record no longer exists in the database, The record has been deleted by another user.");
                     throw;
                 }
                 // Refresh the original values to bypass next concurrency check

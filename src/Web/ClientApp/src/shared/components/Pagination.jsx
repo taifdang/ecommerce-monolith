@@ -23,9 +23,9 @@ export function Pagination({ currentPage, totalPage, onChange }) {
             <path
               fill="none"
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.5"
               d="m15 5l-6 7l6 7"
             />
           </svg>
@@ -66,9 +66,9 @@ export function Pagination({ currentPage, totalPage, onChange }) {
             <path
               fill="none"
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.5"
               d="m9 5l6 7l-6 7"
             />
           </svg>

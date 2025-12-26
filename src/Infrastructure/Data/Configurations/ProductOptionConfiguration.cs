@@ -23,7 +23,8 @@ public class ProductOptionConfiguration : IEntityTypeConfiguration<ProductOption
 
         builder.HasIndex(x => x.ProductId)
           .IsUnique()
-          .HasFilter("[AllowImage] = 1"); // Ensures only one option with images per product
+          .HasFilter("\"AllowImage\" = true");
+          //.HasFilter("[AllowImage] = 1"); // Ensures only one option with images per product
 
         // Relationships
         builder.HasMany(x => x.Values)

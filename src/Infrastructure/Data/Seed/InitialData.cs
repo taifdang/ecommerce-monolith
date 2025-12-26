@@ -265,7 +265,7 @@ public static class InitialData
                     },
                     new Domain.Entities.VariantOption
                     {
-                        OptionValueId = new Guid("3c5c0000-97c6-fc34-a0cb-08db322230f4")
+                        OptionValueId = new Guid("3c5c0000-97c6-fc34-a0cb-08db322230f3")
                     }
                 },
                 IsActive = true,
@@ -283,7 +283,7 @@ public static class InitialData
                 {
                     new Domain.Entities.VariantOption
                     {
-                        OptionValueId = new Guid("3c5c0000-97c6-fc34-a0cb-08db322230f1")
+                        OptionValueId = new Guid("3c5c0000-97c6-fc34-a0cb-08db322230f2")
                     },
                     new Domain.Entities.VariantOption
                     {

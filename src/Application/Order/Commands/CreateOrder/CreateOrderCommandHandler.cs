@@ -71,7 +71,7 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Gui
 
         var order = Domain.Entities.Order.Create(
             Guid.NewGuid(),
-            DateTime.Now.Ticks,
+            DateTime.UtcNow.Ticks,
             command.CustomerId,
             Address.Of(command.Street, command.City, command.ZipCode),
             orderItems,

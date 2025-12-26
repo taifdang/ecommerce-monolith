@@ -115,8 +115,7 @@ public static class CatalogApi
     {
         var result = await mediator.Send(new GetListProductQuery(request.PageIndex, request.PageSize), cancellationToken);
 
-        var response = new PaginatedResult<ProductListDto>(result.CurrentPage, result.PageSize,
-            result.TotalCount, result.TotalPage, result.Items);
+        var response = new PaginatedResult<ProductListDto>(result.PageIndex, result.PageSize, result.Count, result.Items);
 
         return TypedResults.Ok(response);
     }
@@ -126,14 +125,13 @@ public static class CatalogApi
     {
         var result = await mediator.Send(new GetAvailableProductsQuery(request.PageIndex, request.PageSize), cancellationToken);
 
-        var response = new PaginatedResult<AvailableProductsDto>(result.CurrentPage, result.PageSize,
-            result.TotalCount, result.TotalPage, result.Items);
+        var response = new PaginatedResult<AvailableProductsDto>(result.PageIndex, result.PageSize, result.Count, result.Items);
 
         return TypedResults.Ok(response);
     }
 
     private static async Task<Results<Ok<ProductItemDto>, BadRequest>> GetProductById(
-       IMediator mediator, [FromQuery] Guid id, CancellationToken cancellationToken)
+       IMediator mediator, Guid id, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new GetProductByIdQuery(id), cancellationToken);
 

@@ -27,8 +27,9 @@ public class GetListProductQueryHandler : IRequestHandler<GetListProductQuery, P
         // isActive filter
         //query = query.Where(p => p.IsActive);
         // paging
+        var page = request.PageIndex <= 0 ? 1 :request.PageIndex;
         var take = request.PageSize;
-        var skip = request.PageIndex * request.PageSize;
+        var skip = (page - 1) * request.PageSize;
         if (take == 0)
         {
             take = int.MaxValue;

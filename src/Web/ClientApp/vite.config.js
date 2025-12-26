@@ -6,6 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
+  console.log(env);
   return {
     plugins: [react(), tailwindcss()],
     server: {
@@ -16,7 +17,7 @@ export default defineConfig(({ mode }) => {
             process.env.services__apiservice__https__0 ||
             process.env.services__apiservice__http__0,
           changeOrigin: true,
-          //rewrite: (path) => path.replace(/^\/api/, ""),
+          // rewrite: (path) => path.replace(/^\/api/, "api"),
           secure: false,
         },
       },
@@ -30,7 +31,7 @@ export default defineConfig(({ mode }) => {
 
     resolve: {
       alias: {
-        "@": p.resolve(__dirname, "src"),
+        "@": p.resolve(__dirname, "./src"),
       },
     },
     css: {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Shared.Constants;
@@ -17,13 +18,18 @@ public static class Extentions
         builder.Services.AddDbContext<TContext>(
             (sp, options) =>
             {
-                string? connectionString = 
+                string? connectionString =
                     sp.GetRequiredService<ConnectionStrings>().DefaultConnection
                     ?? builder.Configuration?.GetSection("ConnectionStrings:DefaultConnection").ToString();
 
+                if (connectionString != null)
+                {
+                    throw new Exception("Emptyy connection");
+                }
+
                 ArgumentException.ThrowIfNullOrEmpty(connectionString);
 
-                options.UseSqlServer(connectionString, dbOptions =>
+                options.UseNpgsql(connectionString, dbOptions =>
                 {
                     dbOptions.MigrationsAssembly(typeof(TContext).Assembly.GetName().Name);
                 });
@@ -70,6 +76,6 @@ public static class Extentions
 
         var seedersManager = scope.ServiceProvider.GetRequiredService<ISeedManager>();
 
-        await seedersManager.ExecuteSeedAsync   ();
+        await seedersManager.ExecuteSeedAsync();
     }
 }

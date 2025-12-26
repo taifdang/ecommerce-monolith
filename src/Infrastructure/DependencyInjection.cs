@@ -20,11 +20,15 @@ using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Outbox.EF.Extensions;
+using Outbox.EF.Infrastructure.Data;
 using Shared.Constants;
 using Shared.EFCore;
 using Shared.Web;
+using System;
 
 namespace Infrastructure;
 //ref: https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-9.0&tabs=visual-studio
@@ -43,15 +47,19 @@ public static class DependencyInjection
         // DbContext
         //builder.AddCustomDbContext<ApplicationDbContext>();
         // Inteceptors
+
         builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
-            options.UseSqlServer(appSettings.ConnectionStrings.DefaultConnection);
+#if (sqlserver)
+            //options.useSqlServer(appSettings.ConnectionStrings.DefaultConnection);
+#endif
+            options.UseNpgsql(builder.Configuration.GetConnectionString("shopdb"));
             options.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
         });
 
-        // Identity
-        builder.AddCustomDbContext<AppIdentityDbContext>();
+        builder.AddNpgsqlDbContext<AppIdentityDbContext>("shopdb");
+
         builder.AddCustomIdentity();
 
         // Jwt
@@ -64,21 +72,19 @@ public static class DependencyInjection
 
         // Custom Servicess      
         builder.Services.AddTransient<IEmailService, EmailService>();
-        //if (appSettings.FileStorageSettings.LocalStorage)
-        //{
-        //    builder.Services.AddSingleton<IFileService, LocalStorageService>();
-        //}
         builder.Services.AddScoped<IFileService, LocalStorageService>();
         builder.Services.AddScoped<IIdentityService, IdentityService>();
         builder.Services.AddScoped<IPaymentProvider, PaypalGateway>();
         builder.Services.AddScoped<IPaymentProvider, VnPayGateway>();
 
         // Seeders    
+        builder.Services.AddScoped<ISeedManager, SeedManager>();
+
         builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
         builder.Services.AddScoped<IDataSeeder, CatalogDataSeeder>();
 
         // eventbus
-        if(builder.Environment.EnvironmentName == "test")
+        if (builder.Environment.EnvironmentName == "test")
         {
             builder.Services.AddTransient<IEventPublisher, NullEventPublisher>();
         }
@@ -101,7 +107,10 @@ public static class DependencyInjection
 
     public static WebApplication UseInfrastructureServices(this WebApplication app)
     {
+
+        app.UseMigration<ApplicationDbContext>();
         app.UseMigration<AppIdentityDbContext>();
+        app.UseMigration<OutboxDbContext>();
 
         return app;
     }

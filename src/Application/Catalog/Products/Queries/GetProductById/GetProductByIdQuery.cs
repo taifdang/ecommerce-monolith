@@ -43,6 +43,7 @@ public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, P
                 Category = m.Category.Name,
                 Options = m.Options.Select(po => new ProductOptionDto
                 {
+                    Id = po.Id,
                     Title = po.Name,
                     Values = po.Values.Select(ov => new OptionValueDto
                     {
