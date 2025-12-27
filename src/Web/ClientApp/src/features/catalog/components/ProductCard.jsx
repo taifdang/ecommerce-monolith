@@ -1,8 +1,8 @@
 import { formatCurrency } from "@/shared/lib/currency";
-import fallbackImage from "@/assets/images/default.jpg"
+import fallbackImage from "@/assets/images/default.jpg";
+import { Link } from "react-router-dom";
 
 export default function ProductCard({ product }) {
-
   const displayImage = product?.image?.url ?? fallbackImage;
 
   return (
@@ -11,7 +11,7 @@ export default function ProductCard({ product }) {
         className="relative h-full"
         style={{ border: "1px solid rgba(0, 0, 0, 0.09)" }}
       >
-        <a href={`/product/${product.id}`} className="block h-full">
+        <Link to={`/product/${product.id}`} className="block h-full">
           <div className="flex flex-col h-full w-full bg-white">
             {/* -------- IMAGE  -------- */}
             <div className="relative">
@@ -48,7 +48,7 @@ export default function ProductCard({ product }) {
               </div>
             </div>
           </div>
-        </a>
+        </Link>
       </div>
     </div>
   );

@@ -21,7 +21,7 @@ public class CookieService(IHttpContextAccessor httpContextAccessor) : ICookieSe
             token,
             new CookieOptions
             {
-                SameSite = SameSiteMode.None,
+                SameSite = SameSiteMode.Strict,
                 Secure = true,
                 HttpOnly = true,
                 MaxAge = TimeSpan.FromDays(30)

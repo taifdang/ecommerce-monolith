@@ -1,6 +1,16 @@
-import fallbackImage from "@/assets/images/default.jpg"
+import fallbackImage from "@/assets/images/default.jpg";
+import { useAuth } from "@/features/identity/contexts/AuthContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function NavBar() {
+  const { logout } = useAuth();
+
+  // const queryClient = useQueryClient();
+  // const user = queryClient.getQueryData(["profile"]);
+
+  const object = localStorage.getItem("profile");
+  const user = JSON.parse(object);
+
   return (
     <div className="bg-white">
       <section
@@ -63,8 +73,68 @@ export function NavBar() {
                   </a>
                 </li>
                 {/* USER */}
-                <li style={{ padding: "0 10px" }}>
-                  <a href="/user">
+                {user ? (
+                  <li style={{ padding: "0 10px" }}>
+                   <div className="flex items-center">
+                     <a href="/user" className="flex relative">
+                      <div
+                        className="flex items-center"
+                        style={{ padding: "5px 0" }}
+                      >
+                        <div>
+                          <img
+                            src={fallbackImage}
+                            alt=""
+                            className="user__avatar"
+                          />
+                        </div>
+                        <span style={{ padding: "0 10px" }}>
+                          {user?.userName || "guest"}
+                        </span>
+                        <div
+                          className="block"
+                          style={{
+                            height: "13px",
+                            borderLeft: "1px solid black",
+                          }}
+                        ></div>
+                      </div>
+                    </a>
+                    <a
+                      onClick={() => logout()}
+                      className="flex relative"
+                      style={{ padding: "0 10px" }}
+                    >
+                      Logout
+                    </a>
+                   </div>
+                  </li>
+                ) : (
+                  <>
+                    {/* GUEST */}
+                    <a
+                      //href="/"
+
+                      className="flex relative"
+                      style={{ padding: "0 10px" }}
+                    >
+                      Sign up
+                    </a>
+                    <div
+                      className="block"
+                      style={{ height: "13px", borderLeft: "1px solid black" }}
+                    ></div>
+                    <a
+                      href="/login"
+                      className="flex items-center relative"
+                      style={{ padding: "0 10px" }}
+                    >
+                      Login
+                    </a>
+                  </>
+                )}
+                {/* <li style={{ padding: "0 10px" }}>
+                  <a href="/user" className="flex relative">
                     <div
                       className="flex items-center"
                       style={{ padding: "5px 0" }}
@@ -76,29 +146,26 @@ export function NavBar() {
                           className="user__avatar"
                         />
                       </div>
-                      <span className="ms-1">guest</span>
+                      <span style={{ padding: "0 10px" }}>
+                        {user?.userName || "guest"}
+                      </span>
+                      <div
+                        className="block"
+                        style={{
+                          height: "13px",
+                          borderLeft: "1px solid black",
+                        }}
+                      ></div>
+                      <a
+                        href="/signup"
+                        className="flex relative"
+                        style={{ padding: "0 10px" }}
+                      >
+                        Logout
+                      </a>
                     </div>
                   </a>
-                </li>
-                {/* GUEST */}
-                <a
-                  href="/signup"
-                  className="flex relative"
-                  style={{ padding: "0 10px" }}
-                >
-                  Sign up
-                </a>
-                <div
-                  className="block"
-                  style={{ height: "13px", borderLeft: "1px solid black" }}
-                ></div>
-                <a
-                  href="/login"
-                  className="flex items-center relative"
-                  style={{ padding: "0 10px" }}
-                >
-                  Login
-                </a>
+                </li> */}
               </ul>
             </div>
           </div>

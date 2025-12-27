@@ -1,7 +1,55 @@
-export function LoginForm({ showPassword, setShowPassword }) {
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { loginSchema } from "../utils/login.schema";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
+
+export function LoginForm({ showPassword, setShowPassword, setShowError }) {
+  const navigate = useNavigate();
+  const { setUser, login } = useAuth();
+
+  // React hook form + zod (schema validation)
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    mode: "onSubmit",
+    reValidateMode: "onBlur", // validate input when pointer leave focus
+  });
+
+  const onLoginSubmit = async (data) => {
+    const result = await login(data.username, data.password);
+
+    if (result.success) {
+      navigate("/");
+    }
+    else{
+      setShowError(`${result.message} - ${new Date().toISOString()}`)
+    }
+
+    // try {
+    //   const res = await loginRequest(data.username, data.password);
+    //   //console.log(res.data);
+    //   if (res.status === 200) {
+    //     //window.location.href = "/"; // reload. lost token in memory
+    //     navigate("/");
+    //     tokenStorage.set(res.data.token);
+
+    //     setUser("have a user");
+
+    //     console.log(tokenStorage.get());
+    //   }
+    // } catch (err) {
+    //   setShowError(`Invalid input, create at: ${new Date().toISOString()}`);
+    // }
+  };
+
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit(onLoginSubmit)}>
         {/* -------- USERNAME  -------- */}
         <div style={{ marginBottom: "10px" }}>
           <div className="text-field">
@@ -10,9 +58,10 @@ export function LoginForm({ showPassword, setShowPassword }) {
               type="text"
               maxLength="128"
               placeholder="Username"
+              {...register("username")}
             />
           </div>
-          <div className="text-field__error">123</div>
+          <div className="text-field__error">{errors.username?.message}</div>
         </div>
         {/* -------- PASSWORD  -------- */}
         <div style={{ marginBottom: "10px" }}>
@@ -22,6 +71,7 @@ export function LoginForm({ showPassword, setShowPassword }) {
               type={showPassword ? "text" : "password"}
               maxLength="16"
               placeholder="Password"
+              {...register("password")}
             />
             <button
               className="text-field__button"
@@ -41,9 +91,9 @@ export function LoginForm({ showPassword, setShowPassword }) {
                   />
                   <path
                     fill="currentColor"
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M2 12c0 1.64.425 2.191 1.275 3.296C4.972 17.5 7.818 20 12 20s7.028-2.5 8.725-4.704C21.575 14.192 22 13.639 22 12c0-1.64-.425-2.191-1.275-3.296C19.028 6.5 16.182 4 12 4S4.972 6.5 3.275 8.704C2.425 9.81 2 10.361 2 12m10-3.75a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5"
-                    clip-rule="evenodd"
+                    clipRule="evenodd"
                   />
                 </svg>
               ) : (
@@ -61,7 +111,7 @@ export function LoginForm({ showPassword, setShowPassword }) {
               )}
             </button>
           </div>
-          <div className="text-field__error">Invalid password</div>
+          <div className="text-field__error">{errors.password?.message}</div>
         </div>
         <div style={{ height: "16px" }}></div>
         {/* -------- SUBMIT  -------- */}

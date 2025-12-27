@@ -23,6 +23,8 @@ export function ProductList() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["products", currentPage, pageSize],
     queryFn: () => fetchProducts(1, pageSize).then((res) => res.data),
+    refetchOnWindowFocus: false,
+    retry: false
   });
 
   console.log(data);
@@ -42,7 +44,7 @@ export function ProductList() {
   // not on home page
   const showPagination = !isHomePage && totalPages > 1;
 
-  const handlePageChange = () => {};
+  const handlePageChange = () => { };
 
 
   return (

@@ -130,27 +130,28 @@ public class IdentityService : IIdentityService
         //    throw new UnauthorizedAccessException("Invalid user ID");
         //}
 
-        var userId = Guid.Empty;
-
         var tokenInCookie = cookieService.Get();
 
-        if (!string.IsNullOrEmpty(tokenInCookie))
-        {
-            var lastToken = await dbContext.RefreshTokens.FirstOrDefaultAsync(x => x.Token == tokenInCookie);
+        if (string.IsNullOrEmpty(tokenInCookie)) throw new Exception("Not found cookie in client");
 
-            if (lastToken != null && lastToken.IsActive)
-            {
-                lastToken.Revoked = DateTime.UtcNow;
-                userId = lastToken.UserId;
-            }  
-        }
+        var tokenInDb = await dbContext.RefreshTokens.Where(x => x.Token == tokenInCookie).FirstOrDefaultAsync();
 
-        if(userId == Guid.Empty)
-        {
-            throw new Exception("Not found user with token in cookie");
-        }
+        if (tokenInDb is null) throw new Exception("Not found token in db");
 
-        var user = await userManager.Users.SingleOrDefaultAsync(x => x.Id == userId);
+        if (tokenInDb.Expires <= DateTime.UtcNow) throw new Exception("Refresh token is expired");
+
+        //if (!string.IsNullOrEmpty(tokenInCookie))
+        //{
+        //    var lastToken = await dbContext.RefreshTokens.FirstOrDefaultAsync(x => x.Token == tokenInCookie);
+
+        //    if (lastToken != null && lastToken.IsActive)
+        //    {
+        //        lastToken.Revoked = DateTime.UtcNow;
+        //        userId = lastToken.UserId;
+        //    }  
+        //}
+
+        var user = await userManager.Users.SingleOrDefaultAsync(x => x.Id == tokenInDb.UserId);
 
         if (user == null)
         {
@@ -160,20 +161,20 @@ public class IdentityService : IIdentityService
         var roles = await userManager.GetRolesAsync(user);
 
         var result = tokenService.GenerateToken(user.Id, user.UserName!, user.Email!, roles.ToArray());
-        var refreshToken = tokenService.GenerateRefereshToken();
+        //var refreshToken = tokenService.GenerateRefereshToken();
 
-        //save refresh token
-        dbContext.RefreshTokens.Add(new RefreshToken
-        {
-            UserId = user.Id,
-            Token = result.Token,
-            Expires = result.Expire,
-            Created = DateTime.UtcNow
-        });
-        await dbContext.SaveChangesAsync();
+        ////save refresh token
+        //dbContext.RefreshTokens.Add(new RefreshToken
+        //{
+        //    UserId = user.Id,
+        //    Token = result.Token,
+        //    Expires = result.Expire,
+        //    Created = DateTime.UtcNow
+        //});
+        //await dbContext.SaveChangesAsync();
 
-        cookieService.Delete();
-        cookieService.Set(refreshToken);
+        //cookieService.Delete();
+        //cookieService.Set(refreshToken);
 
         return result;
     }

@@ -1,12 +1,14 @@
 ﻿using Api.Models.Requests;
 using Application.Common.Models;
+using Application.Identity.Commands.Login;
 using Application.Identity.Commands.Logout;
 using Application.Identity.Commands.RefreshToken;
 using Application.Identity.Commands.RegisterUser;
 using Application.Identity.Queries.GetProfile;
-using Application.Identity.Queries.Login;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Shared.Constants;
 
 namespace Api.Endpoints;
 
@@ -34,10 +36,10 @@ public static class IdentityApi
             .Produces(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        group.MapGet("/login",
-            async(IMediator mediator, [AsParameters] LoginRequestDto request, CancellationToken cancellationToken) =>
+        group.MapPost("/login",
+            async(IMediator mediator, [FromBody] LoginRequestDto request, CancellationToken cancellationToken) =>
             {
-                return await mediator.Send(new LoginQuery(request.UserName, request.Password), cancellationToken);
+                return await mediator.Send(new LoginCommand(request.UserName, request.Password), cancellationToken);
             })
             .WithName("Login")
             .Produces<TokenResult>()
@@ -76,7 +78,8 @@ public static class IdentityApi
             })
             .WithName("Profile")
             .Produces<GetProfileResult>()
-            .ProducesProblem(StatusCodes.Status400BadRequest);
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .RequireAuthorization(IdentityConstant.Role.User);
 
         //group.MapPost("/change-password", null);
 

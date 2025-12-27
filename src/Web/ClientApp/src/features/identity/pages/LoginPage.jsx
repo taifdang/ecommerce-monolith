@@ -4,6 +4,7 @@ import { LoginForm } from "../components/LoginForm";
 export default function LoginPage() {
   // HOOKS
   const [showPassword, setShowPassword] = useState(false);
+  const [showError, setShowError] = useState(null);
 
   return (
     <div>
@@ -12,10 +13,12 @@ export default function LoginPage() {
         redirect="/signup"
         redirectName="Sign Up"
         redirectTitle="New Guest"
+        inputError={showError}
       >
         <LoginForm
           showPassword={showPassword}
           setShowPassword={setShowPassword}
+          setShowError={setShowError}
         />
         <div style={{ margin: "10px 0" }}>
           <a

@@ -5,6 +5,7 @@ export function AuthLayout({
   redirect,
   redirectName,
   redirectTitle,
+  inputError
 }) {
   return (
     <>
@@ -28,9 +29,9 @@ export function AuthLayout({
           <div className={s["auth-container"]}>
             <div className={s["auth-with-form"]}>
               <div className={s["auth-with-form__header"]}>{title}</div>
-
+              <div className={s["auth-error__text"]}>{inputError}</div>
               <div style={{ padding: "0 30px 30px" }}>
-                {/* ================= MAIN ================= */}
+                {/* ================= MAIN ================= */}   
                 <main>{children}</main>
                 {/* --------  SOCIAL LOGIN  -------- */}
                 <div>

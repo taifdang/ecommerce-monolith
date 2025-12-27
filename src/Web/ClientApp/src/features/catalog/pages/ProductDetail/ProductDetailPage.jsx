@@ -87,18 +87,11 @@ export function ProductDetailPage() {
     });
   };
 
-  const handleIncrease = () =>{
+  const handleIncrease = () => {};
 
-  }
+  const handleDecrease = () => {};
 
-  const handleDecrease = () =>{
-
-  }
-
-  const updateQuatity = () =>{
-    
-  }
-
+  const updateQuatity = () => {};
 
   const priceText = useMemo(() => {
     const source = variant ?? product;
