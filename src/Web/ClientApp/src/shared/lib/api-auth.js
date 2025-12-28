@@ -13,7 +13,7 @@ apiAuth.interceptors.request.use(
   (config) => {
     const token = tokenStorage.get();
 
-    console.log(`current-token: ${token}`);
+    //console.log(`current-token: ${token}`);
     //&& !config._retry
     if (token && !config._retry) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -45,7 +45,7 @@ apiAuth.interceptors.response.use(
       try {
         var res = await apiAuth.post(`/api/v1/identity/refresh-token`);
         //
-        console.log(`get refresh-token ${res.data.token}`);
+        //console.log(`get refresh-token ${res.data.token}`);
 
         tokenStorage.set(res.data.token);
 

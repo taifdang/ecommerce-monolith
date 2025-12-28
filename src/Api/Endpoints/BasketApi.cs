@@ -4,6 +4,7 @@ using Application.Basket.Queries.GetBasket;
 using Application.Basket.Queries.GetCartList;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Endpoints;
 
@@ -29,7 +30,7 @@ public static class BasketApi
         .Produces<BasketDto>()
         .ProducesProblem(StatusCodes.Status400BadRequest);
 
-        group.MapPost("/", async (IMediator mediator, [AsParameters] UpdateBasketRequestDto request, CancellationToken cancellationToken) =>
+        group.MapPost("/", async (IMediator mediator, [FromBody] UpdateBasketRequestDto request, CancellationToken cancellationToken) =>
         {
             await mediator.Send(new UpdateItemCommand(request.VariantId, request.Quantity));
 

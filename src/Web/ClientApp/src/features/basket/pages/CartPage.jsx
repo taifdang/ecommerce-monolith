@@ -1,11 +1,22 @@
+import { useQuery } from "@tanstack/react-query";
 import { NavBar } from "../../../shared/components/layout/NavBar";
 import { CartFooter } from "../components/CartFooter";
 import { CartHeader } from "../components/CartHeader";
 import CartItem from "../components/CartItem";
 import { useNavigate } from "react-router-dom";
+import { fetchBasket } from "../services/basket-service";
 
 export default function CartPage() {
   const navigate = useNavigate();
+
+  const { data: basket } = useQuery({
+    queryKey: ["basket"],
+    queryFn: () => fetchBasket().then((res) => res.data),
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+
+  console.log(`afaf:${JSON.stringify(basket)}`);
 
   return (
     <div>
@@ -60,6 +71,8 @@ export default function CartPage() {
                   >
                     <span>Items: 3 </span>
                   </div>
+                  {/* {basket.items.length === 0 ? <>1</> : <>2</>} */}
+
                   <CartItem />
                   <div
                     style={{
