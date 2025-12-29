@@ -93,11 +93,27 @@ export function ProductDetailPage() {
 
   const updateQuatity = () => {};
 
-  const priceText = useMemo(() => {
-    const source = variant ?? product;
-    if (!source?.minPrice || !source?.maxPrice) return "";
-    return handleSetPriceText(source.minPrice, source.maxPrice);
+  const priceSource = useMemo(() => {
+    if (variant) {
+      return {
+        minPrice: variant.minPrice,
+        maxPrice: variant.maxPrice,
+      };
+    }
+
+    if (product?.variantBrief) {
+      return {
+        minPrice: product.variantBrief.minPrice,
+        maxPrice: product.variantBrief.maxPrice,
+      };
+    }
+    return null;
   }, [variant, product]);
+
+  const priceText = useMemo(() => {
+    if (!priceSource) return "";
+    return handleSetPriceText(priceSource.minPrice, priceSource.maxPrice);
+  }, [priceSource]);
 
   // delay show UI
   const priceText__delay = useDebounce(priceText, 500);
