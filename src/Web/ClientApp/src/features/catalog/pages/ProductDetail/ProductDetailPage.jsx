@@ -1,5 +1,5 @@
 import s from "./index.module.css";
-import { useState, useEffect, useRef, useMemo, useLayoutEffect } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import ImagePreview from "../../components/ImagePreview";
 import Gallery from "../../components/Gallery";
 import { Info } from "../../components/Info";
@@ -31,6 +31,7 @@ export function ProductDetailPage() {
   const [displayPrice, setDisplayPrice] = useState("");
   const [displayStock, setDisplayStock] = useState(0);
   const [hasError, setHasError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   // filter available quantity and options ???
   const [variantId, setVariantId] = useState(null);
@@ -44,6 +45,7 @@ export function ProductDetailPage() {
       //toast
       queryClient.invalidateQueries({ queryKey: ["basket"] });
       setHasError(false);
+      setIsSuccess(true);
     },
   });
 
@@ -167,10 +169,16 @@ export function ProductDetailPage() {
     } else {
       setVariantId(null);
     }
-   
   }, [product, variant]);
 
-   console.log(variantId)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsSuccess(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, [isSuccess]);
+
 
   if (isLoading) {
     return <></>;
@@ -270,6 +278,32 @@ export function ProductDetailPage() {
             category={product.category}
             description={product.description}
           />
+        </div>
+      )}
+      {/* MODAL */}
+      {isSuccess && (
+        <div className={s["add-to-cart__modal"]}>
+          <div
+            className="flex flex-col items-center justify-center "
+            style={{ padding: "40px 20px" }}
+          >
+            <div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width={60}
+                height={60}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275t-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7t-.7-.275t-.7.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"
+                ></path>
+              </svg>
+            </div>
+            <div style={{ marginTop: "10px", color: "white" }}>
+              Item has been added to your shopping cart
+            </div>
+          </div>
         </div>
       )}
     </>
