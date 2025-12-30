@@ -1,5 +1,5 @@
 import s from "./index.module.css";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useLayoutEffect } from "react";
 import ImagePreview from "../../components/ImagePreview";
 import Gallery from "../../components/Gallery";
 import { Info } from "../../components/Info";
@@ -16,7 +16,6 @@ import {
 
 import { formatCurrency } from "@/shared/lib/currency";
 import fallbackImage from "@/assets/images/default.jpg";
-import { useDebounce } from "@/shared/hooks/useDebounce";
 import { updateBasket } from "../../../basket/services/basket-service";
 
 export function ProductDetailPage() {
@@ -27,7 +26,9 @@ export function ProductDetailPage() {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [selectedImage, setSelectedImage] = useState(0);
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [stock, setStock] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [displayPrice, setDisplayPrice] = useState("");
 
   // filter available quantity and options ???
   const [variantId, setVariantId] = useState(null);
@@ -83,8 +84,6 @@ export function ProductDetailPage() {
   const gallery__limit = 5;
   const displayImage = product?.mainImage?.url ?? fallbackImage;
 
-  const isAvailable = variant?.totalStock ?? null;
-
   const handleSetPriceText = (minPrice, maxPrice) => {
     if (minPrice == null || maxPrice == null) return "";
 
@@ -105,12 +104,6 @@ export function ProductDetailPage() {
     });
   };
 
-  const handleIncrease = () => {};
-
-  const handleDecrease = () => {};
-
-  const updateQuatity = () => {};
-
   const priceSource = useMemo(() => {
     if (variant) {
       return {
@@ -128,23 +121,31 @@ export function ProductDetailPage() {
     return null;
   }, [variant, product]);
 
-  const priceText = useMemo(() => {
-    if (!priceSource) return "";
-    return handleSetPriceText(priceSource.minPrice, priceSource.maxPrice);
-  }, [priceSource]);
 
-  // delay show UI
-  const priceText__delay = useDebounce(priceText, 500);
-  const quantity__delay = useDebounce(isAvailable, 500);
+  useEffect(() => {
+    if (!priceSource) return;
+
+    const newPrice = handleSetPriceText(
+      priceSource.minPrice,
+      priceSource.maxPrice
+    );
+
+    const timer = setTimeout(() => {
+      setDisplayPrice(newPrice);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [priceSource]);
 
   useEffect(() => {
     if (!product) return;
     setVariantId(product.variantBrief?.id ?? null);
+    setStock(product.variantBrief?.quantity ?? 0);
   }, [product]);
 
   useEffect(() => {
+    setStock(variant?.totalStock ?? null);
     if (!variant) return;
-
     if (variant.variants.length === 1) {
       setVariantId(variant.variants[0].id);
     } else {
@@ -182,7 +183,7 @@ export function ProductDetailPage() {
               {/* Right */}
               <div className={s["detail__section--right"]}>
                 {/* PriceBox(regular price, price, discount/percent) */}
-                <Info price={priceText__delay} name={product.title} />
+                <Info price={displayPrice} name={product.title}/>
                 {/* Configuration behavior */}
                 <div className={s["selector__section"]}>
                   <div className="flex flex-col">
@@ -194,7 +195,7 @@ export function ProductDetailPage() {
                     />
                     {/* Quantity */}
                     <QuantitySelector
-                      available={quantity__delay}
+                      available={stock}
                       quantity={quantity}
                       onChange={setQuantity}
                       onShow={canSetQuantity}
