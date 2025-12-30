@@ -17,6 +17,7 @@ import {
 import { formatCurrency } from "@/shared/lib/currency";
 import fallbackImage from "@/assets/images/default.jpg";
 import { updateBasket } from "../../../basket/services/basket-service";
+import clsx from "clsx";
 
 export function ProductDetailPage() {
   const { id } = useParams();
@@ -26,24 +27,31 @@ export function ProductDetailPage() {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [selectedImage, setSelectedImage] = useState(0);
   const [galleryIndex, setGalleryIndex] = useState(0);
-  const [stock, setStock] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [displayPrice, setDisplayPrice] = useState("");
+  const [displayStock, setDisplayStock] = useState(0);
+  const [hasError, setHasError] = useState(false);
 
   // filter available quantity and options ???
   const [variantId, setVariantId] = useState(null);
+  const isEnoughOption = variantId !== null;
   const canSetQuantity = variantId !== null;
   const canAddToCart = variantId !== null;
 
   const addToCart = useMutation({
     mutationFn: ({ variantId, quantity }) => updateBasket(variantId, quantity),
     onSuccess: () => {
+      //toast
       queryClient.invalidateQueries({ queryKey: ["basket"] });
+      setHasError(false);
     },
   });
 
   const handleAddToCart = () => {
-    if (variantId === null) return;
+    if (variantId === null) {
+      setHasError(true);
+    }
+
     addToCart.mutate({ variantId: variantId, quantity: quantity });
   };
 
@@ -104,6 +112,12 @@ export function ProductDetailPage() {
     });
   };
 
+  const resolveStock = () => {
+    if (variant) return variant.totalStock ?? 0;
+    if (product?.variantBrief) return product.variantBrief.quantity ?? 0;
+    return 0;
+  };
+
   const priceSource = useMemo(() => {
     if (variant) {
       return {
@@ -121,7 +135,6 @@ export function ProductDetailPage() {
     return null;
   }, [variant, product]);
 
-
   useEffect(() => {
     if (!priceSource) return;
 
@@ -138,20 +151,26 @@ export function ProductDetailPage() {
   }, [priceSource]);
 
   useEffect(() => {
-    if (!product) return;
-    setVariantId(product.variantBrief?.id ?? null);
-    setStock(product.variantBrief?.quantity ?? 0);
-  }, [product]);
+    const stock = resolveStock();
+    const timer = setTimeout(() => {
+      setDisplayStock(stock);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, [product, variant]);
 
   useEffect(() => {
-    setStock(variant?.totalStock ?? null);
-    if (!variant) return;
-    if (variant.variants.length === 1) {
+    if (variant?.variants.length === 1) {
       setVariantId(variant.variants[0].id);
+    } else if (product?.variantBrief?.id) {
+      setVariantId(product.variantBrief.id);
     } else {
       setVariantId(null);
     }
-  }, [variant]);
+   
+  }, [product, variant]);
+
+   console.log(variantId)
 
   if (isLoading) {
     return <></>;
@@ -183,9 +202,14 @@ export function ProductDetailPage() {
               {/* Right */}
               <div className={s["detail__section--right"]}>
                 {/* PriceBox(regular price, price, discount/percent) */}
-                <Info price={displayPrice} name={product.title}/>
+                <Info price={displayPrice} name={product.title} />
                 {/* Configuration behavior */}
-                <div className={s["selector__section"]}>
+                <div
+                  className={clsx(
+                    s["selector__section"],
+                    hasError && s["error"]
+                  )}
+                >
                   <div className="flex flex-col">
                     {/* Option */}
                     <OptionSelector
@@ -195,11 +219,16 @@ export function ProductDetailPage() {
                     />
                     {/* Quantity */}
                     <QuantitySelector
-                      available={stock}
+                      stock={displayStock}
                       quantity={quantity}
                       onChange={setQuantity}
                       onShow={canSetQuantity}
                     />
+                    {hasError && (
+                      <div className={s["error--not-enough-option"]}>
+                        Please select product variation first
+                      </div>
+                    )}
                   </div>
                 </div>
                 {/* Action controls */}

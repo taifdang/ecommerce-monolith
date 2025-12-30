@@ -1,11 +1,11 @@
 import clsx from "clsx";
 import s from "./index.module.css";
 
-export function QuantitySelector({ available, quantity, onChange, onShow }) {
-  const handleStockStatus = (available) => {
-    if (!available) return "INSTOCK"; // for test
-    if (available === 0) return "OUT OF STOCK";
-    if (available) return `${available} pieces available`;
+export function QuantitySelector({ stock, quantity, onChange, onShow }) {
+  const handleStockStatus = (stock) => {
+    if (!stock) return "INSTOCK"; // for test
+    if (stock === 0) return "OUT OF STOCK";
+    if (stock) return `${stock} pieces stock`;
   };
 
   return (
@@ -21,7 +21,7 @@ export function QuantitySelector({ available, quantity, onChange, onShow }) {
               aria-label="Decrease"
               className={clsx(
                 s["quantity-selector__button"],
-                (onShow && quantity > 1) && s["active"]
+                onShow && quantity > 1 && s["active"]
               )}
             >
               <svg
@@ -46,7 +46,7 @@ export function QuantitySelector({ available, quantity, onChange, onShow }) {
             <button
               type="button"
               onClick={() => onChange(quantity + 1)}
-              disabled={quantity + 1 > available}
+              disabled={!onShow || quantity + 1 > stock}
               aria-label="Increase"
               className={clsx(
                 s["quantity-selector__button"],
@@ -68,7 +68,7 @@ export function QuantitySelector({ available, quantity, onChange, onShow }) {
           </div>
         </div>
         <div className={s["quantity-selector__status"]}>
-          {handleStockStatus(available)}
+          {handleStockStatus(stock)}
         </div>
       </div>
     </section>

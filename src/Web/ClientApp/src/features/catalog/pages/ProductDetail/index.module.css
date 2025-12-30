@@ -25,6 +25,19 @@
     line-height: 16.8px;
     padding-bottom: 15px;
     /* height: auto; */
+   
+}
+.selector__section.error{
+ background-color: rgb(255, 245, 245);
+}
+
+.error--not-enough-option{
+    display: block;
+    margin: 15px 0 0 110px;
+
+    font-size: 14px;
+    line-height: 16.8px;
+    color: rgb(255, 66, 79);
 }
 
 .purchase-action__section {
