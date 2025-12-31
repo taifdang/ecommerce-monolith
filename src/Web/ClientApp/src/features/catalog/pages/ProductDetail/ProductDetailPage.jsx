@@ -16,7 +16,10 @@ import {
 
 import { formatCurrency } from "@/shared/lib/currency";
 import fallbackImage from "@/assets/images/default.jpg";
-import { updateBasket } from "../../../basket/services/basket-service";
+import {
+  fetchBasket,
+  updateBasket,
+} from "../../../basket/services/basket-service";
 import clsx from "clsx";
 
 export function ProductDetailPage() {
@@ -27,7 +30,8 @@ export function ProductDetailPage() {
   const [selectedOptions, setSelectedOptions] = useState({});
   const [selectedImage, setSelectedImage] = useState(0);
   const [galleryIndex, setGalleryIndex] = useState(0);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0); // current quantity in basket
+  const [inputValue, setInputValue] = useState(1); // default value
   const [displayPrice, setDisplayPrice] = useState("");
   const [displayStock, setDisplayStock] = useState(0);
   const [hasError, setHasError] = useState(false);
@@ -39,23 +43,88 @@ export function ProductDetailPage() {
   const canSetQuantity = variantId !== null;
   const canAddToCart = variantId !== null;
 
-  const addToCart = useMutation({
-    mutationFn: ({ variantId, quantity }) => updateBasket(variantId, quantity),
+  // useQuery[basket]
+  const { data: basket } = useQuery({
+    queryKey: ["basket"],
+    queryFn: () => fetchBasket().then((res) => res.data),
+    refetchOnWindowFocus: false,
+    initialData: {
+      id: "",
+      customerId: "",
+      items: [],
+      createdAt: new Date().toDateString(),
+      lastModified: null,
+    },
+  });
+
+  // const addToCart = useMutation({
+  //   mutationFn: ({ variantId, quantity }) => updateBasket(variantId, quantity),
+  //   onSuccess: () => {
+  //     //toast
+  //     queryClient.invalidateQueries({ queryKey: ["basket"] });
+  //     setHasError(false);
+  //     setIsSuccess(true);
+  //   },
+  // });
+
+  const updateBasketItem = useMutation({
+    mutationFn: (qty) => updateBasket(variantId, qty),
     onSuccess: () => {
-      //toast
-      queryClient.invalidateQueries({ queryKey: ["basket"] });
+      queryClient.refetchQueries({ queryKey: ["basket"] });
       setHasError(false);
       setIsSuccess(true);
+    },
+    onError: (err) => {
+      setHasError(true);
+      console.log(err);
     },
   });
 
   const handleAddToCart = () => {
-    if (variantId === null) {
+    if (!variantId) {
       setHasError(true);
+      return;
     }
-
-    addToCart.mutate({ variantId: variantId, quantity: quantity });
+    
+    const newQuantity = quantity > 0 ? quantity + inputValue : inputValue;
+    updateBasketItem.mutate(newQuantity);
+    //addToCart.mutate({ variantId: variantId, quantity: quantity });
   };
+
+  const handleIncrease = () => {
+    // const newQuantity = quantity + 1;
+    // updateQuantity(newQuantity);
+
+    setInputValue((prev) => prev + 1);
+  };
+
+  const handleDecrease = () => {
+    // const newQuantity = Math.max(0, quantity - 1);
+    // updateQuantity(newQuantity);
+    setInputValue((prev) => Math.max(1, prev - 1));
+  };
+
+  const updateQuantity = (newQty) => {
+    if (!variantId) {
+      console.log("not found variantId");
+      return;
+    }
+    //setInputValue(newQty);
+    setQuantity(newQty);
+  };
+
+  // sync quantity from basket
+  useEffect(() => {
+    if (!variantId) return;
+    const existingItem = basket?.items.find(
+      (item) => item.productVariantId === variantId
+    );
+    if (existingItem) {
+      setQuantity(existingItem.quantity);
+    } else {
+      setQuantity(0);
+    }
+  }, [basket, variantId]);
 
   useEffect(() => {
     if (id && !hasTrackedRef.current) {
@@ -69,6 +138,7 @@ export function ProductDetailPage() {
     [selectedOptions]
   );
 
+  // useQuery[variant]
   const {
     data: variant,
     isLoading: vLoading,
@@ -80,7 +150,7 @@ export function ProductDetailPage() {
     enabled: optionValueIds.length > 0,
   });
 
-  // useQuery hook
+  // useQuery[product]
   const {
     data: product,
     isLoading,
@@ -94,6 +164,7 @@ export function ProductDetailPage() {
   const gallery__limit = 5;
   const displayImage = product?.mainImage?.url ?? fallbackImage;
 
+  // set display price text
   const handleSetPriceText = (minPrice, maxPrice) => {
     if (minPrice == null || maxPrice == null) return "";
 
@@ -102,6 +173,7 @@ export function ProductDetailPage() {
     return `${formatCurrency(minPrice)} - ${formatCurrency(maxPrice)}`;
   };
 
+  // display option selected (clone + delete object)
   const handleSelectOption = (optionId, optionValueId) => {
     setSelectedOptions((prev) => {
       const next = { ...prev };
@@ -120,6 +192,7 @@ export function ProductDetailPage() {
     return 0;
   };
 
+  // get price source (variant/product)
   const priceSource = useMemo(() => {
     if (variant) {
       return {
@@ -137,6 +210,7 @@ export function ProductDetailPage() {
     return null;
   }, [variant, product]);
 
+  // update display price text when product/variant change state
   useEffect(() => {
     if (!priceSource) return;
 
@@ -152,6 +226,7 @@ export function ProductDetailPage() {
     return () => clearTimeout(timer);
   }, [priceSource]);
 
+  // update display stock when product/variant change state
   useEffect(() => {
     const stock = resolveStock();
     const timer = setTimeout(() => {
@@ -161,6 +236,7 @@ export function ProductDetailPage() {
     return () => clearTimeout(timer);
   }, [product, variant]);
 
+  // get variant id
   useEffect(() => {
     if (variant?.variants.length === 1) {
       setVariantId(variant.variants[0].id);
@@ -171,6 +247,7 @@ export function ProductDetailPage() {
     }
   }, [product, variant]);
 
+  // add to cart success
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsSuccess(false);
@@ -178,11 +255,6 @@ export function ProductDetailPage() {
 
     return () => clearTimeout(timer);
   }, [isSuccess]);
-
-
-  if (isLoading) {
-    return <></>;
-  }
 
   return (
     <>
@@ -228,7 +300,9 @@ export function ProductDetailPage() {
                     {/* Quantity */}
                     <QuantitySelector
                       stock={displayStock}
-                      quantity={quantity}
+                      quantity={inputValue}
+                      onIncrease={handleIncrease}
+                      onDecrease={handleDecrease}
                       onChange={setQuantity}
                       onShow={canSetQuantity}
                     />

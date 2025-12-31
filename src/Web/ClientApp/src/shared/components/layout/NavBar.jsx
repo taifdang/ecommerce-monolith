@@ -1,10 +1,15 @@
 import fallbackImage from "@/assets/images/default.jpg";
 import { useAuth } from "@/features/identity/contexts/AuthContext";
 import { profileStorage } from "../../storage/profile-storage";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function NavBar() {
   const { logout } = useAuth();
+  const queryClient = useQueryClient();
   const user = profileStorage.get();
+
+  const cart = queryClient.getQueryData("basket");
+  console.log("cart data",cart)
 
   return (
     <div className="bg-white">

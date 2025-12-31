@@ -1,7 +1,14 @@
 import clsx from "clsx";
 import s from "./index.module.css";
 
-export function QuantitySelector({ stock, quantity, onChange, onShow }) {
+export function QuantitySelector({
+  stock,
+  quantity,
+  onChange,
+  onShow,
+  onIncrease,
+  onDecrease,
+}) {
   const handleStockStatus = (stock) => {
     if (!stock) return "INSTOCK"; // for test
     if (stock === 0) return "OUT OF STOCK";
@@ -16,7 +23,7 @@ export function QuantitySelector({ stock, quantity, onChange, onShow }) {
           <div className={s["quantity-selector__button-wrapper"]}>
             <button
               type="button"
-              onClick={() => onChange(quantity - 1)}
+              onClick={() => onDecrease()}
               disabled={quantity <= 1}
               aria-label="Decrease"
               className={clsx(
@@ -45,7 +52,7 @@ export function QuantitySelector({ stock, quantity, onChange, onShow }) {
             />
             <button
               type="button"
-              onClick={() => onChange(quantity + 1)}
+              onClick={() => onIncrease()}
               disabled={!onShow || quantity + 1 > stock}
               aria-label="Increase"
               className={clsx(

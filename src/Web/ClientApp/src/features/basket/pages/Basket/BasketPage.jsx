@@ -48,7 +48,7 @@ export function BasketPage() {
     },
     onSuccess: () => {
       //queryClient.invalidateQueries({ queryKey: ["basket"] });
-      queryClient.setQueryData(["basket",basket])
+      queryClient.setQueryData(["basket", basket]);
     },
   });
 
