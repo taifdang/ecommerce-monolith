@@ -17,6 +17,7 @@ export function BasketPage() {
   const [quantity, setQuantity] = useState(0);
   const [inputValue, setInputValue] = useState("0");
 
+  
   const { data: basket, isFetching } = useQuery({
     queryKey: ["basket"],
     queryFn: () => fetchBasket().then((res) => res.data),
