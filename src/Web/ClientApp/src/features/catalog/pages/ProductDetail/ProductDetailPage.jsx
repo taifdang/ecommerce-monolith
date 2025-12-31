@@ -34,7 +34,7 @@ export function ProductDetailPage() {
   const [inputValue, setInputValue] = useState(1); // default value
   const [displayPrice, setDisplayPrice] = useState("");
   const [displayStock, setDisplayStock] = useState(0);
-  const [hasError, setHasError] = useState(false);
+  const [hasError, setHasError] = useState({ isError: false, message: "" });
   const [isSuccess, setIsSuccess] = useState(false);
 
   // filter available quantity and options ???
@@ -57,60 +57,38 @@ export function ProductDetailPage() {
     },
   });
 
-  // const addToCart = useMutation({
-  //   mutationFn: ({ variantId, quantity }) => updateBasket(variantId, quantity),
-  //   onSuccess: () => {
-  //     //toast
-  //     queryClient.invalidateQueries({ queryKey: ["basket"] });
-  //     setHasError(false);
-  //     setIsSuccess(true);
-  //   },
-  // });
-
   const updateBasketItem = useMutation({
     mutationFn: (qty) => updateBasket(variantId, qty),
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ["basket"] });
-      setHasError(false);
+      setHasError({ isError: false, message: "" });
       setIsSuccess(true);
     },
     onError: (err) => {
-      setHasError(true);
+      setHasError({ isError: true, message: "Invalid Input" });
       console.log(err);
     },
   });
 
   const handleAddToCart = () => {
     if (!variantId) {
-      setHasError(true);
+      setHasError({
+        isError: true,
+        message: "Please select product variation first",
+      });
       return;
     }
-    
+
     const newQuantity = quantity > 0 ? quantity + inputValue : inputValue;
     updateBasketItem.mutate(newQuantity);
-    //addToCart.mutate({ variantId: variantId, quantity: quantity });
   };
 
   const handleIncrease = () => {
-    // const newQuantity = quantity + 1;
-    // updateQuantity(newQuantity);
-
     setInputValue((prev) => prev + 1);
   };
 
   const handleDecrease = () => {
-    // const newQuantity = Math.max(0, quantity - 1);
-    // updateQuantity(newQuantity);
     setInputValue((prev) => Math.max(1, prev - 1));
-  };
-
-  const updateQuantity = (newQty) => {
-    if (!variantId) {
-      console.log("not found variantId");
-      return;
-    }
-    //setInputValue(newQty);
-    setQuantity(newQty);
   };
 
   // sync quantity from basket
@@ -287,7 +265,7 @@ export function ProductDetailPage() {
                 <div
                   className={clsx(
                     s["selector__section"],
-                    hasError && s["error"]
+                    hasError.isError && s["error"]
                   )}
                 >
                   <div className="flex flex-col">
@@ -306,9 +284,9 @@ export function ProductDetailPage() {
                       onChange={setQuantity}
                       onShow={canSetQuantity}
                     />
-                    {hasError && (
+                    {hasError.isError && (
                       <div className={s["error--not-enough-option"]}>
-                        Please select product variation first
+                        {hasError.message}
                       </div>
                     )}
                   </div>
