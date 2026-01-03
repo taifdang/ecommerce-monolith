@@ -11,9 +11,6 @@ public static class InitialData
     public static List<Domain.Entities.Variant> Variants { get; set; }
     public static List<Domain.Entities.VariantOption> VariantOptions { get; set; }
 
-    public static decimal PriceRnd = Random.Shared.Next(10000, 100000);
-    public static int QuantityRnd = Random.Shared.Next(10, 100);
-
     static InitialData()
     {
         // category
