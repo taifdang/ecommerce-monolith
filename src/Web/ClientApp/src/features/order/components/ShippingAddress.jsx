@@ -10,7 +10,7 @@ export default function ShippingAdress({
   address,
   onSubmitAddress,
   status,
-  onSetStatus
+  onSetStatus,
 }) {
   const navigate = useNavigate();
 
@@ -19,7 +19,6 @@ export default function ShippingAdress({
     onSetOpen(false);
     onSubmitAddress(data);
     onSetStatus(true);
-    console.log(JSON.stringify(data));
   };
 
   const handleCancel = () => {

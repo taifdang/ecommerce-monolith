@@ -1,4 +1,10 @@
-import { createContext, useContext, useRef, useLayoutEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useRef,
+  useLayoutEffect,
+  useEffect,
+} from "react";
 import {
   fetchProfile,
   loginRequest,
@@ -17,7 +23,6 @@ export const AuthProvider = ({ children }) => {
       const res = await loginRequest(username, password);
       if (res.status === 200) {
         tokenStorage.set(res.data.token);
-        console.log(`login-token ${res.data.token}`);
         await handleLoadProfile();
         return { success: true };
       }
@@ -67,14 +72,13 @@ export const AuthProvider = ({ children }) => {
       if (data) {
         profileStorage.set(data);
       }
-      console.log(`user-login ${JSON.stringify(data)}`);
     } catch {
       tokenStorage.clear();
       setUser(null);
     }
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const initAuth = async () => {
       if (trackuser.current) return;
       trackuser.current = true;
@@ -83,7 +87,6 @@ export const AuthProvider = ({ children }) => {
         if (data) {
           profileStorage.set(data);
         }
-        console.log(`user-login ${JSON.stringify(data)}`);
       } catch {
         // clear storage
         tokenStorage.clear();

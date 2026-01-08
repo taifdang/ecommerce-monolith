@@ -12,16 +12,16 @@ export default defineConfig(({ mode }) => {
     server: {   
       port: parseInt(env.VITE_PORT ?? "3000"),
       host: true,
-      // proxy for development
-      // proxy: {
-      //   "/api": {
-      //     target:
-      //       process.env.services__apiservice__https__0 ||
-      //       process.env.services__apiservice__http__0  || "http://api:80",
-      //     changeOrigin: true,     
-      //     secure: false,
-      //   },
-      // },
+      // proxy for dev
+      proxy: {
+        "/api": {
+          target:
+            process.env.services__apiservice__https__0 ||
+            process.env.services__apiservice__http__0  || "http://api:80",
+          changeOrigin: true,     
+          secure: false,
+        },
+      },
     },
     build: {
       outDir: "dist",

@@ -27,7 +27,6 @@ export function ProductList() {
     retry: false
   });
 
-  console.log(data);
   useEffect(() => {
     const currentPage = parseInt(urlParams.get("pageNumber") || "1");
 

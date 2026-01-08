@@ -9,8 +9,7 @@ export function NavBar() {
   const user = profileStorage.get();
 
   const cart = queryClient.getQueryData("basket");
-  console.log("cart data",cart)
-
+  
   return (
     <div className="bg-white">
       <section
