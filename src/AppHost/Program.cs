@@ -29,7 +29,7 @@ var apiService = builder.AddProject<Projects.Api>("apiservice")
 
         context.Urls.Add(new()
         {
-            Url = "/swagger",
+            Url = "/openapi/swagger/index.html",
             DisplayText = "API Reference",
             Endpoint = context.GetEndpoint("https")
         });

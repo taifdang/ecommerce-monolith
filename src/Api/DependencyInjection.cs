@@ -61,7 +61,7 @@ public static class DependencyInjection
 
     public static WebApplication UseWebServices(this WebApplication app)
     {
-        // app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
         app.UseForwardedHeaders(new ForwardedHeadersOptions
         {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
