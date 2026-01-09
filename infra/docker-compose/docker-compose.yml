@@ -36,6 +36,7 @@ services:
       - "8081:8081"
     depends_on:
       - postgres
+    restart: unless-stopped
     networks:
       - eshop-network
 
@@ -63,6 +64,7 @@ services:
       - dataprotection-keys:/root/.aspnet/DataProtection-Keys
     depends_on:
       - postgres
+    restart: unless-stopped
     networks:
       - eshop-network
 

@@ -48,8 +48,7 @@ public static class DependencyInjection
         builder.Services.AddHttpContextAccessor();
 
         // Data Protection-keys: cookie auth, session, identity, antiforgery => persist key, encryptor
-        builder.Services.AddDataProtection().PersistKeysToFileSystem(
-            new DirectoryInfo("/root/.aspnet/DataProtection-Keys"));
+        builder.Services.AddCustomDataProtection();
 
         builder.Services.AddTransient<ICurrentUserProvider, CurrentUserProvider>();
         builder.Services.AddTransient<ICookieService, CookieService>();
