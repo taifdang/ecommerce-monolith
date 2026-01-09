@@ -7,7 +7,7 @@ import CheckoutPage from "../features/order/pages/CheckoutPage";
 import HomePage from "../pages/HomePage";
 import { ProductDetailPage } from "@/features/catalog/pages/ProductDetail/ProductDetailPage";
 import { BasketPage } from "../features/basket/pages/Basket/BasketPage";
-import { OrderResultPage } from "../features/order/pages/OrderResult/OrrderResultPage";
+import { OrderResultPage } from "../features/order/pages/OrderResult/OrderResultPage";
 
 export const routes = [
   {

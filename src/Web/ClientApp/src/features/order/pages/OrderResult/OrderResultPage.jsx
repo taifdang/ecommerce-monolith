@@ -16,7 +16,7 @@ export const OrderResultPage = () => {
     {
       status: "failure",
       titlle: "Error!",
-      subtitle: "Oops! Something went wrong!",
+      subtitle: (<>Oops! <br/> Something went wrong!</>),
       buttonText: "Ok, got it",
     },
   ];
@@ -54,7 +54,6 @@ export const OrderResultPage = () => {
               </>
             ) : (
               <>
-                {" "}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width={150}
@@ -73,13 +72,7 @@ export const OrderResultPage = () => {
           </div>
           <div className={s["box__title"]}>{result.titlle}</div>
           <div className={s["box__subtitle"]}>{result.subtitle}</div>
-          <button
-            onClick={() => handleRedirect()}
-            className={clsx(
-              s["box__button"],
-              s[`box__button--${result.status}`]
-            )}
-          >
+          <button onClick={() => handleRedirect()} className={s["box__button"]}>
             <span className={s["box__button--text"]}>{result.buttonText}</span>
           </button>
         </div>
