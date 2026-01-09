@@ -15,7 +15,7 @@ export function AuthLayout({
           <div className="flex items-center relative">
             <a href="/" className="mx-2 mb-2">
               <img
-                src="src/assets/images/logo-brand-no-bg.png"
+                src="/src/assets/images/logo-brand-no-bg.png"
                 style={{ height: "32px", width: "auto" }}
               />
             </a>

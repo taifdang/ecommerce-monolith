@@ -24,7 +24,7 @@
     margin: 0 auto;
     width: 1040px;
     min-height: 600px;
-    background-image: url("src/assets/images/smart-banner-no-text.png");
+    background-image: url("/src/assets/images/smart-banner-no-text.png");
 }
 
 .auth-container {
