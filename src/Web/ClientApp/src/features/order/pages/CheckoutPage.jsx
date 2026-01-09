@@ -12,8 +12,17 @@ import { fetchBasket } from "../../basket/services/basket-service";
 import { formatCurrency } from "@/shared/lib/currency";
 import { profileStorage } from "@/shared/storage/profile-storage";
 import { placeOrder } from "../services/order-service";
+import { useNavigate } from "react-router-dom";
 
 export default function CheckoutPage() {
+  const navigate = useNavigate();
+
+  const handleOrderSuccess = () => {
+    navigate("/order/result?status=confirm");
+  };
+  const handleOrderFailure = () => {
+    navigate("/order/result?status=failure");
+  };
 
   //* VARIABLES
   const PAYMENT_PROVIDERS = [
@@ -27,7 +36,6 @@ export default function CheckoutPage() {
     zipCode: "",
     street: "",
   };
-
 
   //* HOOKS
   const [open, setOpen] = useState(false);
@@ -63,22 +71,26 @@ export default function CheckoutPage() {
     }
   }, []);
 
-  const hasEmptyField = Object.values(shippingAddress).some(value => !value || value.trim() === "")
+  const hasEmptyField = Object.values(shippingAddress).some(
+    (value) => !value || value.trim() === ""
+  );
 
   const mutationPlaceOrder = useMutation({
     mutationFn: ({ customerId, street, city, zipCode }) =>
       placeOrder(customerId, street, city, zipCode),
     onSuccess: () => {
+      handleOrderSuccess();
       console.log("order success");
     },
     onError: (err) => {
+      handleOrderFailure();
       console.log("order error: ", err);
     },
   });
 
   const handlePlaceOrder = async () => {
     if (hasEmptyField) return;
-    if(basket.customerId === "");
+    if (basket.customerId === "");
 
     mutationPlaceOrder.mutate({
       customerId: basket.customerId,
