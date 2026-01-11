@@ -31,25 +31,15 @@ Provide a sample production-ready foundation for an online store with clean arch
 ## Technologies - Libraries
 
 - ✔️ `.NET 9` – .NET Framework and .NET Core, including ASP\.NET and ASP\.NET Core.
-
 - ✔️ `EF Core` – Modern object-database mapper for .NET. It supports LINQ queries, change tracking, updates, and schema migrations.
-
 - ✔️ `ASP.NET Core OpenAPI` – API specification for automatic documentation and client generation.
-
 - ✔️ `MediatR` – Implements the Mediator pattern to support CQRS and decoupled architectures.
-
 - ✔️ `FluentValidation` – Fluent, strongly-typed validation library for clean input validation.
-
 - ✔️ `AutoMapper` – Simplifies object-to-object mapping between DTOs and domain models.
-
 - ✔️ `Swagger UI` – Interactive API documentation and testing interface.
-
 - ✔️ `Nginx` – High-performance reverse proxy and load balancer.
-
 - ✔️ `.NET Aspire` – Cloud-native tooling for orchestrating and observing distributed applications.
-
 - ✔️ `React + Vite` – Fast, modern frontend stack for building responsive user interfaces.
-
 - ✔️ `xUnit.net` – Unit testing framework with strong CI/CD integration.
 
 ## When to Use
