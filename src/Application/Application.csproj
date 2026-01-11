@@ -29,8 +29,4 @@
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.9" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Payment\" />
-  </ItemGroup>
-
 </Project>

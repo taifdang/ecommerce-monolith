@@ -6,19 +6,19 @@ using Microsoft.Extensions.Logging;
 using Shared.Constants;
 using System.Net.Http.Headers;
 
-namespace Infrastructure.ExternalServices;
+namespace Infrastructure.ExternalServices.Storage;
 
-public class LocalStorageService : IFileService
+public class LocalStorage : IFileService
 {
     private readonly FileStorageSettings _fileStorage;
     private readonly string _userContentFolder;
     private readonly IWebHostEnvironment _webHostEnvironment;
-    private readonly ILogger<LocalStorageService> _logger;
+    private readonly ILogger<LocalStorage> _logger;
     private readonly string _baseUrl;
 
-    public LocalStorageService(
+    public LocalStorage(
        IWebHostEnvironment webHostEnvironment,
-       ILogger<LocalStorageService> logger,
+       ILogger<LocalStorage> logger,
        AppSettings appSettings)
     {
         _webHostEnvironment = webHostEnvironment;

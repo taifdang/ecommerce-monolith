@@ -5,12 +5,12 @@ using Shared.Web;
 using System.Net;
 using System.Net.Mail;
 
-namespace Infrastructure.ExternalServices;
+namespace Infrastructure.ExternalServices.Notifications.Email;
 
-public class EmailService : IEmailService
+public class SmtpEmailSender : IEmailService
 {
     private readonly IConfiguration _configuration;
-    public EmailService(IConfiguration configuration) => _configuration = configuration;
+    public SmtpEmailSender(IConfiguration configuration) => _configuration = configuration;
 
     public async Task SendAsync(string To, string Subject, string Message)
     {

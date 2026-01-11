@@ -1,9 +1,7 @@
 ﻿using Api.Extensions;
 using Api.Services;
 using Application.Common.Interfaces;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.HttpOverrides;
-using Scalar.AspNetCore;
 using ServiceDefaults.OpenApi;
 
 namespace Api;
@@ -12,18 +10,18 @@ public static class DependencyInjection
 {
     public static WebApplicationBuilder AddWebServices(this WebApplicationBuilder builder)
     {
-        //var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() 
-        //    ?? new[] { "http://localhost:3000", "http://localhost:5173" };
-
-        //builder.Services.AddCors(options =>
-        //{
-        //    options.AddPolicy("AllowFrontend",
-        //            policy => policy
-        //            .WithOrigins(allowedOrigins)
-        //            .AllowAnyMethod()
-        //            .AllowAnyHeader()
-        //            .AllowCredentials());
-        //});
+#if (crossDomainUsingCors)
+        var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins");
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend",
+                    policy => policy
+                    .WithOrigins(allowedOrigins)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+        });
+#endif
 
         builder.Services.ConfigureApplicationCookie(options =>
         {
@@ -50,8 +48,9 @@ public static class DependencyInjection
         // Data Protection-keys: cookie auth, session, identity, antiforgery => persist key, encryptor
         builder.Services.AddCustomDataProtection();
 
-        builder.Services.AddTransient<ICurrentUserProvider, CurrentUserProvider>();
-        builder.Services.AddTransient<ICookieService, CookieService>();
+        builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+        builder.Services.AddScoped<ICookieService, CookieService>();
+        builder.Services.AddScoped<ICurrentIPAddressProvider, CurrentIPAddressProvider>();
 
         //builder.Services.AddHostedService<GracePeriodBackgroundService>();
 
@@ -63,12 +62,17 @@ public static class DependencyInjection
         //app.UseHttpsRedirection();
         app.UseForwardedHeaders(new ForwardedHeadersOptions
         {
-            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+            // Loopback by default, this clears that out so we can accept from any proxy
+            KnownNetworks = { }, 
+            KnownProxies = { },
         });
 
-        app.UseRouting();    
+        app.UseRouting();
 
-        //app.UseCors("AllowFrontend");
+#if (crossDomainUsingCors)
+        app.UseCors("AllowFrontend");
+#endif
         app.UseStaticFiles();
 
         app.UseAuthentication();

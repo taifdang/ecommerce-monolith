@@ -40,6 +40,7 @@
 
   <ItemGroup>
     <Folder Include="Data\Migrations\" />
+    <Folder Include="ExternalServices\Payments\Paypal\" />
     <Folder Include="Identity\Data\Migrations\" />
   </ItemGroup>
 

@@ -11,11 +11,13 @@ using Infrastructure.Data;
 using Infrastructure.Data.Interceptors;
 using Infrastructure.Data.Repositories;
 using Infrastructure.Data.Seed;
-using Infrastructure.ExternalServices;
+using Infrastructure.ExternalServices.Notifications.Email;
+using Infrastructure.ExternalServices.Payments;
+using Infrastructure.ExternalServices.Payments.Vnpay;
+using Infrastructure.ExternalServices.Storage;
 using Infrastructure.Identity;
 using Infrastructure.Identity.Data;
 using Infrastructure.Identity.Data.Seed;
-using Infrastructure.Payments.Gateways;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +30,6 @@ using Outbox.EF.Infrastructure.Data;
 using Shared.Constants;
 using Shared.EFCore;
 using Shared.Web;
-using System;
 
 namespace Infrastructure;
 //ref: https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-9.0&tabs=visual-studio
@@ -38,6 +39,8 @@ public static class DependencyInjection
     {
         // Get Configuration
         var appSettings = builder.Configuration.GetOptions<AppSettings>();
+        builder.Services.Configure<VnpayOptions>(builder.Configuration.GetSection("VnpayConf"));
+
         builder.Services.AddSingleton(appSettings);
 
         // Interceptors
@@ -69,13 +72,16 @@ public static class DependencyInjection
         builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
         builder.Services.AddScoped<IUnitOfWork, ApplicationDbContext>();
         builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+  
+        // External Services
+        builder.Services.AddTransient<IEmailService, SmtpEmailSender>();
+        builder.Services.AddScoped<IFileService, LocalStorage>();
+               
+        builder.Services.AddScoped<IPaymentGateway, VnpayPaymentGateway>();
+        builder.Services.AddScoped<IPaymentGatewayFactory, PaymentGatewayFactory>();
 
-        // Custom Servicess      
-        builder.Services.AddTransient<IEmailService, EmailService>();
-        builder.Services.AddScoped<IFileService, LocalStorageService>();
+        // Identity
         builder.Services.AddScoped<IIdentityService, IdentityService>();
-        builder.Services.AddScoped<IPaymentProvider, PaypalGateway>();
-        builder.Services.AddScoped<IPaymentProvider, VnPayGateway>();
 
         // Seeders    
         builder.Services.AddScoped<ISeedManager, SeedManager>();
@@ -83,7 +89,7 @@ public static class DependencyInjection
         builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
         builder.Services.AddScoped<IDataSeeder, CatalogDataSeeder>();
 
-        // eventbus
+        // Eventbus
         if (builder.Environment.EnvironmentName == "test")
         {
             builder.Services.AddTransient<IEventPublisher, NullEventPublisher>();
