@@ -1,5 +1,5 @@
 import clsx from "clsx";
-export default function Checkout({ items, value, onChange }) {
+export default function PaymentProvider({ items, value, onChange }) {
   return (
     <div style={{ display: "contents" }}>
       <div className="checkout-payment-method-main">

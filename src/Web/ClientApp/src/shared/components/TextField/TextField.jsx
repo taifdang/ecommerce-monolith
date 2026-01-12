@@ -1,4 +1,4 @@
-import s from "../TextField/index.module.css";
+import s from "./TextField.module.css";
 import clsx from "clsx";
 
 export const TextField = ({

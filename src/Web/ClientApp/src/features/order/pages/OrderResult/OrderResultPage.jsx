@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import s from "./orderResult.module.css";
+import s from "./OrderResultPage.module.css";
 import clsx from "clsx";
 
 export const OrderResultPage = () => {

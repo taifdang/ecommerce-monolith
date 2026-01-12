@@ -1,8 +1,8 @@
 import clsx from "clsx";
-import s from "../Checkout.module.css";
+import s from "./ShippingAddress.module.css";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { shippingAddressSchema } from "../utils/shippingAddress.schema";
+import { shippingAddressSchema } from "../../utils/shippingAddress.schema";
 import { TextField } from "@/shared/components/TextField/TextField";
 import { useEffect } from "react";
 
@@ -11,7 +11,7 @@ export default function ShippingAddressModal({
   onSetOpen,
   address,
   onSubmitAddress,
-  onCancel
+  onCancel,
 }) {
   // REACT HOOK FORM
   const {
@@ -33,12 +33,12 @@ export default function ShippingAddressModal({
 
   return (
     <div className="z-1">
-      <div className={s.shippingAddressModalSection}>
-        <div className={s.shippingAddressModal}>
-          <div className={s.shippingAddressModalTitle}>New Address</div>
+      <div className={s["shipping-address__modal-section"]}>
+        <div className={s["shipping-address__modal"]}>
+          <div className={s["shipping-address__modal-title"]}>New Address</div>
           <form onSubmit={handleSubmit(onSubmitAddress)}>
-            <div className={s.modalFormContainer}>
-              <div className={s.modalFormContent}>
+            <div className={s["shipping-address__modal-container"]}>
+              <div className={s["shipping-address__form-content"]}>
                 {/* -------- FULLNAME AND PHONE NUMBER  -------- */}
                 <div className="flex 100w">
                   <TextField
@@ -49,7 +49,7 @@ export default function ShippingAddressModal({
                     {...register("fullname")}
                     error={errors.fullname?.message}
                   />
-                  <div style={{ width: "16px" }}></div>
+                  <div className={s["shipping-address__spacer"]}></div>
                   <TextField
                     type="text"
                     label="Phone Number"
@@ -60,7 +60,7 @@ export default function ShippingAddressModal({
                 </div>
                 {/* -------- CITY AND ZIPCODE  -------- */}
                 <div className="flex 100w">
-                  <div className={clsx(s.colMain)}>
+                  <div className={clsx(s["shipping-address__col--main"])}>
                     <TextField
                       type="text"
                       label="City"
@@ -71,8 +71,8 @@ export default function ShippingAddressModal({
                       error={errors.city?.message}
                     />
                   </div>
-                  <div style={{ width: "16px" }}></div>
-                  <div className={clsx(s.colSub)}>
+                  <div className={s["shipping-address__spacer"]}></div>
+                  <div className={clsx(s["shipping-address__col--sub"])}>
                     <TextField
                       type="text"
                       label="zipCode"
@@ -98,9 +98,9 @@ export default function ShippingAddressModal({
                 </div>
               </div>
               {/* -------- BUTTON GROUP SECTION  -------- */}
-              <div className={s.modalFormButtonSection}>
+              <div className={s["shipping-address__button-section"]}>
                 <button
-                  className={s.modalFormButton}
+                  className={s["shipping-address__button"]}
                   onClick={() => onCancel()}
                 >
                   Cancel
@@ -108,7 +108,10 @@ export default function ShippingAddressModal({
                 <button
                   type="submit"
                   disabled={!isValid || isSubmitting}
-                  className={clsx(s.modalFormButton, s.modalFormButtonSubmit)}
+                  className={clsx(
+                    s["shipping-address__button"],
+                    s["shipping-address__button--submit"]
+                  )}
                 >
                   Submit
                 </button>

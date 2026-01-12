@@ -1,5 +1,5 @@
 import Modal from "@/shared/components/Modal";
-import s from "../Checkout.module.css";
+import s from "./ShippingAddress.module.css";
 import clsx from "clsx";
 import ShippingAddressModal from "./ShippingAddressModal";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +39,7 @@ export default function ShippingAdress({
         {/* -------- SECTION TITLE  -------- */}
         <div className="flex items-center">
           <div className={s["shipping-address__title-wrap"]}>
-            <div className="flex" style={{ marginRight: "8px" }}>
+            <div className={clsx("flex", s["shipping-address__icon"])}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -63,16 +63,16 @@ export default function ShippingAdress({
               s["shipping-address__content"]
             )}
           >
-            <div style={{ fontWeight: 700 }}>
+            <div className={s["shipping-address__fullname"]}>
               {fullname} {phoneNumber}
             </div>
-            <div style={{ marginLeft: "20px" }}>
+            <div className={s["shipping-address__address"]}>
               {city && <span>{city}</span>}
               {zipCode && <span>, {zipCode}</span>}
               {street && <span>, {street}</span>}
             </div>
           </div>
-          <div style={{ marginLeft: "40px" }}>
+          <div className={s["shipping-address__change-btn-wrap"]}>
             <button
               className={s["shipping-address__button"]}
               type="button"

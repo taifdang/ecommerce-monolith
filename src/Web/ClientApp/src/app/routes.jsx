@@ -3,7 +3,7 @@ import NoPage from "@/pages/NoPage";
 import Layout from "@/shared/components/layout/Layout";
 import LoginPage from "@/features/identity/pages/LoginPage";
 import RegisterPage from "@/features/identity/pages/RegisterPage";
-import CheckoutPage from "../features/order/pages/CheckoutPage";
+import CheckoutPage from "@/features/order/pages/Checkout/CheckoutPage";
 import HomePage from "../pages/HomePage";
 import { ProductDetailPage } from "@/features/catalog/pages/ProductDetail/ProductDetailPage";
 import { BasketPage } from "../features/basket/pages/Basket/BasketPage";

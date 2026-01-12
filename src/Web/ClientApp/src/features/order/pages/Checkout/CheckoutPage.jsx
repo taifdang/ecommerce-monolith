@@ -1,18 +1,22 @@
 import { NavBar } from "@/shared/components/layout/NavBar";
-import CheckoutHeader from "../components/CheckoutHeader";
-import ShippingAdress from "../components/ShippingAddress";
-import CheckoutMain from "../components/CheckoutMain";
-import CheckoutFooter from "../components/CheckoutFooter";
-import { useEffect, useState } from "react";
-import s from "../Checkout.module.css";
+import {
+  CheckoutHeader,
+  ShippingAddress as ShippingAdress,
+  CheckoutContent,
+} from "../../components";
+
+import s from "./CheckoutPage.module.css";
 import clsx from "clsx";
-import Checkout from "@/shared/components/Checkout";
+
+import PaymentProvider from "@/shared/components/PaymentProvider";
+
+import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { fetchBasket } from "../../basket/services/basket-service";
-import { formatCurrency } from "@/shared/lib/currency";
-import { profileStorage } from "@/shared/storage/profile-storage";
-import { placeOrder } from "../services/order-service";
 import { useNavigate } from "react-router-dom";
+
+import { fetchBasket } from "../../../basket/services/basket-service";
+import { formatCurrency } from "@/shared/lib/currency";
+import { placeOrder } from "../../services/order-service";
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -64,7 +68,7 @@ export default function CheckoutPage() {
     0
   );
 
-  //
+  // first load page: open modal if no validated
   useEffect(() => {
     if (!formValidated) {
       setOpen(true); //open modal
@@ -122,34 +126,34 @@ export default function CheckoutPage() {
             onSetStatus={setFormValidated}
             onSubmitAddress={setShippingAddress}
           />
-          {/* ================= MAIN CONTENT ================= */}
+          {/* ================= CHECKOUT CONTENT ================= */}
           <div style={{ marginTop: "12px", backgroundColor: "white" }}>
-            <CheckoutMain items={basket?.items} />
+            <CheckoutContent items={basket?.items} />
           </div>
-          {/* ================= FOOTER ================= */}
-          <div className={s.checkoutFooterSection}>
-            {/* -------- PAYMENT PROVIDER SECTION -------- */}
-            <div className={s.checkoutFooterWithPaymentSection}>
-              <Checkout
+          <div className={s["checkout-section__footer"]}>
+            {/* ================= PAYMENT SECTION =================  */}
+            <div className={s["checkout-footer-with-payment-section"]}>
+              {/* this section is global component, it's can use in other page */}
+              <PaymentProvider
                 items={PAYMENT_PROVIDERS}
                 value={paymentMethod}
                 onChange={setPaymnetMethod}
               />
             </div>
-            <div className={s.checkoutFooter}>
-              <h3 className={clsx(s.row, s.checkoutFooterTitle)}>
+            <div className={s["checkout-footer"]}>
+              <h3 className={clsx(s["checkout-footer-grid-per-row"], s["checkout-footer__title"])}>
                 Total Payment
               </h3>
-              <div className={clsx(s.row, s.checkoutFooterTotalPrice)}>
+              <div className={clsx(s["checkout-footer-grid-per-row"], s["checkout-footer-total-price"])}>
                 {formatCurrency(totalResult)}
               </div>
-              <div className={clsx(s.row, s.checkoutFooterWithButtonOrder)}>
+              <div className={clsx(s["checkout-footer-grid-per-row"], s["checkout-footer-with-button-order"])}>
                 <div></div>
                 <button
                   onClick={() => {
                     handlePlaceOrder();
                   }}
-                  className={s.checkoutFooterButtonOrder}
+                  className={s["checkout-footer-button-order"]}
                 >
                   Place Order
                 </button>
