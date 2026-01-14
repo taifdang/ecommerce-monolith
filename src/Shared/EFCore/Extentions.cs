@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Shared.Constants;
@@ -59,14 +58,31 @@ public static class Extentions
         var context = scope.ServiceProvider.GetRequiredService<TContext>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<TContext>>(); 
 
-        var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
-
-        if(pendingMigrations.Any())
+        try
         {
-            logger.LogInformation("Applying {Count} pending migrations. ",pendingMigrations.Count());
+            logger.LogInformation("Checking database connection and pending migrations for {Context}...", typeof(TContext).Name);
+            
+            // Ensure database is created
+            await context.Database.EnsureCreatedAsync();
+            
+            var pendingMigrations = await context.Database.GetPendingMigrationsAsync();
 
-            await context.Database.MigrateAsync();
-            logger.LogInformation("Migrations applied successfully.");
+            if(pendingMigrations.Any())
+            {
+                logger.LogInformation("Applying {Count} pending migrations for {Context}...", pendingMigrations.Count(), typeof(TContext).Name);
+
+                await context.Database.MigrateAsync();
+                logger.LogInformation("Migrations applied successfully for {Context}.", typeof(TContext).Name);
+            }
+            else
+            {
+                logger.LogInformation("No pending migrations for {Context}.", typeof(TContext).Name);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occurred while migrating the database for {Context}.", typeof(TContext).Name);
+            throw;
         }
     }
 
@@ -74,8 +90,20 @@ public static class Extentions
     {
         await using var scope = serviceProvider.CreateAsyncScope();
 
-        var seedersManager = scope.ServiceProvider.GetRequiredService<ISeedManager>();
-
-        await seedersManager.ExecuteSeedAsync();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<ISeedManager>>();
+        
+        try
+        {
+            var seedersManager = scope.ServiceProvider.GetRequiredService<ISeedManager>();
+            
+            logger.LogInformation("Starting database seeding...");
+            await seedersManager.ExecuteSeedAsync();
+            logger.LogInformation("Database seeding completed successfully.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occurred while seeding the database.");
+            throw;
+        }
     }
 }

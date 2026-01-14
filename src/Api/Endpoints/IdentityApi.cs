@@ -8,7 +8,6 @@ using Application.Identity.Queries.GetProfile;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Constants;
 
 namespace Api.Endpoints;
 

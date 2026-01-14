@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class dbinitial : Migration
+    public partial class DbInitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -85,6 +85,8 @@ namespace Infrastructure.Data.Migrations
                     Street = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
                     City = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     ZipCode = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    PaymentMethod = table.Column<string>(type: "text", nullable: false),
+                    PaymentProvider = table.Column<string>(type: "text", nullable: false),
                     CardBrand = table.Column<string>(type: "text", nullable: true),
                     TransactionId = table.Column<string>(type: "text", nullable: true),
                     OrderDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),

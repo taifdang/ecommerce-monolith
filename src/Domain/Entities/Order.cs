@@ -13,14 +13,14 @@ public class Order : Aggregate<Guid>
     public Money TotalAmount { get; private set; } = default!;
     public Address ShippingAddress { get; private set; } = default!;
     public PaymentMethod PaymentMethod { get; set; }
-    public PaymentProvider? PaymentProvider { get; set; }
+    public PaymentProvider PaymentProvider { get; set; }
     public string? CardBrand { get; set; }
     public string? TransactionId { get; set; }
     public DateTime OrderDate { get; init; } = DateTime.UtcNow;
     public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
 
     public static Order Create(Guid orderId, long OrderNumber, Guid customerId, Address shippingAddress,
-        List<OrderItem> items, Money totalAmount, PaymentMethod method, PaymentProvider? provider)
+        List<OrderItem> items, Money totalAmount, PaymentMethod method, PaymentProvider provider)
     {
         var order = new Order 
         { 

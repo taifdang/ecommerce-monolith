@@ -28,7 +28,7 @@ public class NewOrderCommandHanlerTest
     {
         // Arrange
         var customerId = Guid.NewGuid();
-        var command = new CreateOrderCommand(customerId, Domain.Enums.PaymentMethod.COD, null, "Street567", "City123", "12345");
+        var command = new CreateOrderCommand(customerId, Domain.Enums.PaymentMethod.COD, Domain.Enums.PaymentProvider.Unknown, "Street567", "City123", "12345");
 
         var variantId = Guid.NewGuid();
         var basket = new BasketDto(

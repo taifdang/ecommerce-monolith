@@ -7,7 +7,7 @@ namespace Application.Order.Commands.CreateOrder;
 public record CreateOrderCommand(
     Guid CustomerId,
     PaymentMethod Method, 
-    PaymentProvider? Provider,
+    PaymentProvider Provider,
     string Street,
     string City, 
     string ZipCode) : IRequest<CreateOrderResult>;

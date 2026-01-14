@@ -67,10 +67,10 @@ public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Cre
             totalAmount += Money.Vnd(orderItem.TotalPrice);
         }
 
-        if (command.Method == PaymentMethod.COD && command.Provider != null)
+        if (command.Method == PaymentMethod.COD && command.Provider != PaymentProvider.Unknown)
             throw new Exception("COD does not use provider");
 
-        if (command.Method == PaymentMethod.Online && command.Provider == null)
+        if (command.Method == PaymentMethod.Online && command.Provider == PaymentProvider.Unknown)
             throw new Exception("Online payment requires provider");
 
         var order = Domain.Entities.Order.Create(

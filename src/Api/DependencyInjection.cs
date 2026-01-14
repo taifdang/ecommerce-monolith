@@ -53,7 +53,6 @@ public static class DependencyInjection
         builder.Services.AddScoped<ICurrentIPAddressProvider, CurrentIPAddressProvider>();
 
         //builder.Services.AddHostedService<GracePeriodBackgroundService>();
-
         return builder;
     }
 

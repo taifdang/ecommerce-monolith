@@ -4,5 +4,5 @@ public enum PaymentProvider
 {
     Unknown = 0,
     Vnpay = 1,
-    Paypal = 2
+    Stripe = 2
 }

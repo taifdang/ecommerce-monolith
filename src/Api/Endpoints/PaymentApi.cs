@@ -23,7 +23,7 @@ public static class PaymentApi
         group.MapPost("/create",
             async (IMediator mediator, [FromBody] CreatePaymentUrlRequestDto request, CancellationToken cancellationToken) =>
             {
-                var result = await mediator.Send(new CreatePaymentUrlCommand(request.OrderNumber, request.Amount, request.Provider, DateTime.UtcNow));
+                var result = await mediator.Send(new CreatePaymentUrlCommand(request.OrderNumber, request.Amount, request.Provider, DateTime.UtcNow), cancellationToken);
                 return result;
             })
             .WithName("CreatePayment")
@@ -34,7 +34,7 @@ public static class PaymentApi
             async (IMediator mediator, [FromRoute] string provider, [FromBody] Dictionary<string, string> request, CancellationToken cancellationToken) =>
             {
                 var paymentProvider = PaymentProviderMapper.From(provider);
-                var result = await mediator.Send(new VerifyPaymentReturnCommand(paymentProvider, request));
+                var result = await mediator.Send(new VerifyPaymentReturnCommand(paymentProvider, request), cancellationToken);
                 return result;
             })
             .WithName("ReturnUrlVerify")
@@ -45,7 +45,7 @@ public static class PaymentApi
             async (IMediator mediator, [FromRoute] string provider, [FromBody] Dictionary<string, string> request, CancellationToken cancellationToken) =>
             {
                 var paymentProvider = PaymentProviderMapper.From(provider);
-                var result = await mediator.Send(new VerifyPaymentIpnCommand(paymentProvider, request));
+                var result = await mediator.Send(new VerifyPaymentIpnCommand(paymentProvider, request), cancellationToken);
                 return result;
             })
             .WithName("IpnCallback")
@@ -65,7 +65,7 @@ public static class PaymentApi
             return provider.ToLowerInvariant() switch
             {
                 "vnpay" => PaymentProvider.Vnpay,
-                "paypal" => PaymentProvider.Paypal,
+                "stripe" => PaymentProvider.Stripe,
                 _ => throw new NotSupportedException($"Payment provider '{provider}' is not supported")
             };
         }

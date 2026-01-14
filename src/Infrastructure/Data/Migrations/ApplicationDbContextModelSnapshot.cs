@@ -217,6 +217,14 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long>("OrderNumber")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PaymentProvider")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("text");
