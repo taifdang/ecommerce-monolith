@@ -59,30 +59,30 @@ export const CheckoutResultPage = () => {
     );
   }
 
-  return (
-    <>
-      <div className={s["w4p-container"]}>
-        <div className={s["w4p-wrapper"]}>
-          <div className={s["w4p-box"]}>
-            <div className={s["w4p-box__subtitle"]}>
-              <p>
-                The payment was not successful. Please try again or choose a
-                different payment method.
-              </p>
-            </div>         
-            <div className="flex w-100">
-              <button
-                onClick={() => handleRedirect()}
-                className={s["w4p__button"]}
-              >
-                OK, got it
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+  // return (
+  //   <>
+  //     <div className={s["w4p-container"]}>
+  //       <div className={s["w4p-wrapper"]}>
+  //         <div className={s["w4p-box"]}>
+  //           <div className={s["w4p-box__subtitle"]}>
+  //             <p>
+  //               The payment was not successful. Please try again or choose a
+  //               different payment method.
+  //             </p>
+  //           </div>         
+  //           <div className="flex w-100">
+  //             <button
+  //               onClick={() => handleRedirect()}
+  //               className={s["w4p__button"]}
+  //             >
+  //               OK, got it
+  //             </button>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </>
+  // );
 
   return (
     <>

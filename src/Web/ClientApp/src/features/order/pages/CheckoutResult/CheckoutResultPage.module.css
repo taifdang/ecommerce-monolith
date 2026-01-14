@@ -120,7 +120,7 @@
 .w4p-box__subtitle {
     display: flex;
     flex-direction: column;
-    text-align: start;
+    text-align: center;
     justify-content: center;
 
     padding-bottom: 10px;

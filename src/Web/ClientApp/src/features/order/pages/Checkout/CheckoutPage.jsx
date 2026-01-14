@@ -17,22 +17,24 @@ import { useNavigate } from "react-router-dom";
 import { fetchBasket } from "../../../basket/services/basket-service";
 import { formatCurrency } from "@/shared/lib/currency";
 import { placeOrder } from "../../services/order-service";
+import Modal from "@/shared/components/Modal";
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
 
   const handleOrderSuccess = () => {
-    navigate("checkout/result?status=confirm");
+    navigate("/checkout/result?status=confirm");
   };
   const handleOrderFailure = () => {
-    navigate("checkout/result?status=failure");
+    setIsValid(true);
+    // navigate("/checkout/result?status=failure");
   };
 
   //* VARIABLES
   const PAYMENT_PROVIDERS = [
-    { id: "cod", label: "Cash on Delivery", status:"" },
-    { id: "vnpay", label: "VnPay", status:"" },
-    { id: "stripe", label: "Stripe", status:"" },
+    { id: "cod", label: "Cash on Delivery", method: 1, provider: 0 },
+    { id: "vnpay", label: "VnPay", method: 2, provider: 1 },
+    { id: "stripe", label: "Stripe", method: 2, provider: 2 },
   ];
   const initialAddress = {
     fullname: "",
@@ -44,10 +46,19 @@ export default function CheckoutPage() {
 
   //* HOOKS
   const [open, setOpen] = useState(false);
-  const [paymentMethod, setPaymnetMethod] = useState(PAYMENT_PROVIDERS[0].id);
-  const [shippingAddress, setShippingAddress] = useState(initialAddress);
 
+  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_PROVIDERS[0].id);
+  const [paymentProvider, setPaymentProvider] = useState(PAYMENT_PROVIDERS[0]);
+
+  const [shippingAddress, setShippingAddress] = useState(initialAddress);
   const [formValidated, setFormValidated] = useState(false);
+  const [isValid, setIsValid] = useState(false);
+
+  const handleChangePayment = (methodId) => {
+    setPaymentMethod(methodId);
+    const selectedProvider = PAYMENT_PROVIDERS.find((p) => p.id === methodId);
+    setPaymentProvider(selectedProvider);
+  };
 
   // get basket item, set init data
   const { data: basket } = useQuery({
@@ -81,8 +92,8 @@ export default function CheckoutPage() {
   );
 
   const mutationPlaceOrder = useMutation({
-    mutationFn: ({ customerId, street, city, zipCode }) =>
-      placeOrder(customerId, street, city, zipCode),
+    mutationFn: ({ customerId, method, provider, street, city, zipCode }) =>
+      placeOrder(customerId, method, provider, street, city, zipCode),
     onSuccess: () => {
       handleOrderSuccess();
       console.log("order success");
@@ -99,6 +110,8 @@ export default function CheckoutPage() {
 
     mutationPlaceOrder.mutate({
       customerId: basket.customerId,
+      method: paymentProvider.method,
+      provider: paymentProvider.provider,
       street: shippingAddress.street,
       city: shippingAddress.city,
       zipCode: shippingAddress.zipCode,
@@ -138,7 +151,7 @@ export default function CheckoutPage() {
               <PaymentProvider
                 items={PAYMENT_PROVIDERS}
                 value={paymentMethod}
-                onChange={setPaymnetMethod}
+                onChange={handleChangePayment}
               />
             </div>
             <div className={s["checkout-footer"]}>
@@ -178,6 +191,37 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+      {isValid && (
+        <Modal open={isValid} onClose={() => setIsValid(false)}>
+          <div className={s["w4p-container"]}>
+            <div className={s["w4p-wrapper"]}>
+              <div className={s["w4p-box"]}>
+                <div className={s["w4p-box__subtitle"]}>
+                  <p>
+                    Oops! We couldn’t process your order. Please check the
+                    following:
+                    <br />
+                    1. All items in your order must use the same payment method.
+                    <br />
+                    2. Please review your delivery address.
+                    <br />
+                    3. Please review your payment details or choose a different
+                    payment option.
+                  </p>
+                </div>
+                <div className="flex w-100">
+                  <button
+                    onClick={() => setIsValid(false)}
+                    className={s["w4p__button"]}
+                  >
+                    OK, got it
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
