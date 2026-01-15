@@ -3,6 +3,8 @@ import { api } from "@/shared/lib/api-client";
 
 export const fetchOrder = () => apiAuth.get(`/api/v1/orders`);
 
+export const fetchCheckoutOrder = (orderNumber) => apiAuth.get(`/api/v1/orders/checkout/${orderNumber}`);
+
 export const placeOrder = (_customerId, _method, _provider, _street, _city, _zipCode, ) =>
   apiAuth.post(`api/v1/orders`, {
     customerId: _customerId,

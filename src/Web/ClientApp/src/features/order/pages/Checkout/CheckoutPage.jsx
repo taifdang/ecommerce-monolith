@@ -52,7 +52,7 @@ export default function CheckoutPage() {
       }
     }
 
-    navigate("/checkout/result?status=confirm");
+    navigate("/checkout/result?orderNumber=" + res?.orderNumber);
   };
   const handleOrderFailure = () => {
     setIsValid(true);
@@ -82,6 +82,7 @@ export default function CheckoutPage() {
   const [shippingAddress, setShippingAddress] = useState(initialAddress);
   const [formValidated, setFormValidated] = useState(false);
   const [isValid, setIsValid] = useState(false);
+  const [orderProcessing, setOrderProcessing] = useState(false);
 
   const handleChangePayment = (methodId) => {
     setPaymentMethod(methodId);

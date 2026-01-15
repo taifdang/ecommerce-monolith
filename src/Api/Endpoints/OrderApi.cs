@@ -4,6 +4,7 @@ using Application.Order.Commands.CancelOrder;
 using Application.Order.Commands.CreateOrder;
 using Application.Order.Queries.GetListOrder;
 using Application.Order.Queries.GetOrderById;
+using Application.Order.Queries.GetOrderByOrderNumber;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,6 +44,19 @@ public static class OrderApi
             .RequireAuthorization()
             .WithName("GetOrderById")
             .Produces<List<OrderItemDto>>(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status400BadRequest);
+
+        group.MapGet($"/checkout/{{orderNumber}}",
+            async (IMediator mediator, long orderNumber, CancellationToken cancellationToken) =>
+            {
+                var query = new GetOrderByOrderNumberQuery(orderNumber);
+
+                return await mediator.Send(query, cancellationToken);
+            })
+            .RequireAuthorization()
+            .WithName("GetOrderByOrderNumber")
+            .WithSummary("Get order by order number")
+            .Produces<CheckoutOrderDto>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest);
 
         group.MapPost("/",

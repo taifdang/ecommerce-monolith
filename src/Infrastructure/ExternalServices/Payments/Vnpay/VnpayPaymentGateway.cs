@@ -255,7 +255,8 @@ public class VnpayPaymentGateway : IPaymentGateway
             {"vnp_Locale", _vnpOption.Locale},
             {"vnp_OrderInfo", $"Payment for {OrderNumber.ToString()} with amount {Amount.ToString()}"},
             {"vnp_OrderType", _vnpOption.OrderType},
-            {"vnp_ReturnUrl", _vnpOption.ReturnUrl},
+            // NOTE: Returning a URL with the orderNumber parameter is not a good idea and is not safe.
+            {"vnp_ReturnUrl", $"{_vnpOption.ReturnUrl}?orderNumber={OrderNumber}"},
             {"vnp_TmnCode", _vnpOption.TmnCode},
             {"vnp_TxnRef", OrderNumber.ToString()},
             {"vnp_Version", _vnpOption.Version},

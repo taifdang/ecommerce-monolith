@@ -41,6 +41,7 @@ public class StripePaymentGateway : IPaymentGateway
                     }
                 },
                 Mode = "payment",
+                // NOTE: Returning a URL with the orderNumber parameter is not a good idea and is not safe.
                 SuccessUrl = $"{_options.ReturnUrl}?orderNumber={request.OrderNumber}",
                 CancelUrl = $"{_options.ReturnUrl}?orderNumber={request.OrderNumber}&cancelled=true",
             };
