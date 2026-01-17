@@ -67,8 +67,6 @@ public static class DependencyInjection
             KnownProxies = { },
         });
 
-        app.UseRouting();
-
 #if (crossDomainUsingCors)
         app.UseCors("AllowFrontend");
 #endif
@@ -77,8 +75,7 @@ public static class DependencyInjection
         app.UseAuthentication();
         app.UseAuthorization();
        
-        app.MapControllers();
-        app.MapDefaultEndpoints();
+        app.UseServiceDefaults();
 
         app.MapGet("/", x => x.Response.WriteAsync("server listening ..."));
 
