@@ -24,10 +24,6 @@ public class OutboxMessageProcessor : IOutboxMessageProcessor
 
     public async Task ProcessOutboxMessagesAsync(CancellationToken cancellationToken = default)
     {
-        //while (!cancellationToken.IsCancellationRequested)
-        //{
-
-        //}
         var messages = await _repository.GetUnprocessedMessagesAsync();
 
         foreach (var message in messages)
@@ -55,11 +51,6 @@ public class OutboxMessageProcessor : IOutboxMessageProcessor
             {
                 _logger.LogError(ex, "Failed to publish message {MessageId}", message.Id);
             }
-
-            //if (!messages.Any() && !cancellationToken.IsCancellationRequested)
-            //{
-            //    await Task.Delay(30000, cancellationToken); // wait before next polling
-            //}
         }
     }
 

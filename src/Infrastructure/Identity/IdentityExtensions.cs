@@ -17,13 +17,8 @@ public static class IdentityExtensions
             config.Password.RequireNonAlphanumeric = false;
             config.Password.RequireUppercase = false;
         })
-           .AddEntityFrameworkStores<AppIdentityDbContext>()
-           .AddDefaultTokenProviders();
-
-        //builder.Services.Configure<IdentityOptions>(options =>
-        //{
-        //    options.SignIn.RequireConfirmedEmail = true;
-        //});
+        .AddEntityFrameworkStores<AppIdentityDbContext>()
+        .AddDefaultTokenProviders();
 
         return builder;
     }

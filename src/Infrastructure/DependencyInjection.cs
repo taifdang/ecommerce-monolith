@@ -29,8 +29,8 @@ using Microsoft.Extensions.Hosting;
 using Outbox.EF.Extensions;
 using Outbox.EF.Infrastructure.Data;
 using Shared.Constants;
-using Shared.EFCore;
 using Shared.Web;
+using DatabaseMigrationHelpers;
 
 namespace Infrastructure;
 //ref: https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-9.0&tabs=visual-studio
@@ -49,26 +49,20 @@ public static class DependencyInjection
         builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         builder.Services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventIntercopter>();
 
-        // DbContext
-        //builder.AddCustomDbContext<ApplicationDbContext>();
-        // Inteceptors
-
         builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
-#if (sqlserver)
-            //options.useSqlServer(appSettings.ConnectionStrings.DefaultConnection);
-#endif
             options.UseNpgsql(builder.Configuration.GetConnectionString("shopdb"));
+
             options.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
         });
 
-        builder.AddNpgsqlDbContext<AppIdentityDbContext>("shopdb",
-            configureDbContextOptions: x => x.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning)));
+        builder.AddNpgsqlDbContext<AppIdentityDbContext>("shopdb");
 
+        // Identity
         builder.AddCustomIdentity();
 
-        // Jwt
+        // Token
         builder.Services.AddScoped<ITokenService, TokenService>();
 
         // Repositores    
@@ -80,7 +74,7 @@ public static class DependencyInjection
         builder.Services.AddTransient<IEmailService, SmtpEmailSender>();
         builder.Services.AddScoped<IFileService, LocalStorage>();
                
-        // default IPaymentGateway registration points to Vnpay (legacy). Keep explicit registration for both gateways.
+
         builder.Services.AddScoped<IPaymentGateway, VnpayPaymentGateway>();
         builder.Services.AddScoped<IPaymentGateway, StripePaymentGateway>();
         builder.Services.AddScoped<IPaymentGatewayFactory, PaymentGatewayFactory>();
@@ -95,10 +89,8 @@ public static class DependencyInjection
         builder.Services.AddScoped<IIdentityService, IdentityService>();
 
         // Seeders    
-        builder.Services.AddScoped<ISeedManager, SeedManager>();
-
-        builder.Services.AddScoped<IDataSeeder, IdentityDataSeeder>();
-        builder.Services.AddScoped<IDataSeeder, CatalogDataSeeder>();
+        builder.Services.AddScoped<IDataSeeder<ApplicationDbContext>, CatalogDataSeeder>();
+        builder.Services.AddScoped<IDataSeeder<AppIdentityDbContext>, IdentityDataSeeder>();
 
         // Eventbus
         if (builder.Environment.EnvironmentName == "test")
@@ -124,10 +116,14 @@ public static class DependencyInjection
 
     public static WebApplication UseInfrastructure(this WebApplication app)
     {
+        return app;
+    }
 
-        app.UseMigration<ApplicationDbContext>();
-        app.UseMigration<AppIdentityDbContext>();
-        app.UseMigration<OutboxDbContext>();
+    public static async Task<WebApplication> MigrateAndSeedDataAsync(this WebApplication app)
+    {
+        await app.MigrationDbContextAsync<ApplicationDbContext>();
+        await app.MigrationDbContextAsync<AppIdentityDbContext>();
+        await app.MigrationDbContextAsync<OutboxDbContext>();
 
         return app;
     }

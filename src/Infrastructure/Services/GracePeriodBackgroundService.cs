@@ -19,7 +19,6 @@ public class GracePeriodBackgroundService(
     ) : BackgroundService
 {
     private readonly BackgroundTaskOptions _options = options?.Value ?? throw new ArgumentNullException(nameof(options));
-    //private readonly ApplicationDbContext _dbcontext = dbcontext;
     private readonly IServiceScopeFactory _serviceScopeFactory = serviceScopeFactory;
     private readonly IEventPublisher _eventPublisher = eventPublisher;
 

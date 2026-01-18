@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Shared.EFCore;
+﻿using DatabaseMigrationHelpers;
 
 namespace Infrastructure.Data.Seed;
 
-public class CatalogDataSeeder : IDataSeeder
+public class CatalogDataSeeder : IDataSeeder<ApplicationDbContext>
 {
     private readonly ApplicationDbContext _dbContext;
 
@@ -12,18 +11,14 @@ public class CatalogDataSeeder : IDataSeeder
         _dbContext = dbContext;
     }
 
-    public async Task SendAllAsync()
+    public async Task SeedAsync(CancellationToken cancellationToken)
     {
-        var pendingMigrations = await _dbContext.Database.GetPendingMigrationsAsync();
-        if (!pendingMigrations.Any())
-        {
-            await SeedCategories();
-            await SeedProducts();
-            await SeedProductOptions();
-            await SeedOptionValues();
-            await SeedProductImages();
-            await SeedVariants();
-        }
+        await SeedCategories();
+        await SeedProducts();
+        await SeedProductOptions();
+        await SeedOptionValues();
+        await SeedProductImages();
+        await SeedVariants();
     }
 
     private async Task SeedCategories()

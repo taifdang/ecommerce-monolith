@@ -1,6 +1,4 @@
 ﻿using EventBus.InMemory;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Outbox.Abstractions;
@@ -14,20 +12,17 @@ public static class OutboxEfExtensions
 {
     public static void AddTransactionalOutbox(this IHostApplicationBuilder builder)
     {
-#if (sqlServer)
-        builder.Services.AddDbContext<OutboxDbContext>((sp, options) =>
-        {
-            options.UseSqlServer("Server=LAPTOP-J20BGGNG\\SQLEXPRESS;Database=ecommerce_db;Trusted_Connection=true; MultipleActiveResultSets=true; TrustServerCertificate=True");
-        });
-#endif
+        builder.AddNpgsqlDbContext<OutboxDbContext>("shopdb");
 
-        builder.AddNpgsqlDbContext<OutboxDbContext>("shopdb", 
-            configureDbContextOptions: x => x.ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning)));
         builder.Services.AddScoped<IOutboxMessageProcessor, OutboxMessageProcessor>();
         builder.Services.AddScoped<IPollingOutboxMessageRepository, PollingOutboxMessageRepository>();
         builder.Services.AddSingleton<PollingOutboxMessageRepositoryOptions>();
-        //builder.Services.AddTransient<IEventPublisher, NullEventPublisher>();
+
+        // In-memory event bus for demo/testing purposes
+        // In production, consider using a more robust event bus like RabbitMQ, Azure Service Bus, etc.
         builder.AddInMemoryEventBus();
+
+        // Hosted service to poll and process outbox messages
         builder.Services.AddHostedService<TransactionalOutboxPollingService>();
     }
 }

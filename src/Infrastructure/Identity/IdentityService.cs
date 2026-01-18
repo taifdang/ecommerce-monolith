@@ -76,7 +76,7 @@ public class IdentityService : IIdentityService
         var result = tokenService.GenerateToken(user.Id, user.UserName!, user.Email!, roles.ToArray());
         var refreshToken = tokenService.GenerateRefereshToken();
 
-        //save refresh token: expires 30 days
+        // save refresh token: expires 30 days
         dbContext.RefreshTokens.Add(new RefreshToken
         {
             UserId = user.Id,
@@ -86,6 +86,7 @@ public class IdentityService : IIdentityService
         });
         await dbContext.SaveChangesAsync();
 
+        // ensure to delete old cookie
         cookieService.Delete();
         cookieService.Set(refreshToken);
 
@@ -116,34 +117,15 @@ public class IdentityService : IIdentityService
 
     public async Task<TokenResult> RefreshToken()
     {
-        //var currentUser = currentUserProvider.GetCurrentUserId();
-        //if (!Guid.TryParse(currentUser, out var userId))
-        //{
-        //    throw new UnauthorizedAccessException("Invalid user ID");
-        //}
-
         var tokenInCookie = cookieService.Get();
 
         if (string.IsNullOrEmpty(tokenInCookie)) return null!;
-        //throw new Exception("Not found cookie in client")
 
         var tokenInDb = await dbContext.RefreshTokens.Where(x => x.Token == tokenInCookie).FirstOrDefaultAsync();
 
         if (tokenInDb is null) return null!;
-        //throw new Exception("Not found token in db");
 
         if (tokenInDb.Expires <= DateTime.UtcNow) throw new Exception("Refresh token is expired");
-
-        //if (!string.IsNullOrEmpty(tokenInCookie))
-        //{
-        //    var lastToken = await dbContext.RefreshTokens.FirstOrDefaultAsync(x => x.Token == tokenInCookie);
-
-        //    if (lastToken != null && lastToken.IsActive)
-        //    {
-        //        lastToken.Revoked = DateTime.UtcNow;
-        //        userId = lastToken.UserId;
-        //    }  
-        //}
 
         var user = await userManager.Users.SingleOrDefaultAsync(x => x.Id == tokenInDb.UserId);
 
@@ -155,20 +137,6 @@ public class IdentityService : IIdentityService
         var roles = await userManager.GetRolesAsync(user);
 
         var result = tokenService.GenerateToken(user.Id, user.UserName!, user.Email!, roles.ToArray());
-        //var refreshToken = tokenService.GenerateRefereshToken();
-
-        ////save refresh token
-        //dbContext.RefreshTokens.Add(new RefreshToken
-        //{
-        //    UserId = user.Id,
-        //    Token = result.Token,
-        //    Expires = result.Expire,
-        //    Created = DateTime.UtcNow
-        //});
-        //await dbContext.SaveChangesAsync();
-
-        //cookieService.Delete();
-        //cookieService.Set(refreshToken);
 
         return result;
     }

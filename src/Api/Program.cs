@@ -6,7 +6,6 @@ using Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-
 builder.AddApplicationServices();
 builder.AddInfrastructure();
 builder.AddWebDependencies();
@@ -22,6 +21,8 @@ app.MapOrderApi();
 app.MapCustomerApi();
 app.MapIdentityApi();
 app.MapPaymentApi();
+
+await app.MigrateAndSeedDataAsync();
 
 app.Run();
 

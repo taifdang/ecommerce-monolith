@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{FF77485D-96D1-B1AA-B58F-3986BE3ADB27}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseMigrationHelpers", "src\DatabaseMigrationHelpers\DatabaseMigrationHelpers.csproj", "{AD7EAE3F-FFDA-082D-EF4E-BE1886A4BB7B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +99,10 @@ Global
 		{FF77485D-96D1-B1AA-B58F-3986BE3ADB27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF77485D-96D1-B1AA-B58F-3986BE3ADB27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF77485D-96D1-B1AA-B58F-3986BE3ADB27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD7EAE3F-FFDA-082D-EF4E-BE1886A4BB7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD7EAE3F-FFDA-082D-EF4E-BE1886A4BB7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD7EAE3F-FFDA-082D-EF4E-BE1886A4BB7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD7EAE3F-FFDA-082D-EF4E-BE1886A4BB7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -116,6 +122,7 @@ Global
 		{E3C0E21B-371B-ACD5-5FF0-77C353D89E20} = {64B810B5-A9D5-45BC-A641-AF0CE891F8F7}
 		{9D1DD2CD-7B04-4472-4377-027563F356CA} = {83D0B14B-E6E5-442A-9FCE-63AAC6176C47}
 		{FF77485D-96D1-B1AA-B58F-3986BE3ADB27} = {83D0B14B-E6E5-442A-9FCE-63AAC6176C47}
+		{AD7EAE3F-FFDA-082D-EF4E-BE1886A4BB7B} = {64B810B5-A9D5-45BC-A641-AF0CE891F8F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {52DC47D6-46CC-4F3B-883F-D33194913F17}

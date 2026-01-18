@@ -1,21 +1,18 @@
-﻿using Application.Customer.Commands;
-using Contracts.IntegrationEvents;
+﻿using Contracts.IntegrationEvents;
+using DatabaseMigrationHelpers;
 using EventBus.Abstractions;
 using Infrastructure.Identity.Entity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.Constants;
-using Shared.EFCore;
 
 namespace Infrastructure.Identity.Data.Seed;
 
-public class IdentityDataSeeder : IDataSeeder
+public class IdentityDataSeeder : IDataSeeder<AppIdentityDbContext>
 {
     private readonly RoleManager<ApplicationRole> _roleManager;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly AppIdentityDbContext _appIdentityDbContext;
-    private readonly IMediator _mediator;
     private readonly IEventPublisher _eventPublisher;
 
     public IdentityDataSeeder(
@@ -26,20 +23,14 @@ public class IdentityDataSeeder : IDataSeeder
         IEventPublisher eventPublisher)
     {
         _roleManager = roleManager;
-        _appIdentityDbContext = appIdentityDbContext;
         _userManager = userManager;
-        _mediator = mediator;
         _eventPublisher = eventPublisher;
     }
 
-    public async Task SendAllAsync()
+    public async Task SeedAsync(CancellationToken cancellationToken)
     {
-        var pendingMigrations = await _appIdentityDbContext.Database.GetPendingMigrationsAsync();
-        if (!pendingMigrations.Any())
-        {
-            await SeedRoles();
-            await SeedUsers();
-        }
+        await SeedRoles();
+        await SeedUsers();
     }
 
     public async Task SeedRoles()
@@ -68,7 +59,6 @@ public class IdentityDataSeeder : IDataSeeder
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(InitialData.Users.First(), IdentityConstant.Role.Admin);
-                    //await _mediator.Send(new CreateCustomerCommand(InitialData.Users.First().Id, InitialData.Users.First().Email));
                     await _eventPublisher.PublishAsync(new UserCreatedIntegrationEvent
                     {
                         UserId = InitialData.Users.First().Id,
@@ -83,7 +73,6 @@ public class IdentityDataSeeder : IDataSeeder
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(InitialData.Users.Last(), IdentityConstant.Role.User);
-                    //await _mediator.Send(new CreateCustomerCommand(InitialData.Users.Last().Id, InitialData.Users.Last().Email));
                     await _eventPublisher.PublishAsync(new UserCreatedIntegrationEvent
                     {
                         UserId = InitialData.Users.Last().Id,
