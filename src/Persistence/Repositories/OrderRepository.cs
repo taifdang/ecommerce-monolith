@@ -1,0 +1,40 @@
+       using Application.Common.Interfaces;
+using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace Persistence.Repositories;
+
+public class OrderRepository : IOrderRepository
+{
+    private readonly ApplicationDbContext _context;
+
+    public IUnitOfWork UnitOfWork => _context;
+
+    public OrderRepository(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task AddAsync(Order order)
+    {
+        await _context.Orders.AddAsync(order);
+    }
+    public async Task<Order?> GetByIdAsync(Guid id)
+    {
+        return await _context.Orders.FindAsync(id);
+    }
+    public async Task<Order?> GetAsync(Guid id)
+    {                  
+        return await _context.Orders.Include(m => m.Items).Where(x => x.Id == id).FirstOrDefaultAsync();
+    }
+
+    public async Task<List<Order>?> GetListByCustomerAsync(Guid customerId)
+    {
+        return await _context.Orders.Where(x => x.CustomerId == customerId).ToListAsync();
+    }
+
+    public async Task<Order?> GetByOrderNumber(long orderNumber)
+    {
+        return await _context.Orders.SingleOrDefaultAsync(x => x.OrderNumber == orderNumber);
+    }
+}

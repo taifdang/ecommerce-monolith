@@ -1,4 +1,5 @@
-﻿using Api.Models.Requests;
+﻿using Api.Filters;
+using Api.Models.Requests;
 using Api.Models.Responses;
 using Application.Catalog.Categories.Commands.CreateCategory;
 using Application.Catalog.Categories.Queries.GetListCategory;
@@ -82,6 +83,7 @@ public static class CatalogApi
 
         // ProductImage
         productGroupApi.MapPost("images", CreateProductImage)
+            .AddEndpointFilter<FileValidationFilter>()
             .DisableAntiforgery();
         productGroupApi.MapDelete("images", DeleteProductImage);
 

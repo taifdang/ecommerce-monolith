@@ -82,12 +82,12 @@ public static class Extensions
                 metrics.AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddRuntimeInstrumentation()
-                    .AddMeter("eshop.Application");
+                    .AddMeter("eshop");
             })
             .WithTracing(tracing =>
             {
                 tracing.AddSource(builder.Environment.ApplicationName)
-                    .AddSource("eshop.Application")
+                    .AddSource("eshop")
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation();
             });

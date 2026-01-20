@@ -1,5 +1,6 @@
 ﻿using Application.Common.Observability.Commands;
 using Application.Common.Observability.Queries;
+using Domain.ShareKernel;
 using MediatR;
 
 namespace Application.Common.Behaviors;
@@ -41,7 +42,8 @@ public class ActivityBehavior<TRequest, TResponse>(
                     cancellationToken);
             }
         }
-        finally{
+        finally
+        {
             if(isCommand)
             {
                 commandMetrics.StopHandling<TRequest>();
