@@ -38,7 +38,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\DatabaseMigrationHelpers\DatabaseMigrationHelpers.csproj" />
+    <ProjectReference Include="..\Persistence.Migrations\Persistence.Migrations.csproj" />
     <ProjectReference Include="..\EventBus.InMemory\EventBus.InMemory.csproj" />
     <ProjectReference Include="..\Outbox.EF\Outbox.EF.csproj" />
     <ProjectReference Include="..\Persistence\Persistence.csproj" />

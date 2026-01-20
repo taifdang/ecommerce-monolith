@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace DatabaseMigrationHelpers;
+namespace Persistence.Migrations;
 
 public interface IDataSeeder<in TContext> where TContext : DbContext
 {

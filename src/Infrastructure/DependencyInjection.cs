@@ -23,7 +23,7 @@ using Outbox.EF.Extensions;
 using Outbox.EF.Infrastructure.Data;
 using Shared.Constants;
 using Shared.Web;
-using DatabaseMigrationHelpers;
+using Persistence.Migrations;
 using Persistence;
 
 namespace Infrastructure;

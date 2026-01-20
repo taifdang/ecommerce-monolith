@@ -1,4 +1,4 @@
-using DatabaseMigrationHelpers;
+using Persistence.Migrations;
 
 namespace Persistence.Seed;
 

@@ -1,5 +1,5 @@
 ﻿using Contracts.IntegrationEvents;
-using DatabaseMigrationHelpers;
+using Persistence.Migrations;
 using EventBus.Abstractions;
 using Infrastructure.Identity.Entity;
 using MediatR;

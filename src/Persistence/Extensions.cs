@@ -1,5 +1,5 @@
 using Application.Common.Interfaces;
-using DatabaseMigrationHelpers;
+using Persistence.Migrations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

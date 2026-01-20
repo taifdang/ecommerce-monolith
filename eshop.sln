@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.2.11408.102 d18.0
@@ -35,7 +35,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "tests\UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTests", "tests\IntegrationTests\IntegrationTests.csproj", "{FF77485D-96D1-B1AA-B58F-3986BE3ADB27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseMigrationHelpers", "src\DatabaseMigrationHelpers\DatabaseMigrationHelpers.csproj", "{AD7EAE3F-FFDA-082D-EF4E-BE1886A4BB7B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence.Migrations", "src\Persistence.Migrations\Persistence.Migrations.csproj", "{AD7EAE3F-FFDA-082D-EF4E-BE1886A4BB7B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persistence", "src\Persistence\Persistence.csproj", "{C4F00904-8DBE-0709-B376-61AA41535537}"
 EndProject
@@ -135,3 +135,4 @@ Global
 		SolutionGuid = {52DC47D6-46CC-4F3B-883F-D33194913F17}
 	EndGlobalSection
 EndGlobal
+
