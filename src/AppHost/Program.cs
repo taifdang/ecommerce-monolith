@@ -6,46 +6,32 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 builder.AddDockerComposeEnvironment("env");
 
-var postgres = builder.AddPostgres("postgres").WithPgWeb();
+var rabbitmq = builder.AddRabbitMQ("rabbitmq");
 
-if (builder.ExecutionContext.IsPublishMode)
-{
-    postgres.WithDataVolume("postgres-data")
-        .WithLifetime(ContainerLifetime.Persistent);
-}
+var postgres = builder.AddPostgres("postgres").WithPgWeb();
 
 var database = postgres.AddDatabase("shopdb");
 
 var apiService = builder.AddProject<Projects.Api>("apiservice")
     .WithExternalHttpEndpoints()
     .WithReference(database)
+    .WithReference(rabbitmq)
     .WaitFor(database)
-    .WithUrls(context =>
-    {
-        foreach (var url in context.Urls)
-        {
-            url.DisplayLocation = UrlDisplayLocation.DetailsOnly;
-        }
+    .WaitFor(rabbitmq);
 
-        context.Urls.Add(new()
-        {
-            Url = "/openapi/swagger/index.html",
-            DisplayText = "API Reference",
-            Endpoint = context.GetEndpoint("https")
-        });
-    })
-  .PublishAsDockerComposeService((_, svc) =>
-  {
-      // When creating the docker compose service
-      svc.Restart = "always";
-  });
+var identityService = builder.AddProject<Projects.IdentityService>("identityservice")
+    .WithExternalHttpEndpoints()
+    .WithReference(database)
+    .WithReference(rabbitmq)
+    .WaitFor(database)
+    .WaitFor(rabbitmq)
+    .WaitFor(apiService);
 
-// test / dev
+// test / dev local frontend with react and vite
 var reactVite = builder.AddViteApp("webfrontend", "../Web/ClientApp")
     .WithReference(apiService)
     .WaitFor(apiService)
     .WithEndpoint("http", e => e.Port = 3000) // fixed port for frontend
-    .WithEnvironment("BROWSER", "none")
-    .WithUrl("", "UI");
+    .WithEnvironment("BROWSER", "none");
 
 builder.Build().Run();

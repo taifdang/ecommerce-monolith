@@ -5,17 +5,18 @@ using System.Threading.Channels;
 
 namespace EventBus.InMemory;
 
-public static class InMemoryEventBusExtensions
+public static class Extensions
 {
     public static IEventBusBuilder AddInMemoryEventBus(this IHostApplicationBuilder builder)
     {
-        var options = new InMemoryEventBusOptions();
+        var options = new InMemoryOptions();
         var channel = Channel.CreateBounded<MessageEnvelope>(options.MaxQueue);
 
         builder.Services.AddSingleton(channel);
         builder.Services.AddSingleton(options);
-        builder.Services.AddTransient<IEventPublisher, InMemoryEventBusSender>();
-        builder.Services.AddHostedService<InMemoryEventBusReceiver>();
+
+        builder.Services.AddSingleton<IEventPublisher, InMemorySender>();
+        builder.Services.AddHostedService<InMemoryReceiver>();
 
         return new InMemoryEventBusBuilder(builder.Services);
     }

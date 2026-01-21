@@ -9,17 +9,17 @@ using System.Threading.Channels;
 
 namespace EventBus.InMemory;
 
-public class InMemoryEventBusReceiver(
+public class InMemoryReceiver(
     IServiceProvider serviceProvider,
     Channel<MessageEnvelope> channel,
     IOptions<EventBusSubscriptionManager> subscriptionManager,
-    ILogger<InMemoryEventBusReceiver> logger) 
+    ILogger<InMemoryReceiver> logger) 
     : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
     private readonly Channel<MessageEnvelope> _channel = channel;
     private readonly EventBusSubscriptionManager _subscriptions = subscriptionManager.Value;
-    private readonly ILogger<InMemoryEventBusReceiver> _logger = logger;
+    private readonly ILogger<InMemoryReceiver> _logger = logger;
   
     public async Task ProcessEvent<T>(T envelope) where T : MessageEnvelope
     {

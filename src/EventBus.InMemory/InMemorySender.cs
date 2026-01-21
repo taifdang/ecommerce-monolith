@@ -5,11 +5,11 @@ using System.Threading.Channels;
 
 namespace EventBus.InMemory;
 
-public class InMemoryEventBusSender : IEventPublisher
+public class InMemorySender : IEventPublisher
 {
     private readonly Channel<MessageEnvelope> _channel;
 
-    public InMemoryEventBusSender(Channel<MessageEnvelope> channel)
+    public InMemorySender(Channel<MessageEnvelope> channel)
     {
         _channel = channel;
     }

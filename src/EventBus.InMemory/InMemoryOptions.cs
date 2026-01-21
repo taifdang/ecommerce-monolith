@@ -1,6 +1,6 @@
 ﻿namespace EventBus.InMemory;
 
-public class InMemoryEventBusOptions
+public class InMemoryOptions
 {
     public int MaxQueue { get; set; } = 100;
 }
